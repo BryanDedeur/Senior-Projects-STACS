@@ -4,7 +4,7 @@ The ECSL is colaborating with the ARA Laboratory on Inspecting and Preserving In
 
 ## Getting Started
 
-1. Download Unity version 2018.4.19f1 (Best if managed through the Unity Hub application)
+1. Download Unity version 2018.4.19f1 (best if managed through [Unity Hub](https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe))
 2. Download this repository using your prefered github interface
 3. Open the project in Unity
 4. If prompted for update Unity project version choose no (for version consistency)
