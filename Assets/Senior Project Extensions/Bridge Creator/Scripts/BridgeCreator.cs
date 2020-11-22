@@ -4,26 +4,52 @@ using UnityEngine;
 
 public class BridgeCreator : MonoBehaviour
 {
-    public GameObject ClickWall;
-    public GameObject Truss;
-    public GameObject Vertex;
+    // TODO make background scenery for the bridge creator
+
+    public GameObject bridgeContainer;
+    public GameObject clickWall;
+    public GameObject trussPrefab;
+    public GameObject vertexPrefab;
+
+    // TODO make a UI for these options
+    // TODO make implementation for these options
+    public bool mirrorAcrossX; // half of the length of the bridge will be cloned
+    public bool mirrorAcrossY; // top to bottom of road platform
+    public bool mirrorAcrossZ; // both sides of the road will be mirrored
+
+    public enum cameraDirection
+    {
+        Left, Right, Top, Bottom
+    }
+    // TODO create UI interface to set this
+    public cameraDirection ViewDirection = cameraDirection.Right;
+
+    // TODO make truss prefab options
+    public GameObject[] trussPrefabs;
+    // TODO make vertex prefab options
+    public GameObject[] vertexPrefabs;
+    // TODO create platform options (road, road with sidewalk, train, sidewalk)
+    public GameObject[] platformPrefabs;
 
     public bool mirroring;
-    public Vector3 viewAxis;
 
-    private Dictionary<Vector3, GameObject> verticies;
+    private Bridge bridge;
 
-    private GameObject object_v1;
-    private GameObject object_v2;
+    // TODO make a selection indicator for the selected vertices and update when selected
+    private GameObject firstSelection;
+    private GameObject secondSelection;
 
     private GameObject cursor;
 
     // Start is called before the first frame update
     void Start()
     {
-        verticies = new Dictionary<Vector3, GameObject>();
+        bridge = bridgeContainer.GetComponent<Bridge>();
 
-        cursor = Instantiate(Vertex.transform).gameObject;
+        // TODO setting the platform should be done by the UI
+        bridge.SetPlatform(platformPrefabs[0]);
+
+        cursor = Instantiate(vertexPrefab.transform).gameObject;
         Destroy(cursor.GetComponent<Collider>());
     }
 
@@ -32,80 +58,116 @@ public class BridgeCreator : MonoBehaviour
         return new Vector3(Mathf.Round(p.x), Mathf.Round(p.y), Mathf.Round(p.z));
     }
 
-    GameObject CreateVertex(Vector3 p)
-    {
-        p = Snap(p);
+    // TODO add ability to click and drag select all vertices in a region
+    // TODO add ability to click and drag a vertices from a position to another and update connected edges
 
-        if (verticies.ContainsKey(p))
+    void MoveClickWall(Vector3 newPosition)
+    {
+        switch (ViewDirection)
         {
-            return verticies[p];
+            case cameraDirection.Right:
+                newPosition = new Vector3(0,0,-1) * bridge.GetWidth() / 2f;
+                break;
+            case cameraDirection.Left:
+                newPosition = new Vector3(0, 0, 1) * bridge.GetWidth() / 2f;
+                break;
+            default:
+                // TODO fix the click wall position when trying to click on a second vertex from top or bottom view
+                newPosition = new Vector3(0, newPosition.y, 0);
+                break;
+
         }
 
-        Transform newVertex = Instantiate(Vertex.transform);
-        newVertex.name = "Vertex";
-        newVertex.localPosition = p;
-
-        verticies.Add(p, newVertex.transform.gameObject);
-
-        return newVertex.gameObject;
+        clickWall.transform.position = newPosition;
+        clickWall.transform.LookAt(Vector3.zero);
     }
 
-    void ConnectPoints(GameObject v1, GameObject v2)
+    void CheckMouseState()
     {
-        Transform newTruss = Instantiate(Truss.transform);
-        newTruss.name = "Truss";
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        // TODO use layers to ensure that nothing overlaps
+        if (Physics.Raycast(ray, out hit))
+        {
+            Vector3 snapped = Snap(hit.point);
+            MoveClickWall(snapped);
 
-        Vector3 diff = v1.transform.localPosition - v2.transform.localPosition;
-        float dist = diff.magnitude;
-        newTruss.localScale = new Vector3(Truss.transform.localScale.x, Truss.transform.localScale.y, dist);
-        newTruss.position = v2.transform.localPosition + (diff / 2.0f);
-        newTruss.LookAt(v1.transform.localPosition);
+            if (Input.GetMouseButtonDown(0))
+            {
+                // TODO mirror accross X Y and Z axis if mirroring enabled
 
-        object_v1 = null;
-        object_v2 = null;
+                if (firstSelection == null)
+                {
+                    firstSelection = bridge.CreateVertex(snapped, vertexPrefab);
+                }
+                else if (secondSelection == null)
+                {
+                    secondSelection = bridge.CreateVertex(snapped, vertexPrefab);
+                    bridge.CreateEdge(firstSelection, secondSelection, trussPrefab);
+                    // reset the tracker objects
+                    firstSelection = null;
+                    secondSelection = null;
+                }
+            }
+            else
+            {
+                cursor.transform.localPosition = snapped;
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+
+                // TODO mirror accross X Y and Z axis if mirroring enabled
+                if (hit.transform.name == "Truss")
+                {
+                    bridge.RemoveEdge(hit.transform.gameObject);
+                }
+                else if (hit.transform.name == "Vertex")
+                {
+                    bridge.RemoveVertex(hit.transform.position);
+                } else if (bridge.VertexExists(snapped))
+                {
+                    bridge.RemoveVertex(snapped);
+                }
+            }
+        }
+    }
+
+    void RepositionCameraAndClickWall()
+    {
+        if (Camera.current != null)
+        {
+            float offset = 100;
+            switch(ViewDirection)
+            {
+                case cameraDirection.Right:
+                    Camera.current.transform.localPosition = new Vector3(.25f,.25f,-1) * offset;
+                    break;
+                case cameraDirection.Left:
+                    Camera.current.transform.localPosition = new Vector3(.25f, .25f, 1) * offset;
+                    break;
+                case cameraDirection.Top:
+                    Camera.current.transform.localPosition = new Vector3(0, 1, 0) * offset;
+                    break;
+                case cameraDirection.Bottom:
+                    Camera.current.transform.localPosition = new Vector3(0, -1, 0) * offset;
+                    break;
+            }
+
+            Camera.current.transform.LookAt(Vector3.zero);
+            // TODO make sure when camera changes that the click wall updates to face that new camera position
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (object_v1 == null)
-                {
-                    object_v1 = CreateVertex(hit.point);
-                } else if (object_v2 == null)
-                {
-                    object_v2 = CreateVertex(hit.point);
-                    ConnectPoints(object_v1, object_v2);
-                }
-            } else
-            {
-                cursor.transform.localPosition = Snap(hit.point);
-            }
 
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (hit.transform.name == "Truss")
-                {
-                    Destroy(hit.transform.gameObject);
-                } else if (verticies.ContainsKey(Snap(hit.point)))
-                {
-                    Vector3 snapped = Snap(hit.point);
-                    Destroy(verticies[snapped]);
-                    verticies.Remove(snapped);
+        // TODO this should not happen every update... would be better if once the cameraDirection changes by the UI to call this function
+        RepositionCameraAndClickWall();
 
-                }
-            }
-        }
+        CheckMouseState();
 
-        if (Camera.current != null)
-        {
-            Camera.current.transform.localPosition = -viewAxis * 100;
-            Camera.current.transform.LookAt(Vector3.zero);
-        }
+
     }
 }
