@@ -5,7 +5,7 @@ The ECSL is colaborating with the ARA Laboratory on Inspecting and Preserving In
 ## Getting Started
 
 1. Download Unity version 2018.4.19f1 (best if managed through [Unity Hub](https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe))
-2. Download this repository using your prefered github interface
-3. Open the project in Unity
+2. Download this repository using git (on Windows use [GitHub Desktop](https://desktop.github.com/) or [Git Bash](https://git-scm.com/downloads) on Linux)
+3. Open the project in Unity 2018.4.19.f1
 4. If prompted for update Unity project version choose no (for version consistency)
-5. When open in Unity, select the Scenes folder in Assets and click on a scene file to see the simulator working
+5. Select the scenes folder in (Assets -> Senior Projects Extensions) and click on a scene file to open the latest progress
