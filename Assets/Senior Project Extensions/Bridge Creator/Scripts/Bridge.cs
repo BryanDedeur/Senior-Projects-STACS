@@ -22,7 +22,7 @@ public class Bridge : MonoBehaviour
     private Dictionary<Vector3, GameObject> vertices;
     private Dictionary<Tuple<Vector3, Vector3>, GameObject> edges;
 
-
+    // TODO add defects Dictionary<edge, defect> (like vertices but are attached somehow along the edge)
 
     // Start is called before the first frame update
     void Start()
@@ -74,7 +74,7 @@ public class Bridge : MonoBehaviour
         if (vertices.ContainsKey(p))
         {
             return vertices[p];
-        }
+        } 
 
         Transform newVertex = Instantiate(vertex.transform);
         newVertex.name = "Vertex";
@@ -84,6 +84,7 @@ public class Bridge : MonoBehaviour
 
         return newVertex.gameObject;
     }
+
 
     public GameObject CreateEdge(GameObject v1, GameObject v2, GameObject truss)
     {
@@ -110,6 +111,9 @@ public class Bridge : MonoBehaviour
         return newTruss.gameObject;
     }
 
+    // TODO add function to create defects on the bridge
+
+
     public void RemoveVertex(Vector3 atPosition)
     {
         if (vertices.ContainsKey(atPosition))
@@ -131,4 +135,12 @@ public class Bridge : MonoBehaviour
             }
         }
     }
+
+    // TODO add function to export decoded bridge to encoded files
+        // file 1 should be a CSV containing the Vector3 coordinates to the vertices
+        // file 2 should be a Adjacency matrix specifying the which edges are connected to which vertices
+        // file 3 should be a file containing the defect locations
+
+    // TODO add function to import encoded files into bridge class
+        // reads in the three files mentioned above
 }
