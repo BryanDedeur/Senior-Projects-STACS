@@ -181,7 +181,6 @@ public class UIMgr : MonoBehaviour
 
     public void HandleMenuQuitToOS()
     {
-        Debug.Log("Quit");
         Application.Quit();
     }
 

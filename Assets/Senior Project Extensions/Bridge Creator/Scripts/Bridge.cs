@@ -76,7 +76,7 @@ public class Bridge : MonoBehaviour
 
     public GameObject CreateVertex(Vector3 p, GameObject vertex)
     {
-
+     
         if (vertices.ContainsKey(p))
         {
             return vertices[p];
@@ -143,7 +143,8 @@ public class Bridge : MonoBehaviour
         //iterate through all possible pairs
         //check for edge connections with p, old vertex
         //return the first value that is a pair with p
-        foreach (KeyValuePair<Vector3, GameObject> V in vertices)
+       
+        foreach(KeyValuePair<Vector3, GameObject> V in vertices)
         {
             Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(p, V.Key);
             Tuple<Vector3, Vector3> edgeKey2 = new Tuple<Vector3, Vector3>(V.Key, p);
@@ -168,7 +169,7 @@ public class Bridge : MonoBehaviour
         nullVec.z = 100000;
         return nullVec; //ask about returing null vectors
     }
-
+  
     public GameObject SelectVertex(Vector3 p)
     {
         if (vertices.ContainsKey(p))
@@ -178,7 +179,7 @@ public class Bridge : MonoBehaviour
             return vertices[p];
         }
         return null;
-
+       
     }
 
     public GameObject UnselectVertex(Vector3 p)
@@ -194,19 +195,19 @@ public class Bridge : MonoBehaviour
 
     public void SelectEdge(GameObject selectedEdge)
     {
-        Renderer rend = selectedEdge.GetComponent<Renderer>();
+        Renderer rend =  selectedEdge.GetComponent<Renderer>();
         rend.material.color = Color.green;
     }
 
     public GameObject MoveVertex(Vector3 oldloc, Vector3 newloc, GameObject fab)
     {
         RemoveVertex(oldloc);
-        return CreateVertex(newloc, fab);
+        return CreateVertex(newloc, fab); 
     }
 
+    
 
-
-
+   
 
 
 }

@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEditor.Experimental.UIElements.GraphView;
+using System;
 
 public class BridgeCreator : MonoBehaviour
 {
@@ -10,6 +15,13 @@ public class BridgeCreator : MonoBehaviour
     public GameObject clickWall;
     public GameObject trussPrefab;
     public GameObject vertexPrefab;
+    public Button topButton, bottomButton, leftButton, rightButton;
+    static int vertexCount;
+    static int edgeCount;
+    public Text vertexText;
+    public Text edgeText;
+    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
+    public Dictionary<Vector3, GameObject> vertexDictionary;
 
     public GameObject vertexSelectedPrefab;
 
@@ -25,6 +37,8 @@ public class BridgeCreator : MonoBehaviour
     bool isSelecting;
     Vector3 mousePosition1;
     List<Vector3> boxSelectedVertx = new List<Vector3>();
+    List<Vector3> vertexList = new List<Vector3>();
+    int numEdges;
 
 
     public enum cameraDirection
@@ -66,6 +80,10 @@ public class BridgeCreator : MonoBehaviour
 
         cursor = Instantiate(vertexPrefab.transform).gameObject;
         Destroy(cursor.GetComponent<Collider>());
+        vertexCount = 0;
+        edgeCount = 0;
+        edgeDictionary = bridge.edges;
+        vertexDictionary = bridge.vertices;
     }
 
     Vector3 Snap(Vector3 p)
@@ -116,18 +134,32 @@ public class BridgeCreator : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && !selector && !boxSeletector)
             {
                 // TODO mirror accross X Y and Z axis if mirroring enabled
-
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    topButton.onClick.AddListener(UpdateTopView);
+                    bottomButton.onClick.AddListener(UpdateBottomView);
+                    rightButton.onClick.AddListener(UpdateLeftView);
+                    leftButton.onClick.AddListener(UpdateRightView);
+                    return;
+                }
                 if (firstSelection == null)
                 {
                     firstSelection = bridge.CreateVertex(snapped, vertexPrefab);
+
+                    //add location to list of vertex 
+                    vertexList.Add(snapped);
                 }
                 else if (secondSelection == null)
                 {
                     secondSelection = bridge.CreateVertex(snapped, vertexPrefab);
                     bridge.CreateEdge(firstSelection, secondSelection, trussPrefab);
+                    numEdges++;
                     // reset the tracker objects
                     firstSelection = null;
                     secondSelection = null;
+
+                    //add location to list of vertex
+                    vertexList.Add(snapped);
                 }
             }
             else
@@ -141,34 +173,43 @@ public class BridgeCreator : MonoBehaviour
                   {
 
                       // TODO mirror accross X Y and Z axis if mirroring enabled
+
                       if (hit.transform.name == "Truss")
                       {
                           bridge.RemoveEdge(hit.transform.gameObject);
+                    numEdges--;
                       }
                       else if (hit.transform.name == "Vertex")
                       {
                           bridge.RemoveVertex(hit.transform.position);
+                       vertexList.Remove(hit.transform.position);
                       } else if (bridge.VertexExists(snapped))
                       {
                           bridge.RemoveVertex(snapped);
+                         vertexList.Remove(hit.transform.position);
                       }
                   } 
            
-            if(Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetKeyDown(KeyCode.LeftControl))
              {
                  selector = true;
                  Debug.Log(selector);
              }
-            if (Input.GetKeyDown(KeyCode.RightShift))
+            if (Input.GetKeyUp(KeyCode.LeftControl))
+            {
+                selector = false;
+
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 boxSeletector = true;
             }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyUp(KeyCode.LeftShift))
              {
-                 selector = false;
+           
                 boxSeletector = false;
 
-             }
+            }
 
             ///
             ///to enable single selection press space 
@@ -179,28 +220,53 @@ public class BridgeCreator : MonoBehaviour
             ///
             ///to move boxed vertx press back space // not working yet
             ///
+            ///
+            ///todo cnrtl click to select and shift click to drag 
             if (Input.GetMouseButtonDown(0) && selector == true)
             {
-                Debug.Log(selector);
+                ///loop through list of vertex assign radius 2 and see if the hit is within that radius 
+               foreach(var v in vertexList)
+                {
+                    Debug.Log("Vertex");
+                    Debug.Log(v);
+                    //set z componet to the same as the vector
+                    if (Vector3.Distance(snapped, v) < 2)
+                    {
+                        bridge.SelectVertex(v);
+                        selectedVertex = v;
+
+                    }
+                }
+
+                ///
+               /* Debug.Log(selector);
                 if (hit.transform.name == "Vertex")
                 {
                     bridge.SelectVertex(snapped);
                     selectedVertex = snapped;
-                }
+                }*/
             }
             if(Input.GetMouseButtonUp(0) && selector == true)
             {
                 edgeFixer = bridge.MoveVertex(selectedVertex, snapped, vertexPrefab);
-
+                vertexList.Add(snapped);
                 newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
-                while (newEdgeAnchor.x != 100000 && newEdgeAnchor. y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
+
+                for(int i =0; i < numEdges; i++)
                 {
-                
-                    bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
-                    newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+                    if(newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000)
+                    {
+                        bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
+                        vertexList.Add(newEdgeAnchor);
+                        newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+                    }
+                    
                 }
-                
+
+
+
             }
+            UpdateCountText();
         }
         //selecting single vertex moving and updating works 
 
@@ -257,8 +323,6 @@ public class BridgeCreator : MonoBehaviour
 
     }
 
-    // TODO create function for adding defects to the bridge (a defect will just be a small object with a collider that signals a potential issue when the robot scanners see it)
-
     void RepositionCameraAndClickWall()
     {
         if (Camera.current != null)
@@ -284,6 +348,28 @@ public class BridgeCreator : MonoBehaviour
             // TODO make sure when camera changes that the click wall updates to face that new camera position
         }
     }
+    void UpdateTopView()
+    {
+        ViewDirection = cameraDirection.Top;
+    }
+    void UpdateBottomView()
+    {
+        ViewDirection = cameraDirection.Bottom;
+    }
+    void UpdateLeftView()
+    {
+        ViewDirection = cameraDirection.Left;
+    }
+    void UpdateRightView()
+    {
+        ViewDirection = cameraDirection.Right;
+    }
+    
+    void UpdateCountText()
+    {
+        edgeText.text = edgeDictionary.Count.ToString();
+        vertexText.text = vertexDictionary.Count.ToString();
+    }
 
 
 
@@ -292,9 +378,11 @@ public class BridgeCreator : MonoBehaviour
     {
 
         // TODO this should not happen every update... would be better if once the cameraDirection changes by the UI to call this function
+        
         RepositionCameraAndClickWall();
-
         CheckMouseState();
+
+
     }
 
     void OnGUI()
