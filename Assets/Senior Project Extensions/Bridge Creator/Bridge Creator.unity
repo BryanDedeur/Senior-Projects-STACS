@@ -255,11 +255,13 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 70091455}
-  - component: {fileID: 70091457}
-  - component: {fileID: 70091456}
-  m_Layer: 5
-  m_Name: Text
+  - component: {fileID: 352394923}
+  - component: {fileID: 352394922}
+  - component: {fileID: 352394921}
+  - component: {fileID: 352394920}
+  - component: {fileID: 352394924}
+  m_Layer: 0
+  m_Name: ClickWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -322,9 +324,27 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 70091454}
-  m_CullTransparentMesh: 0
---- !u!1 &76329437
+  m_GameObject: {fileID: 352394919}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 100, y: 50, z: 1}
+  m_Children: []
+  m_Father: {fileID: 472769441}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &352394924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352394919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1f71f7b1620e4429d63029806dd488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &472769440
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -425,6 +445,23 @@ Canvas:
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &103165818
+  bridgeContainer: {fileID: 301468916}
+  clickWall: {fileID: 352394919}
+  trussPrefab: {fileID: 6199212017894149434, guid: ceef555b6449c6645ba212451ad95d53,
+    type: 3}
+  vertexPrefab: {fileID: 3624013704367273622, guid: fe2d20860ec2b934f95f6f43b2d9991b,
+    type: 3}
+  vertexSelectedPrefab: {fileID: 0}
+  mirrorAcrossX: 0
+  mirrorAcrossY: 0
+  mirrorAcrossZ: 0
+  ViewDirection: 1
+  trussPrefabs: []
+  vertexPrefabs: []
+  platformPrefabs:
+  - {fileID: 8670752210327266803, guid: 711c822e50b79724ca7bea8aa2d2eaf2, type: 3}
+  mirroring: 0
+--- !u!1 &1113494906
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
