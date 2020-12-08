@@ -19,8 +19,8 @@ public class Bridge : MonoBehaviour
     private GameObject containerBottem;
     private GameObject platform; // the horizontal surface that vehicles move on
 
-    private Dictionary<Vector3, GameObject> vertices;
-    private Dictionary<Tuple<Vector3, Vector3>, GameObject> edges;
+    public Dictionary<Vector3, GameObject> vertices;
+    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edges;
 
     // TODO add defects Dictionary<edge, defect> (like vertices but are attached somehow along the edge)
 

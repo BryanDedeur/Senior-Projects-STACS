@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEditor.Experimental.UIElements.GraphView;
+using System;
 
 public class BridgeCreator : MonoBehaviour
 {
@@ -10,6 +15,13 @@ public class BridgeCreator : MonoBehaviour
     public GameObject clickWall;
     public GameObject trussPrefab;
     public GameObject vertexPrefab;
+    public Button topButton, bottomButton, leftButton, rightButton;
+    static int vertexCount;
+    static int edgeCount;
+    public Text vertexText;
+    public Text edgeText;
+    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
+    public Dictionary<Vector3, GameObject> vertexDictionary;
 
     // TODO make a UI for these options
     // TODO make implementation for these options
@@ -51,6 +63,10 @@ public class BridgeCreator : MonoBehaviour
 
         cursor = Instantiate(vertexPrefab.transform).gameObject;
         Destroy(cursor.GetComponent<Collider>());
+        vertexCount = 0;
+        edgeCount = 0;
+        edgeDictionary = bridge.edges;
+        vertexDictionary = bridge.vertices;
     }
 
     Vector3 Snap(Vector3 p)
@@ -95,7 +111,14 @@ public class BridgeCreator : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 // TODO mirror accross X Y and Z axis if mirroring enabled
-
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    topButton.onClick.AddListener(UpdateTopView);
+                    bottomButton.onClick.AddListener(UpdateBottomView);
+                    rightButton.onClick.AddListener(UpdateLeftView);
+                    leftButton.onClick.AddListener(UpdateRightView);
+                    return;
+                }
                 if (firstSelection == null)
                 {
                     firstSelection = bridge.CreateVertex(snapped, vertexPrefab);
@@ -130,6 +153,7 @@ public class BridgeCreator : MonoBehaviour
                     bridge.RemoveVertex(snapped);
                 }
             }
+            UpdateCountText();
         }
     }
 
@@ -160,14 +184,36 @@ public class BridgeCreator : MonoBehaviour
             // TODO make sure when camera changes that the click wall updates to face that new camera position
         }
     }
+    void UpdateTopView()
+    {
+        ViewDirection = cameraDirection.Top;
+    }
+    void UpdateBottomView()
+    {
+        ViewDirection = cameraDirection.Bottom;
+    }
+    void UpdateLeftView()
+    {
+        ViewDirection = cameraDirection.Left;
+    }
+    void UpdateRightView()
+    {
+        ViewDirection = cameraDirection.Right;
+    }
+    
+    void UpdateCountText()
+    {
+        edgeText.text = edgeDictionary.Count.ToString();
+        vertexText.text = vertexDictionary.Count.ToString();
+    }
 
     // Update is called once per frame
     void Update()
     {
 
         // TODO this should not happen every update... would be better if once the cameraDirection changes by the UI to call this function
+        
         RepositionCameraAndClickWall();
-
         CheckMouseState();
     }
 }
