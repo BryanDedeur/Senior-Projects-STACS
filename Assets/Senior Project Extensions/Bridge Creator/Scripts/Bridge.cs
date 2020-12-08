@@ -21,13 +21,8 @@ public class Bridge : MonoBehaviour
 
     private Dictionary<Vector3, GameObject> vertices;
     private Dictionary<Tuple<Vector3, Vector3>, GameObject> edges;
-    private Dictionary<Vector3, GameObject> selectedVertices;
 
-    //used for moving vertex
-    private Vector3 mOffset;
-    private float mZCoord;
-
-
+    // TODO add defects Dictionary<edge, defect> (like vertices but are attached somehow along the edge)
 
     // Start is called before the first frame update
     void Start()
@@ -76,11 +71,10 @@ public class Bridge : MonoBehaviour
 
     public GameObject CreateVertex(Vector3 p, GameObject vertex)
     {
-        Debug.Log("Brodie");
         if (vertices.ContainsKey(p))
         {
             return vertices[p];
-        }
+        } 
 
         Transform newVertex = Instantiate(vertex.transform);
         newVertex.name = "Vertex";
@@ -90,6 +84,7 @@ public class Bridge : MonoBehaviour
 
         return newVertex.gameObject;
     }
+
 
     public GameObject CreateEdge(GameObject v1, GameObject v2, GameObject truss)
     {
@@ -111,10 +106,13 @@ public class Bridge : MonoBehaviour
         newTruss.LookAt(v1.transform.localPosition);
 
         edges.Add(edgeKey, newTruss.gameObject);
-        Debug.Log("edgekey");
-        Debug.Log(edgeKey);
+
+
         return newTruss.gameObject;
     }
+
+    // TODO add function to create defects on the bridge
+
 
     public void RemoveVertex(Vector3 atPosition)
     {
@@ -138,76 +136,11 @@ public class Bridge : MonoBehaviour
         }
     }
 
-    public Vector3 UpdateEdge(Vector3 p)//ask brin or noah how to get to the vectors in the edges dictionary 
-    {
-        //iterate through all possible pairs
-        //check for edge connections with p, old vertex
-        //return the first value that is a pair with p
-        foreach(KeyValuePair<Vector3, GameObject> V in vertices)
-        {
-            Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(p, V.Key);
-            Tuple<Vector3, Vector3> edgeKey2 = new Tuple<Vector3, Vector3>(V.Key, p);
-            Debug.Log(edgeKey);
-            Debug.Log(edgeKey2);
-            if (edges.ContainsKey(edgeKey))
-            {
-                RemoveEdge(edges[edgeKey]);
-                return V.Key;
-            }
+    // TODO add function to export decoded bridge to encoded files
+        // file 1 should be a CSV containing the Vector3 coordinates to the vertices
+        // file 2 should be a Adjacency matrix specifying the which edges are connected to which vertices
+        // file 3 should be a file containing the defect locations
 
-            if (edges.ContainsKey(edgeKey2))
-            {
-                RemoveEdge(edges[edgeKey2]);
-                return V.Key;
-            }
-        }
-        Vector3 nullVec;
-        //"null vector"
-        nullVec.x = 100000;
-        nullVec.y = 100000;
-        nullVec.z = 100000;
-        return nullVec; //ask about returing null vectors
-    }
-  
-    public GameObject SelectVertex(Vector3 p)
-    {
-        if (vertices.ContainsKey(p))
-        {
-            Renderer rend = vertices[p].GetComponent<Renderer>();
-            rend.material.color = Color.green;
-            return vertices[p];
-        }
-        return null;
-       
-    }
-
-    public GameObject UnselectVertex(Vector3 p)
-    {
-        if (vertices.ContainsKey(p))
-        {
-            Renderer rend = vertices[p].GetComponent<Renderer>();
-            rend.material.color = Color.white;
-            return vertices[p];
-        }
-        return null;
-    }
-
-    public void SelectEdge(GameObject selectedEdge)
-    {
-        Renderer rend =  selectedEdge.GetComponent<Renderer>();
-        rend.material.color = Color.green;
-    }
-
-    public GameObject MoveVertex(Vector3 oldloc, Vector3 newloc, GameObject fab)
-    {
-        RemoveVertex(oldloc);
-        return CreateVertex(newloc, fab); 
-    }
-
-    
-
-   
-
-
+    // TODO add function to import encoded files into bridge class
+        // reads in the three files mentioned above
 }
-

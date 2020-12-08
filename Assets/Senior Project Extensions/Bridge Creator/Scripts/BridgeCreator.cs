@@ -257,6 +257,8 @@ public class BridgeCreator : MonoBehaviour
 
     }
 
+    // TODO create function for adding defects to the bridge (a defect will just be a small object with a collider that signals a potential issue when the robot scanners see it)
+
     void RepositionCameraAndClickWall()
     {
         if (Camera.current != null)
@@ -293,8 +295,6 @@ public class BridgeCreator : MonoBehaviour
         RepositionCameraAndClickWall();
 
         CheckMouseState();
-
-
     }
 
     void OnGUI()
