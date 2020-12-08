@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 352394922}
   - component: {fileID: 352394921}
   - component: {fileID: 352394920}
+  - component: {fileID: 352394924}
   m_Layer: 0
   m_Name: ClickWall
   m_TagString: Untagged
@@ -247,6 +248,18 @@ Transform:
   m_Father: {fileID: 472769441}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &352394924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352394919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1f71f7b1620e4429d63029806dd488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &472769440
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +310,10 @@ MonoBehaviour:
     type: 3}
   vertexPrefab: {fileID: 3624013704367273622, guid: fe2d20860ec2b934f95f6f43b2d9991b,
     type: 3}
+  vertexSelectedPrefab: {fileID: 0}
+  mirrorAcrossX: 0
+  mirrorAcrossY: 0
+  mirrorAcrossZ: 0
   ViewDirection: 1
   trussPrefabs: []
   vertexPrefabs: []

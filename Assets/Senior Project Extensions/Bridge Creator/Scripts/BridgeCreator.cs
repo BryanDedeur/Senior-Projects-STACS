@@ -11,11 +11,21 @@ public class BridgeCreator : MonoBehaviour
     public GameObject trussPrefab;
     public GameObject vertexPrefab;
 
+    public GameObject vertexSelectedPrefab;
+
     // TODO make a UI for these options
     // TODO make implementation for these options
     public bool mirrorAcrossX; // half of the length of the bridge will be cloned
     public bool mirrorAcrossY; // top to bottom of road platform
     public bool mirrorAcrossZ; // both sides of the road will be mirrored
+
+    public bool selector;
+    public bool boxSeletector;
+    public bool updatePosition;
+    bool isSelecting;
+    Vector3 mousePosition1;
+    List<Vector3> boxSelectedVertx = new List<Vector3>();
+
 
     public enum cameraDirection
     {
@@ -38,12 +48,17 @@ public class BridgeCreator : MonoBehaviour
     // TODO make a selection indicator for the selected vertices and update when selected
     private GameObject firstSelection;
     private GameObject secondSelection;
+    private GameObject edgeFixer;
+    private Vector3 selectedVertex;
+   
 
     private GameObject cursor;
 
     // Start is called before the first frame update
     void Start()
     {
+        isSelecting = false;
+
         bridge = bridgeContainer.GetComponent<Bridge>();
 
         // TODO setting the platform should be done by the UI
@@ -59,6 +74,7 @@ public class BridgeCreator : MonoBehaviour
     }
 
     // TODO add ability to click and drag select all vertices in a region
+
     // TODO add ability to click and drag a vertices from a position to another and update connected edges
 
     void MoveClickWall(Vector3 newPosition)
@@ -86,13 +102,18 @@ public class BridgeCreator : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+        Vector3 edgeLocation;
+
+
+        Vector3 newEdgeAnchor;
+  
         // TODO use layers to ensure that nothing overlaps
         if (Physics.Raycast(ray, out hit))
         {
             Vector3 snapped = Snap(hit.point);
             MoveClickWall(snapped);
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !selector && !boxSeletector)
             {
                 // TODO mirror accross X Y and Z axis if mirroring enabled
 
@@ -114,23 +135,126 @@ public class BridgeCreator : MonoBehaviour
                 cursor.transform.localPosition = snapped;
             }
 
-            if (Input.GetMouseButtonDown(1))
-            {
 
-                // TODO mirror accross X Y and Z axis if mirroring enabled
-                if (hit.transform.name == "Truss")
+
+                if (Input.GetMouseButtonDown(1))
+                  {
+
+                      // TODO mirror accross X Y and Z axis if mirroring enabled
+                      if (hit.transform.name == "Truss")
+                      {
+                          bridge.RemoveEdge(hit.transform.gameObject);
+                      }
+                      else if (hit.transform.name == "Vertex")
+                      {
+                          bridge.RemoveVertex(hit.transform.position);
+                      } else if (bridge.VertexExists(snapped))
+                      {
+                          bridge.RemoveVertex(snapped);
+                      }
+                  } 
+           
+            if(Input.GetKeyDown(KeyCode.Space))
+             {
+                 selector = true;
+                 Debug.Log(selector);
+             }
+            if (Input.GetKeyDown(KeyCode.RightShift))
+            {
+                boxSeletector = true;
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+             {
+                 selector = false;
+                boxSeletector = false;
+
+             }
+
+            ///
+            ///to enable single selection press space 
+            ///
+            ///to enable box select press right shift 
+            ///
+            ///to disable both press left shift 
+            ///
+            ///to move boxed vertx press back space // not working yet
+            ///
+            if (Input.GetMouseButtonDown(0) && selector == true)
+            {
+                Debug.Log(selector);
+                if (hit.transform.name == "Vertex")
                 {
-                    bridge.RemoveEdge(hit.transform.gameObject);
+                    bridge.SelectVertex(snapped);
+                    selectedVertex = snapped;
                 }
-                else if (hit.transform.name == "Vertex")
+            }
+            if(Input.GetMouseButtonUp(0) && selector == true)
+            {
+                edgeFixer = bridge.MoveVertex(selectedVertex, snapped, vertexPrefab);
+
+                newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+                while (newEdgeAnchor.x != 100000 && newEdgeAnchor. y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
                 {
-                    bridge.RemoveVertex(hit.transform.position);
-                } else if (bridge.VertexExists(snapped))
+                
+                    bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
+                    newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+                }
+                
+            }
+        }
+        //selecting single vertex moving and updating works 
+
+
+        //Box selection logic 
+        if (Input.GetMouseButtonDown(0) && boxSeletector == true)
+        {
+            isSelecting = true;
+            mousePosition1 = Input.mousePosition;
+        }
+        // If we let go of the left mouse button, end selection
+        if (Input.GetMouseButtonUp(0) && boxSeletector == true)
+        {
+            Debug.Log("Up");
+            isSelecting = false;
+            updatePosition = true;
+        }
+
+        //highlight edges and add them to a list of selected edges
+        if (isSelecting)
+        {
+            foreach (var selectableObject in FindObjectsOfType<GameObject>())
+            {
+                if (IsWithinSelectionBounds(selectableObject.gameObject) && selectableObject.name == "Vertex")
                 {
-                    bridge.RemoveVertex(snapped);
+                    bridge.SelectVertex(selectableObject.transform.position);
+                    boxSelectedVertx.Add(selectableObject.transform.position);
+                }
+                if (IsWithinSelectionBounds(selectableObject.gameObject) && selectableObject.name == "Truss")
+                {
+                    bridge.SelectEdge(selectableObject);
+                }
+
+            }
+        }
+
+        //move the box selected vertices
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            mousePosition1 = Input.mousePosition;;
+            foreach(var v in boxSelectedVertx)
+            {
+                edgeFixer = bridge.MoveVertex(v, mousePosition1, vertexPrefab);
+
+                newEdgeAnchor = bridge.UpdateEdge(v);
+                while (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
+                {
+
+                    bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
+                    newEdgeAnchor = bridge.UpdateEdge(v);
                 }
             }
         }
+
     }
 
     void RepositionCameraAndClickWall()
@@ -159,6 +283,8 @@ public class BridgeCreator : MonoBehaviour
         }
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
@@ -170,4 +296,30 @@ public class BridgeCreator : MonoBehaviour
 
 
     }
+
+    void OnGUI()
+    {
+        if (isSelecting)
+        {
+            // Create a rect from both mouse positions
+            var rect = Box.GetScreenRect(mousePosition1, Input.mousePosition);
+            Box.DrawScreenRect(rect, new Color(0.8f, 0.8f, 0.95f, 0.25f));
+            Box.DrawScreenRectBorder(rect, 2, new Color(0.8f, 0.8f, 0.95f));
+        }
+    }
+
+    public bool IsWithinSelectionBounds(GameObject gameObject)
+    {
+               var camera = Camera.main;
+        var viewportBounds = Box.GetViewportBounds(camera, mousePosition1, Input.mousePosition);
+        return viewportBounds.Contains(camera.WorldToViewportPoint(gameObject.transform.position));
+    }
+
+    public bool IsWithinSelectionBoundsVec(Vector3 p)
+    {
+        var camera = Camera.main;
+        var viewportBounds = Box.GetViewportBounds(camera, mousePosition1, Input.mousePosition);
+        return viewportBounds.Contains(camera.WorldToViewportPoint(p));
+    }
+
 }
