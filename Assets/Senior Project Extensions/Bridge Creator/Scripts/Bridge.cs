@@ -205,7 +205,15 @@ public class Bridge : MonoBehaviour
         return CreateVertex(newloc, fab); 
     }
 
-    
+    public int GetVertices()
+    {
+        return vertices.Count;
+    }
+
+    public int GetEdges()
+    {
+        return edges.Count;
+    }
 
    
 

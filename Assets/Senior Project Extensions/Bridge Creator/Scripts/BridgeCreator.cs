@@ -18,8 +18,6 @@ public class BridgeCreator : MonoBehaviour
 
     // UI Stuff 
     public Button topButton, bottomButton, leftButton, rightButton;
-    static int vertexCount;
-    static int edgeCount;
     public Text vertexText;
     public Text edgeText;
     // TODO there may be a better way to do this
@@ -132,6 +130,14 @@ public class BridgeCreator : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0) && !selector && !boxSeletector)
             {
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    topButton.onClick.AddListener(UpdateTopView);
+                    bottomButton.onClick.AddListener(UpdateBottomView);
+                    rightButton.onClick.AddListener(UpdateLeftView);
+                    leftButton.onClick.AddListener(UpdateRightView);
+                    return;
+                }
                 // TODO mirror accross X Y and Z axis if mirroring enabled
 
                 if (firstSelection == null)
@@ -311,7 +317,7 @@ public class BridgeCreator : MonoBehaviour
                 }
             }
         }
-
+        UpdateCountText();
     }
 
     void RepositionCameraAndClickWall()
@@ -359,8 +365,8 @@ public class BridgeCreator : MonoBehaviour
 
     void UpdateCountText()
     {
-        edgeText.text = edgeDictionary.Count.ToString();
-        vertexText.text = vertexDictionary.Count.ToString();
+        edgeText.text = bridge.GetEdges().ToString();
+        vertexText.text = bridge.GetVertices().ToString();
     }
 
 
