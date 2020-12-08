@@ -26,6 +26,7 @@ public class BridgeCreator : MonoBehaviour
     Vector3 mousePosition1;
     List<Vector3> boxSelectedVertx = new List<Vector3>();
     List<Vector3> vertexList = new List<Vector3>();
+    int numEdges;
 
 
     public enum cameraDirection
@@ -129,6 +130,7 @@ public class BridgeCreator : MonoBehaviour
                 {
                     secondSelection = bridge.CreateVertex(snapped, vertexPrefab);
                     bridge.CreateEdge(firstSelection, secondSelection, trussPrefab);
+                    numEdges++;
                     // reset the tracker objects
                     firstSelection = null;
                     secondSelection = null;
@@ -152,6 +154,7 @@ public class BridgeCreator : MonoBehaviour
                       if (hit.transform.name == "Truss")
                       {
                           bridge.RemoveEdge(hit.transform.gameObject);
+                    numEdges--;
                       }
                       else if (hit.transform.name == "Vertex")
                       {
@@ -225,14 +228,20 @@ public class BridgeCreator : MonoBehaviour
                 edgeFixer = bridge.MoveVertex(selectedVertex, snapped, vertexPrefab);
                 vertexList.Add(snapped);
                 newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
-                while (newEdgeAnchor.x != 100000 && newEdgeAnchor. y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
+
+                for(int i =0; i < numEdges; i++)
                 {
-                
-                    bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
-                    vertexList.Add(newEdgeAnchor);
-                    newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+                    if(newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000)
+                    {
+                        bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
+                        vertexList.Add(newEdgeAnchor);
+                        newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+                    }
+                    
                 }
-                
+
+
+
             }
         }
         //selecting single vertex moving and updating works 

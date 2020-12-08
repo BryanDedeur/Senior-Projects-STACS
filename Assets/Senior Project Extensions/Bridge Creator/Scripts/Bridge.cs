@@ -143,6 +143,7 @@ public class Bridge : MonoBehaviour
         //iterate through all possible pairs
         //check for edge connections with p, old vertex
         //return the first value that is a pair with p
+       
         foreach(KeyValuePair<Vector3, GameObject> V in vertices)
         {
             Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(p, V.Key);
