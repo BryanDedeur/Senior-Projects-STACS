@@ -76,7 +76,7 @@ public class Bridge : MonoBehaviour
 
     public GameObject CreateVertex(Vector3 p, GameObject vertex)
     {
-        Debug.Log("Brodie");
+     
         if (vertices.ContainsKey(p))
         {
             return vertices[p];

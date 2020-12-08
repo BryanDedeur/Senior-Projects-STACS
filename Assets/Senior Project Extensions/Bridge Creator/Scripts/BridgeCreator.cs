@@ -25,6 +25,7 @@ public class BridgeCreator : MonoBehaviour
     bool isSelecting;
     Vector3 mousePosition1;
     List<Vector3> boxSelectedVertx = new List<Vector3>();
+    List<Vector3> vertexList = new List<Vector3>();
 
 
     public enum cameraDirection
@@ -120,6 +121,9 @@ public class BridgeCreator : MonoBehaviour
                 if (firstSelection == null)
                 {
                     firstSelection = bridge.CreateVertex(snapped, vertexPrefab);
+
+                    //add location to list of vertex 
+                    vertexList.Add(snapped);
                 }
                 else if (secondSelection == null)
                 {
@@ -128,6 +132,9 @@ public class BridgeCreator : MonoBehaviour
                     // reset the tracker objects
                     firstSelection = null;
                     secondSelection = null;
+
+                    //add location to list of vertex
+                    vertexList.Add(snapped);
                 }
             }
             else
@@ -141,6 +148,7 @@ public class BridgeCreator : MonoBehaviour
                   {
 
                       // TODO mirror accross X Y and Z axis if mirroring enabled
+
                       if (hit.transform.name == "Truss")
                       {
                           bridge.RemoveEdge(hit.transform.gameObject);
@@ -148,27 +156,34 @@ public class BridgeCreator : MonoBehaviour
                       else if (hit.transform.name == "Vertex")
                       {
                           bridge.RemoveVertex(hit.transform.position);
+                       vertexList.Remove(hit.transform.position);
                       } else if (bridge.VertexExists(snapped))
                       {
                           bridge.RemoveVertex(snapped);
+                         vertexList.Remove(hit.transform.position);
                       }
                   } 
            
-            if(Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetKeyDown(KeyCode.LeftControl))
              {
                  selector = true;
                  Debug.Log(selector);
              }
-            if (Input.GetKeyDown(KeyCode.RightShift))
+            if (Input.GetKeyUp(KeyCode.LeftControl))
+            {
+                selector = false;
+
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 boxSeletector = true;
             }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyUp(KeyCode.LeftShift))
              {
-                 selector = false;
+           
                 boxSeletector = false;
 
-             }
+            }
 
             ///
             ///to enable single selection press space 
@@ -179,24 +194,42 @@ public class BridgeCreator : MonoBehaviour
             ///
             ///to move boxed vertx press back space // not working yet
             ///
+            ///
+            ///todo cnrtl click to select and shift click to drag 
             if (Input.GetMouseButtonDown(0) && selector == true)
             {
-                Debug.Log(selector);
+                ///loop through list of vertex assign radius 2 and see if the hit is within that radius 
+               foreach(var v in vertexList)
+                {
+                    Debug.Log("Vertex");
+                    Debug.Log(v);
+                    //set z componet to the same as the vector
+                    if (Vector3.Distance(snapped, v) < 2)
+                    {
+                        bridge.SelectVertex(v);
+                        selectedVertex = v;
+
+                    }
+                }
+
+                ///
+               /* Debug.Log(selector);
                 if (hit.transform.name == "Vertex")
                 {
                     bridge.SelectVertex(snapped);
                     selectedVertex = snapped;
-                }
+                }*/
             }
             if(Input.GetMouseButtonUp(0) && selector == true)
             {
                 edgeFixer = bridge.MoveVertex(selectedVertex, snapped, vertexPrefab);
-
+                vertexList.Add(snapped);
                 newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
                 while (newEdgeAnchor.x != 100000 && newEdgeAnchor. y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
                 {
                 
                     bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
+                    vertexList.Add(newEdgeAnchor);
                     newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
                 }
                 
