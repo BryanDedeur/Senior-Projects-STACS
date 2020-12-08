@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEditor.Experimental.UIElements.GraphView;
+using System;
 
 public class BridgeCreator : MonoBehaviour
 {
@@ -10,6 +15,16 @@ public class BridgeCreator : MonoBehaviour
     public GameObject clickWall;
     public GameObject trussPrefab;
     public GameObject vertexPrefab;
+
+    // UI Stuff 
+    public Button topButton, bottomButton, leftButton, rightButton;
+    static int vertexCount;
+    static int edgeCount;
+    public Text vertexText;
+    public Text edgeText;
+    // TODO there may be a better way to do this
+    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
+    public Dictionary<Vector3, GameObject> vertexDictionary;
 
     public GameObject vertexSelectedPrefab;
 
@@ -323,6 +338,29 @@ public class BridgeCreator : MonoBehaviour
             Camera.current.transform.LookAt(Vector3.zero);
             // TODO make sure when camera changes that the click wall updates to face that new camera position
         }
+    }
+
+    void UpdateTopView()
+    {
+        ViewDirection = cameraDirection.Top;
+    }
+    void UpdateBottomView()
+    {
+        ViewDirection = cameraDirection.Bottom;
+    }
+    void UpdateLeftView()
+    {
+        ViewDirection = cameraDirection.Left;
+    }
+    void UpdateRightView()
+    {
+        ViewDirection = cameraDirection.Right;
+    }
+
+    void UpdateCountText()
+    {
+        edgeText.text = edgeDictionary.Count.ToString();
+        vertexText.text = vertexDictionary.Count.ToString();
     }
 
 
