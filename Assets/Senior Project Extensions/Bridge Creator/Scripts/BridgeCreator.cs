@@ -33,6 +33,7 @@ public class BridgeCreator : MonoBehaviour
     public bool mirrorAcrossZ; // both sides of the road will be mirrored
 
     public bool selector;
+    public bool mirrorBool;
     public bool boxSeletector;
     public bool updatePosition;
     bool isSelecting;
@@ -63,6 +64,8 @@ public class BridgeCreator : MonoBehaviour
     // TODO make a selection indicator for the selected vertices and update when selected
     private GameObject firstSelection;
     private GameObject secondSelection;
+    private GameObject firstSelectionM;
+    private GameObject secondSelectionM;
     private GameObject edgeFixer;
     private Vector3 selectedVertex;
    
@@ -128,7 +131,7 @@ public class BridgeCreator : MonoBehaviour
             Vector3 snapped = Snap(hit.point);
             MoveClickWall(snapped);
 
-            if (Input.GetMouseButtonDown(0) && !selector && !boxSeletector)
+            if (Input.GetMouseButtonDown(0) && !selector && !boxSeletector && !mirrorBool)
             {
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
@@ -165,8 +168,7 @@ public class BridgeCreator : MonoBehaviour
                 cursor.transform.localPosition = snapped;
             }
 
-
-
+           
                 if (Input.GetMouseButtonDown(1))
                   {
 
@@ -186,12 +188,11 @@ public class BridgeCreator : MonoBehaviour
                           bridge.RemoveVertex(snapped);
                          vertexList.Remove(hit.transform.position);
                       }
-                  } 
+                } 
            
             if(Input.GetKeyDown(KeyCode.LeftControl))
              {
                  selector = true;
-                 Debug.Log(selector);
              }
             if (Input.GetKeyUp(KeyCode.LeftControl))
             {
@@ -208,9 +209,50 @@ public class BridgeCreator : MonoBehaviour
                 boxSeletector = false;
 
             }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                mirrorBool = true;
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                mirrorBool = false;
+            }
+
+            //mirrioing logic 
+            if (Input.GetMouseButtonDown(0) && mirrorBool)
+            {
+                Vector3 temp = snapped;
+                //value can be changed
+                temp.z += 8;
+                if (firstSelection == null)
+                {
+                    firstSelection = bridge.CreateVertex(snapped, vertexPrefab);
+                    firstSelectionM = bridge.CreateVertex(temp, vertexPrefab);
+                    //add location to list of vertex 
+                    vertexList.Add(snapped);
+                    vertexList.Add(temp);
+                }
+                else if (secondSelection == null)
+                {
+                    secondSelection = bridge.CreateVertex(snapped, vertexPrefab);
+                    bridge.CreateEdge(firstSelection, secondSelection, trussPrefab);
+                    numEdges++;
+
+
+                    secondSelectionM = bridge.CreateVertex(temp, vertexPrefab);
+                    bridge.CreateEdge(firstSelectionM, secondSelectionM, trussPrefab);
+                    numEdges++;
+                    // reset the tracker objects
+                    firstSelection = null;
+                    secondSelection = null;
+
+                    //add location to list of vertex
+                    vertexList.Add(snapped);
+                    vertexList.Add(temp);
+                }
+            }
 
             ///
-            ///to enable single selection press space 
             ///
             ///to enable box select press right shift 
             ///
