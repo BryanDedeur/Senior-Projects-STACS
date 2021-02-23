@@ -42,6 +42,10 @@ public class BridgeCreator : MonoBehaviour
     List<Vector3> vertexList = new List<Vector3>();
     int numEdges;
 
+    Vector3 screenPoint;
+    Vector3 offset;
+
+
 
     public enum cameraDirection
     {
@@ -262,50 +266,52 @@ public class BridgeCreator : MonoBehaviour
             ///
             ///
             ///todo cnrtl click to select and shift click to drag 
-            if (Input.GetMouseButtonDown(0) && selector == true)
+                      if (Input.GetMouseButtonDown(0) && selector == true)
+                      {
+                          ///loop through list of vertex assign radius 2 and see if the hit is within that radius 
+                         foreach(var v in vertexList)
+                          {
+                              Debug.Log("Vertex");
+                              Debug.Log(v);
+                              //set z componet to the same as the vector
+                              if (Vector3.Distance(snapped, v) < 2)
+                              {
+                                  bridge.SelectVertex(v);
+                                  selectedVertex = v;
+
+                              }
+                          }
+                      }
+                      if(Input.GetMouseButtonUp(0) && selector == true)
+                      {
+                          edgeFixer = bridge.MoveVertex(selectedVertex, snapped, vertexPrefab);
+                          vertexList.Add(snapped);
+                          newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+
+                          for(int i =0; i < numEdges; i++)
+                          {
+                              if(newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000)
+                              {
+                                  bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
+                                  vertexList.Add(newEdgeAnchor);
+                                  newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
+                              }
+
+                          } 
+
+
+
+                      }
+
+
+
+            if(Input.GetMouseButtonDown(0) && selector == true)
             {
-                ///loop through list of vertex assign radius 2 and see if the hit is within that radius 
-               foreach(var v in vertexList)
-                {
-                    Debug.Log("Vertex");
-                    Debug.Log(v);
-                    //set z componet to the same as the vector
-                    if (Vector3.Distance(snapped, v) < 2)
-                    {
-                        bridge.SelectVertex(v);
-                        selectedVertex = v;
-
-                    }
-                }
-
-                ///
-               /* Debug.Log(selector);
-                if (hit.transform.name == "Vertex")
-                {
-                    bridge.SelectVertex(snapped);
-                    selectedVertex = snapped;
-                }*/
+                Debug.Log("OnMOuseDOwn");
+                screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+                offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
             }
-            if(Input.GetMouseButtonUp(0) && selector == true)
-            {
-                edgeFixer = bridge.MoveVertex(selectedVertex, snapped, vertexPrefab);
-                vertexList.Add(snapped);
-                newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
-
-                for(int i =0; i < numEdges; i++)
-                {
-                    if(newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000)
-                    {
-                        bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
-                        vertexList.Add(newEdgeAnchor);
-                        newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
-                    }
-                    
-                }
-
-
-
-            }
+            
         }
         //selecting single vertex moving and updating works 
 
@@ -345,22 +351,32 @@ public class BridgeCreator : MonoBehaviour
         //move the box selected vertices
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            mousePosition1 = Input.mousePosition;;
-            foreach(var v in boxSelectedVertx)
+            if (Physics.Raycast(ray, out hit))
             {
-                edgeFixer = bridge.MoveVertex(v, mousePosition1, vertexPrefab);
-
-                newEdgeAnchor = bridge.UpdateEdge(v);
-                while (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
+                Vector3 mousePosition1 = Snap(hit.point);
+                Debug.Log("PEfghjkjhgfghjkjhgfghjklkjhgtftghjklkjhygtgyhujkloijuyuikjhghjkjhiokijhioiuyuioie");
+                Debug.Log(mousePosition1);
+                foreach (var v in boxSelectedVertx)
                 {
+                    bridge.CreateVertex(v+mousePosition1, vertexPrefab);
+                    //add location to list of vertex 
+                    vertexList.Add(v+mousePosition1);
+                     edgeFixer = bridge.MoveVertex(v, v + mousePosition1, vertexPrefab);
 
-                    bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
-                    newEdgeAnchor = bridge.UpdateEdge(v);
+                     newEdgeAnchor = bridge.UpdateEdge(v);
+                     while (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
+                     {
+
+                         bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
+                         newEdgeAnchor = bridge.UpdateEdge(v);
+                     }
                 }
             }
+            boxSelectedVertx.Clear();
         }
         UpdateCountText();
     }
+
 
     void RepositionCameraAndClickWall()
     {

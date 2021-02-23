@@ -138,7 +138,7 @@ public class Bridge : MonoBehaviour
         }
     }
 
-    public Vector3 UpdateEdge(Vector3 p)//ask brin or noah how to get to the vectors in the edges dictionary 
+    public Vector3 UpdateEdge(Vector3 p)
     {
         //iterate through all possible pairs
         //check for edge connections with p, old vertex
@@ -167,7 +167,7 @@ public class Bridge : MonoBehaviour
         nullVec.x = 100000;
         nullVec.y = 100000;
         nullVec.z = 100000;
-        return nullVec; //ask about returing null vectors
+        return nullVec; 
     }
   
     public GameObject SelectVertex(Vector3 p)
