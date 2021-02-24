@@ -33,6 +33,7 @@ public class BridgeCreator : MonoBehaviour
     public bool mirrorAcrossZ; // both sides of the road will be mirrored
 
     public bool selector;
+    public bool testbool; //remove after this seesion
     public bool mirrorBool;
     public bool boxSeletector;
     public bool updatePosition;
@@ -63,6 +64,8 @@ public class BridgeCreator : MonoBehaviour
     public GameObject[] platformPrefabs;
 
     public bool mirroring;
+    public float deltaX, deltaY;
+
 
     private Bridge bridge;
 
@@ -136,7 +139,7 @@ public class BridgeCreator : MonoBehaviour
             Vector3 snapped = Snap(hit.point);
             MoveClickWall(snapped);
 
-            if (Input.GetMouseButtonDown(0) && !selector && !boxSeletector && !mirrorBool)
+            if (Input.GetMouseButtonDown(0) && !selector && !boxSeletector && !mirrorBool && !testbool)
             {
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
@@ -222,6 +225,11 @@ public class BridgeCreator : MonoBehaviour
             {
                 mirrorBool = false;
             }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                Debug.Log("EATFOOD");
+                testbool= true;
+            }
 
             //mirrioing logic 
             if (Input.GetMouseButtonDown(0) && mirrorBool)
@@ -306,13 +314,13 @@ public class BridgeCreator : MonoBehaviour
                       }
 
 
-
+/*
             if(Input.GetMouseButtonDown(0) && selector == true)
             {
                 Debug.Log("OnMOuseDOwn");
                 screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
                 offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
-            }
+            }*/
             
         }
         //selecting single vertex moving and updating works 
@@ -338,12 +346,12 @@ public class BridgeCreator : MonoBehaviour
         {
             foreach (var selectableObject in FindObjectsOfType<GameObject>())
             {
-                if (IsWithinSelectionBounds(selectableObject.gameObject) && selectableObject.name == "Vertex")
+                if (IsWithinSelectionBounds(selectableObject.gameObject) && selectableObject.name == "Vertex" && selectableObject.transform.position.z == -4)
                 {
                     bridge.SelectVertex(selectableObject.transform.position);
                     boxSelectedVertx.Add(selectableObject.transform.position);
                 }
-                if (IsWithinSelectionBounds(selectableObject.gameObject) && selectableObject.name == "Truss")
+                if (IsWithinSelectionBounds(selectableObject.gameObject) && selectableObject.name == "Truss" && selectableObject.transform.position.z == -4)
                 {
                     bridge.SelectEdge(selectableObject);
                     boxSelectedEdge.Add(selectableObject);
@@ -354,19 +362,19 @@ public class BridgeCreator : MonoBehaviour
         }
 
         //move the box selected vertices
+        //fix the redrawing of edges 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             if (Physics.Raycast(ray, out hit))
             {
                 Vector3 mousePosition1 = Snap(hit.point);
-                Debug.Log("PEfghjkjhgfghjkjhgfghjklkjhgtftghjklkjhygtgyhujkloijuyuikjhghjkjhiokijhioiuyuioie");
                 Debug.Log(mousePosition1);
                 foreach (var v in boxSelectedVertx)
                 {
                     bridge.CreateVertex(v+mousePosition1, vertexPrefab);
                     //add location to list of vertex 
                     vertexList.Add(v+mousePosition1);
-                     edgeFixer = bridge.MoveVertex(v, v + mousePosition1, vertexPrefab);
+                     edgeFixer = bridge.CreateVertex(v + mousePosition1, vertexPrefab);
 
                      newEdgeAnchor = bridge.UpdateEdge(v);
                      while (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
@@ -376,6 +384,10 @@ public class BridgeCreator : MonoBehaviour
                          newEdgeAnchor = bridge.UpdateEdge(v);
                      }
                 }
+            }
+            foreach (var v in boxSelectedVertx)
+            {
+                bridge.UnselectVertex(v);
             }
             boxSelectedVertx.Clear();
         }
@@ -508,4 +520,22 @@ public class BridgeCreator : MonoBehaviour
         return viewportBounds.Contains(camera.WorldToViewportPoint(p));
     }
 
+    private void OnMouseDown()
+    {
+       if(testbool)
+        {
+            deltaX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.position.x;
+            deltaY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y - transform.position.y;
+        }
+    }
+
+    private void OnMouseDrag()
+    {
+        if (testbool)
+        {
+           Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = new Vector3(mousePosition.x - deltaX, mousePosition.y - deltaY, mousePosition.z);
+            Debug.Log("hehe");
+        }
+    }
 }

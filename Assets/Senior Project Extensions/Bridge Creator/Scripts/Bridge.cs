@@ -190,7 +190,38 @@ public class Bridge : MonoBehaviour
         nullVec.z = 100000;
         return nullVec; 
     }
-  
+
+    public Vector3 GetEdge(Vector3 p)
+    {
+        //iterate through all possible pairs
+        //check for edge connections with p, old vertex
+        //return the first value that is a pair with p
+
+        foreach (KeyValuePair<Vector3, GameObject> V in vertices)
+        {
+            Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(p, V.Key);
+            Tuple<Vector3, Vector3> edgeKey2 = new Tuple<Vector3, Vector3>(V.Key, p);
+
+            if (edges.ContainsKey(edgeKey))
+            {
+                edges.Remove(edgeKey);
+                return V.Key;
+            }
+
+            if (edges.ContainsKey(edgeKey2))
+            {
+                edges.Remove(edgeKey2);
+                return V.Key;
+            }
+        }
+        Vector3 nullVec;
+        //"null vector"
+        nullVec.x = 100000;
+        nullVec.y = 100000;
+        nullVec.z = 100000;
+        return nullVec;
+    }
+
     public GameObject SelectVertex(Vector3 p)
     {
         if (vertices.ContainsKey(p))
@@ -223,7 +254,7 @@ public class Bridge : MonoBehaviour
     public void UnSelectEdge(GameObject selectedEdge)
     {
         Renderer rend = selectedEdge.GetComponent<Renderer>();
-        rend.material.color = Color.blue;
+        rend.material.color = Color.white;
     }
 
 
@@ -242,6 +273,7 @@ public class Bridge : MonoBehaviour
     {
         return edges.Count;
     }
+
 
    
 
