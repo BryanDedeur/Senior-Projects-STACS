@@ -115,6 +115,29 @@ public class Bridge : MonoBehaviour
         return newTruss.gameObject;
     }
 
+    //same as create edge but takes vector3s DOES NOT ADD TO EDGES LIST
+     public GameObject AddEdge(Vector3 v1, Vector3 v2, GameObject truss)
+    {
+        Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(v1, v2);
+        // check if edge already exsits
+     
+
+        // create a new truss
+        Transform newTruss = Instantiate(truss.transform);
+        newTruss.name = "Truss";
+
+        Vector3 diff = v1 - v2;
+        float dist = diff.magnitude;
+        newTruss.localScale = new Vector3(truss.transform.localScale.x, truss.transform.localScale.y, dist);
+        newTruss.position = v2 + (diff / 2.0f);
+        newTruss.LookAt(v1);
+
+        //edges.Add(edgeKey, newTruss.gameObject);
+        Debug.Log("FakeKey");
+        Debug.Log(edgeKey);
+        return newTruss.gameObject;
+    }
+
     public void RemoveVertex(Vector3 atPosition)
     {
         if (vertices.ContainsKey(atPosition))
@@ -147,8 +170,7 @@ public class Bridge : MonoBehaviour
         {
             Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(p, V.Key);
             Tuple<Vector3, Vector3> edgeKey2 = new Tuple<Vector3, Vector3>(V.Key, p);
-            Debug.Log(edgeKey);
-            Debug.Log(edgeKey2);
+            
             if (edges.ContainsKey(edgeKey))
             {
                 RemoveEdge(edges[edgeKey]);
@@ -197,6 +219,13 @@ public class Bridge : MonoBehaviour
         Renderer rend =  selectedEdge.GetComponent<Renderer>();
         rend.material.color = Color.green;
     }
+
+    public void UnSelectEdge(GameObject selectedEdge)
+    {
+        Renderer rend = selectedEdge.GetComponent<Renderer>();
+        rend.material.color = Color.blue;
+    }
+
 
     public GameObject MoveVertex(Vector3 oldloc, Vector3 newloc, GameObject fab)
     {

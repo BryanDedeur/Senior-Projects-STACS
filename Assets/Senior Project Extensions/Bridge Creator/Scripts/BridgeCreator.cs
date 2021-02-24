@@ -39,6 +39,7 @@ public class BridgeCreator : MonoBehaviour
     bool isSelecting;
     Vector3 mousePosition1;
     List<Vector3> boxSelectedVertx = new List<Vector3>();
+    List<GameObject> boxSelectedEdge = new List<GameObject>();
     List<Vector3> vertexList = new List<Vector3>();
     int numEdges;
 
@@ -256,6 +257,7 @@ public class BridgeCreator : MonoBehaviour
                 }
             }
 
+
             ///
             ///
             ///to enable box select press right shift 
@@ -331,6 +333,7 @@ public class BridgeCreator : MonoBehaviour
         }
 
         //highlight edges and add them to a list of selected edges
+        //todo: only select things on clickwall 
         if (isSelecting)
         {
             foreach (var selectableObject in FindObjectsOfType<GameObject>())
@@ -343,6 +346,8 @@ public class BridgeCreator : MonoBehaviour
                 if (IsWithinSelectionBounds(selectableObject.gameObject) && selectableObject.name == "Truss")
                 {
                     bridge.SelectEdge(selectableObject);
+                    boxSelectedEdge.Add(selectableObject);
+
                 }
 
             }
@@ -374,6 +379,43 @@ public class BridgeCreator : MonoBehaviour
             }
             boxSelectedVertx.Clear();
         }
+        //mirror select objects
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            //  Debug.Log("Count : " + boxSelectedVertx.Count);
+            List<Vector3> temp = new List<Vector3>(boxSelectedVertx);
+            foreach (var v in temp)
+            {
+                Vector3 newLocatation = v;
+                newLocatation.z += 8;
+                bridge.CreateVertex(newLocatation, vertexPrefab);
+
+                newEdgeAnchor = bridge.UpdateEdge(v);
+                while (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
+                {
+                    newEdgeAnchor.z += 8;
+                    bridge.AddEdge(newLocatation, newEdgeAnchor, trussPrefab);
+                    Vector3 newVec = newEdgeAnchor;
+                    newVec.z -= 8;
+                    bridge.AddEdge(v, newVec, trussPrefab);
+
+                    newEdgeAnchor = bridge.UpdateEdge(v);
+                }
+                bridge.UnselectVertex(v);
+                boxSelectedVertx.Remove(v);
+
+            }
+            List<GameObject> tempE = new List<GameObject>(boxSelectedEdge);
+            foreach (var e in tempE)
+            {
+                bridge.UnSelectEdge(e);
+                boxSelectedEdge.Remove(e);
+            }
+
+           // foreach (var e in )
+        }
+
+
         UpdateCountText();
     }
 
