@@ -42,14 +42,15 @@ public class Bridge : MonoBehaviour
     public void SetPlatform(GameObject platformPrefab)
     {
         platform = Instantiate(platformPrefab, Vector3.zero, Quaternion.identity, container.transform);
-        Setwidth(platform.transform.localScale.z);
+        SetWidth(platform.transform.localScale.z);
         SetLength(platform.transform.localScale.x);
 
     }
 
     public void SetLength(float newLength)
     {
-        // TODO the user needs a UI to set the length
+        platformLength = newLength;
+        platform.transform.localScale = new Vector3(platformLength, 1, platform.transform.localScale.z);
     }
 
     public float GetLength()
@@ -57,11 +58,9 @@ public class Bridge : MonoBehaviour
         return platformLength;
     }
 
-    public void Setwidth(float newWidth)
+    public void SetWidth(float newWidth)
     {
-        // TODO the user needs a UI to set the width
         platformWidth = newWidth;
-        // TODO update the edges and verticies as the width changes
     }
 
     public float GetWidth()
