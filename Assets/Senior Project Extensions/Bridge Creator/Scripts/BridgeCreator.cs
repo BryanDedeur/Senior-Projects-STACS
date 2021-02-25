@@ -18,8 +18,10 @@ public class BridgeCreator : MonoBehaviour
 
     // UI Stuff 
     public Button topButton, bottomButton, leftButton, rightButton;
+    public Camera userCam;
     public Text vertexText;
     public Text edgeText;
+    public GameObject viewHighlight;
     // TODO there may be a better way to do this
     public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
     public Dictionary<Vector3, GameObject> vertexDictionary;
@@ -92,6 +94,7 @@ public class BridgeCreator : MonoBehaviour
 
         cursor = Instantiate(vertexPrefab.transform).gameObject;
         Destroy(cursor.GetComponent<Collider>());
+        UpdateRightView();
     }
 
     Vector3 Snap(Vector3 p)
@@ -145,8 +148,8 @@ public class BridgeCreator : MonoBehaviour
                 {
                     topButton.onClick.AddListener(UpdateTopView);
                     bottomButton.onClick.AddListener(UpdateBottomView);
-                    rightButton.onClick.AddListener(UpdateLeftView);
-                    leftButton.onClick.AddListener(UpdateRightView);
+                    rightButton.onClick.AddListener(UpdateRightView);
+                    leftButton.onClick.AddListener(UpdateLeftView);
                     return;
                 }
                 // TODO mirror accross X Y and Z axis if mirroring enabled
@@ -434,45 +437,50 @@ public class BridgeCreator : MonoBehaviour
 
     void RepositionCameraAndClickWall()
     {
-        if (Camera.current != null)
-        {
             float offset = 100;
             switch(ViewDirection)
             {
                 case cameraDirection.Right:
-                    Camera.current.transform.localPosition = new Vector3(.25f,.25f,-1) * offset;
+                    userCam.transform.localPosition = new Vector3(.25f,.25f,-1) * offset;
                     break;
                 case cameraDirection.Left:
-                    Camera.current.transform.localPosition = new Vector3(.25f, .25f, 1) * offset;
+                    userCam.transform.localPosition = new Vector3(.25f, .25f, 1) * offset;
                     break;
                 case cameraDirection.Top:
-                    Camera.current.transform.localPosition = new Vector3(0, 1, 0) * offset;
+                    userCam.transform.localPosition = new Vector3(0, 1, 0) * offset;
                     break;
                 case cameraDirection.Bottom:
-                    Camera.current.transform.localPosition = new Vector3(0, -1, 0) * offset;
+                    userCam.transform.localPosition = new Vector3(0, -1, 0) * offset;
                     break;
             }
 
-            Camera.current.transform.LookAt(Vector3.zero);
+            userCam.transform.LookAt(Vector3.zero);
             // TODO make sure when camera changes that the click wall updates to face that new camera position
-        }
     }
 
     void UpdateTopView()
     {
         ViewDirection = cameraDirection.Top;
+        viewHighlight.transform.position = topButton.transform.position;
+        RepositionCameraAndClickWall();
     }
     void UpdateBottomView()
     {
         ViewDirection = cameraDirection.Bottom;
+        viewHighlight.transform.position = bottomButton.transform.position;
+        RepositionCameraAndClickWall();
     }
     void UpdateLeftView()
     {
         ViewDirection = cameraDirection.Left;
+        viewHighlight.transform.position = leftButton.transform.position;
+        RepositionCameraAndClickWall();
     }
     void UpdateRightView()
     {
         ViewDirection = cameraDirection.Right;
+        viewHighlight.transform.position = rightButton.transform.position;
+        RepositionCameraAndClickWall();
     }
 
     void UpdateCountText()
@@ -486,13 +494,7 @@ public class BridgeCreator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        // TODO this should not happen every update... would be better if once the cameraDirection changes by the UI to call this function
-        RepositionCameraAndClickWall();
-
         CheckMouseState();
-
-
     }
 
     void OnGUI()
