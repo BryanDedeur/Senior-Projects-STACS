@@ -10,12 +10,11 @@ using System;
 public class BridgeCreator : MonoBehaviour
 {
     // TODO make background scenery for the bridge creator
-    public Camera userCam;
+
     public GameObject bridgeContainer;
     public GameObject clickWall;
     public GameObject trussPrefab;
     public GameObject vertexPrefab;
-    public GameObject buttonHighlight;
 
     // UI Stuff 
     public Button topButton, bottomButton, leftButton, rightButton;
@@ -93,7 +92,6 @@ public class BridgeCreator : MonoBehaviour
 
         cursor = Instantiate(vertexPrefab.transform).gameObject;
         Destroy(cursor.GetComponent<Collider>());
-        UpdateRightView();
     }
 
     Vector3 Snap(Vector3 p)
@@ -130,7 +128,7 @@ public class BridgeCreator : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        //Vector3 edgeLocation;
+        Vector3 edgeLocation;
 
 
         Vector3 newEdgeAnchor;
@@ -147,8 +145,8 @@ public class BridgeCreator : MonoBehaviour
                 {
                     topButton.onClick.AddListener(UpdateTopView);
                     bottomButton.onClick.AddListener(UpdateBottomView);
-                    rightButton.onClick.AddListener(UpdateRightView);
-                    leftButton.onClick.AddListener(UpdateLeftView);
+                    rightButton.onClick.AddListener(UpdateLeftView);
+                    leftButton.onClick.AddListener(UpdateRightView);
                     return;
                 }
                 // TODO mirror accross X Y and Z axis if mirroring enabled
@@ -436,26 +434,26 @@ public class BridgeCreator : MonoBehaviour
 
     void RepositionCameraAndClickWall()
     {
-        //if (Camera.current != null)
+        if (Camera.current != null)
         {
             float offset = 100;
             switch(ViewDirection)
             {
                 case cameraDirection.Right:
-                    userCam.transform.localPosition = new Vector3(.25f, 0,-1) * offset;
+                    Camera.current.transform.localPosition = new Vector3(.25f,.25f,-1) * offset;
                     break;
                 case cameraDirection.Left:
-                    userCam.transform.localPosition = new Vector3(.25f, 0, 1) * offset;
+                    Camera.current.transform.localPosition = new Vector3(.25f, .25f, 1) * offset;
                     break;
                 case cameraDirection.Top:
-                    userCam.transform.localPosition = new Vector3(0, 1, 0) * offset;
+                    Camera.current.transform.localPosition = new Vector3(0, 1, 0) * offset;
                     break;
                 case cameraDirection.Bottom:
-                    userCam.transform.localPosition = new Vector3(0, -1, 0) * offset;
+                    Camera.current.transform.localPosition = new Vector3(0, -1, 0) * offset;
                     break;
             }
 
-            userCam.transform.LookAt(Vector3.zero);
+            Camera.current.transform.LookAt(Vector3.zero);
             // TODO make sure when camera changes that the click wall updates to face that new camera position
         }
     }
@@ -463,26 +461,18 @@ public class BridgeCreator : MonoBehaviour
     void UpdateTopView()
     {
         ViewDirection = cameraDirection.Top;
-        buttonHighlight.transform.position = topButton.transform.position;
-        RepositionCameraAndClickWall();
     }
     void UpdateBottomView()
     {
         ViewDirection = cameraDirection.Bottom;
-        buttonHighlight.transform.position = bottomButton.transform.position;
-        RepositionCameraAndClickWall();
     }
     void UpdateLeftView()
     {
         ViewDirection = cameraDirection.Left;
-        buttonHighlight.transform.position = leftButton.transform.position;
-        RepositionCameraAndClickWall();
     }
     void UpdateRightView()
     {
         ViewDirection = cameraDirection.Right;
-        buttonHighlight.transform.position = rightButton.transform.position;
-        RepositionCameraAndClickWall();
     }
 
     void UpdateCountText()
@@ -498,10 +488,10 @@ public class BridgeCreator : MonoBehaviour
     {
 
         // TODO this should not happen every update... would be better if once the cameraDirection changes by the UI to call this function
-        
+        RepositionCameraAndClickWall();
 
         CheckMouseState();
-        //RepositionCameraAndClickWall();
+
 
     }
 
