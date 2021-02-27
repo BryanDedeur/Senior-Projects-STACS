@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4727915619328420640}
   - component: {fileID: 5505689375566837997}
   - component: {fileID: 3784740979294681605}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RectangleTruss
   m_TagString: Untagged
   m_Icon: {fileID: 0}

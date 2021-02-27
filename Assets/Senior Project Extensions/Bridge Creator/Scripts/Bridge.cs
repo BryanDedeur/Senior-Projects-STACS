@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
-
 // This class is a container for holding bridge info and functions
 public class Bridge : MonoBehaviour
 {
+
+    public static Bridge instance;
     private GameObject container; // holds all the bridge components
 
     private float platformLength;
@@ -19,15 +19,26 @@ public class Bridge : MonoBehaviour
     private GameObject containerBottem;
     private GameObject platform; // the horizontal surface that vehicles move on
 
-    private Dictionary<Vector3, GameObject> vertices;
-    private Dictionary<Tuple<Vector3, Vector3>, GameObject> edges;
+    public Dictionary<Vector3, GameObject> vertices;
+    public Dictionary<Tuple<Vector3, Vector3>, Edge> edges;
     private Dictionary<Vector3, GameObject> selectedVertices;
 
     //used for moving vertex
     private Vector3 mOffset;
     private float mZCoord;
 
-
+    private void Awake()
+    {
+        // this keeps instance a singlton
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != null)
+        {
+            Destroy(this);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +46,7 @@ public class Bridge : MonoBehaviour
         container = this.transform.gameObject;
 
         vertices = new Dictionary<Vector3, GameObject>();
-        edges = new Dictionary<Tuple<Vector3, Vector3>, GameObject>();
+        edges = new Dictionary<Tuple<Vector3, Vector3>, Edge>();
 
     }
 
@@ -73,6 +84,25 @@ public class Bridge : MonoBehaviour
         return vertices.ContainsKey(position);
     }
 
+    public Edge EdgeExists(Vector3 position1, Vector3 position2)
+    {
+        Tuple<Vector3, Vector3> edgeKey1 = new Tuple<Vector3, Vector3>(position1, position2);
+
+        // check if edge already exsits
+        if (edges.ContainsKey(edgeKey1))
+        {
+            return edges[edgeKey1];
+        }
+
+        Tuple<Vector3, Vector3> edgeKey2 = new Tuple<Vector3, Vector3>(position2, position1);
+
+        if (edges.ContainsKey(edgeKey2))
+        {
+            return edges[edgeKey2];
+        }
+        return null;
+    }
+
     public GameObject CreateVertex(Vector3 p, GameObject vertex)
     {
      
@@ -84,43 +114,20 @@ public class Bridge : MonoBehaviour
         Transform newVertex = Instantiate(vertex.transform);
         newVertex.name = "Vertex";
         newVertex.localPosition = p;
+        newVertex.parent = transform;
 
         vertices.Add(p, newVertex.transform.gameObject);
 
         return newVertex.gameObject;
     }
 
-    public GameObject CreateEdge(GameObject v1, GameObject v2, GameObject truss)
+    public Edge CreateEdge(Vector3 v1, Vector3 v2, GameObject truss)
     {
-        Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(v1.transform.position, v2.transform.position);
-        // check if edge already exsits
-        if (edges.ContainsKey(edgeKey))
+        Edge edge = EdgeExists(v1, v2);
+        if (edge != null)
         {
-            return edges[edgeKey];
+            return edge;
         }
-
-        // create a new truss
-        Transform newTruss = Instantiate(truss.transform);
-        newTruss.name = "Truss";
-
-        Vector3 diff = v1.transform.localPosition - v2.transform.localPosition;
-        float dist = diff.magnitude;
-        newTruss.localScale = new Vector3(truss.transform.localScale.x, truss.transform.localScale.y, dist);
-        newTruss.position = v2.transform.localPosition + (diff / 2.0f);
-        newTruss.LookAt(v1.transform.localPosition);
-
-        edges.Add(edgeKey, newTruss.gameObject);
-        Debug.Log("edgekey");
-        Debug.Log(edgeKey);
-        return newTruss.gameObject;
-    }
-
-    //same as create edge but takes vector3s DOES NOT ADD TO EDGES LIST
-     public GameObject AddEdge(Vector3 v1, Vector3 v2, GameObject truss)
-    {
-        Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(v1, v2);
-        // check if edge already exsits
-     
 
         // create a new truss
         Transform newTruss = Instantiate(truss.transform);
@@ -131,15 +138,64 @@ public class Bridge : MonoBehaviour
         newTruss.localScale = new Vector3(truss.transform.localScale.x, truss.transform.localScale.y, dist);
         newTruss.position = v2 + (diff / 2.0f);
         newTruss.LookAt(v1);
+        newTruss.parent = transform;
 
-        //edges.Add(edgeKey, newTruss.gameObject);
-        Debug.Log("FakeKey");
-        Debug.Log(edgeKey);
-        return newTruss.gameObject;
+        edge = newTruss.gameObject.AddComponent<Edge>();
+        edge.pos1 = v1;
+        edge.pos2 = v2;
+
+        edges.Add(new Tuple<Vector3, Vector3>(v1, v2), edge);
+
+        return edge;
     }
+
+    public Edge CreateEdge(GameObject v1, GameObject v2, GameObject truss)
+    { 
+        return CreateEdge(v1.transform.position, v2.transform.position, truss);
+    }
+
+
+
+    /*    //same as create edge but takes vector3s DOES NOT ADD TO EDGES LIST
+         public GameObject AddEdge(Vector3 v1, Vector3 v2, GameObject truss)
+        {
+            Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(v1, v2);
+
+            // create a new truss
+            Transform newTruss = Instantiate(truss.transform);
+            newTruss.name = "Truss";
+
+            Vector3 diff = v1 - v2;
+            float dist = diff.magnitude;
+            newTruss.localScale = new Vector3(truss.transform.localScale.x, truss.transform.localScale.y, dist);
+            newTruss.position = v2 + (diff / 2.0f);
+            newTruss.LookAt(v1);
+            newTruss.parent = transform;
+
+            return newTruss.gameObject;
+        }*/
 
     public void RemoveVertex(Vector3 atPosition)
     {
+        // find all the edge keys that contain the position
+        List<Tuple<Vector3, Vector3>> edgekeysWithPosition = new List<Tuple<Vector3, Vector3>>();
+
+        foreach (var pair in edges)
+        {
+            if (pair.Key.Item1 == atPosition || pair.Key.Item2 == atPosition)
+            {
+                edgekeysWithPosition.Add(pair.Key);
+            }
+        }
+
+        // remove edges with the keys that we stored
+        for (; edgekeysWithPosition.Count > 0;)
+        {
+            RemoveEdge(edgekeysWithPosition[0].Item1, edgekeysWithPosition[0].Item2);
+            edgekeysWithPosition.Remove(edgekeysWithPosition[0]);
+        }
+
+
         if (vertices.ContainsKey(atPosition))
         {
             Destroy(vertices[atPosition]);
@@ -147,16 +203,41 @@ public class Bridge : MonoBehaviour
         }
     }
 
+    public void RemoveEdge(Vector3 p1, Vector3 p2)
+    {
+        Edge edge = null;
+        Tuple<Vector3, Vector3> edgeKey1 = new Tuple<Vector3, Vector3>(p1, p2);
+
+        // check if edge already exsits
+        if (edges.ContainsKey(edgeKey1))
+        {
+            edge = edges[edgeKey1];
+            edges.Remove(edgeKey1);
+        }
+
+        Tuple<Vector3, Vector3> edgeKey2 = new Tuple<Vector3, Vector3>(p2, p1);
+
+        if (edges.ContainsKey(edgeKey2))
+        {
+            edge = edges[edgeKey2];
+            edges.Remove(edgeKey2);
+        }
+
+        Destroy(edge.gameObject);
+
+    }
+
+    public void RemoveEdge(Edge edge)
+    {
+        RemoveEdge(edge.pos1, edge.pos2);
+    }
+
     public void RemoveEdge(GameObject edge)
     {
-        foreach (var pair in edges)
+        Edge edgeComponent = edge.GetComponent<Edge>();
+        if (edgeComponent != null)
         {
-            if (pair.Value == edge)
-            {
-                Destroy(edge);
-                edges.Remove(pair.Key);
-                break;
-            }
+            RemoveEdge(edgeComponent);
         }
     }
 
@@ -222,42 +303,6 @@ public class Bridge : MonoBehaviour
         return nullVec;
     }
 
-    public GameObject SelectVertex(Vector3 p)
-    {
-        if (vertices.ContainsKey(p))
-        {
-            Renderer rend = vertices[p].GetComponent<Renderer>();
-            rend.material.color = Color.green;
-            return vertices[p];
-        }
-        return null;
-       
-    }
-
-    public GameObject UnselectVertex(Vector3 p)
-    {
-        if (vertices.ContainsKey(p))
-        {
-            Renderer rend = vertices[p].GetComponent<Renderer>();
-            rend.material.color = Color.white;
-            return vertices[p];
-        }
-        return null;
-    }
-
-    public void SelectEdge(GameObject selectedEdge)
-    {
-        Renderer rend =  selectedEdge.GetComponent<Renderer>();
-        rend.material.color = Color.green;
-    }
-
-    public void UnSelectEdge(GameObject selectedEdge)
-    {
-        Renderer rend = selectedEdge.GetComponent<Renderer>();
-        rend.material.color = Color.white;
-    }
-
-
     public GameObject MoveVertex(Vector3 oldloc, Vector3 newloc, GameObject fab)
     {
         RemoveVertex(oldloc);
@@ -273,10 +318,5 @@ public class Bridge : MonoBehaviour
     {
         return edges.Count;
     }
-
-
-   
-
-
 }
 
