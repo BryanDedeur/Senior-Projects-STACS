@@ -1230,7 +1230,7 @@ GameObject:
   - component: {fileID: 352394922}
   - component: {fileID: 352394921}
   - component: {fileID: 352394920}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ClickWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1588,7 +1588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 472769441}
   - component: {fileID: 472769442}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BridgeCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1622,6 +1622,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af1ce1e90b38ad4983c0f9a4a54e0b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   bridgeContainer: {fileID: 301468916}
   clickWall: {fileID: 352394919}
   trussPrefab: {fileID: 6199212017894149434, guid: ceef555b6449c6645ba212451ad95d53,
@@ -1631,7 +1634,8 @@ MonoBehaviour:
   vertexText: {fileID: 850298905}
   edgeText: {fileID: 471221915}
   viewHighlight: {fileID: 0}
-  vertexSelectedPrefab: {fileID: 0}
+  draggedFocusObject: {fileID: 0}
+  draggedStartPos: {x: 0, y: 0, z: 0}
   mirroring: 0
   mirrorAcrossX: 0
   mirrorAcrossY: 0

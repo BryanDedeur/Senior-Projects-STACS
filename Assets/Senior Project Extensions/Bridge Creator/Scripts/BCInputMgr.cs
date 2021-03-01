@@ -19,51 +19,33 @@ public class BCInputMgr : MonoBehaviour
         }
     }
 
-    public Vector3 Snap(Vector3 p)
-    {
-        return new Vector3(Mathf.Round(p.x), Mathf.Round(p.y), Mathf.Round(p.z));
-    }
-
-    public RaycastHit RaycastFromMouse()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            // something was hit
-            hit.point = Snap(hit.point);
-        }
-        return hit;
-    }
-
     private void Update()
     {
         if (Input.GetMouseButtonDown(0)) // Left mouse button
         {
-            RaycastHit hit = RaycastFromMouse();
-
             if (Input.GetKey(KeyCode.LeftControl))
             {
-                BCSelectionMgr.instance.UnitSelect(hit);
+                BCSelectionMgr.instance.UnitSelect();
             } else
             {
-                BridgeCreator.instance.AttemptAddVertexAndConnectEdge(hit);
+                BridgeCreator.instance.AttemptAddVertexAndConnectEdge();
             }
+        }
 
+        if (Input.GetMouseButton(0)) // fires every frame
+        {
+            BridgeCreator.instance.AttemptMoveSelected();
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            RaycastHit hit = RaycastFromMouse();
-
+            BridgeCreator.instance.EndMovingSelected();
             //BridgeCreator.instance.AdjustDraggedVertex(hit);
         }
 
         if (Input.GetMouseButtonDown(1)) // Right mouse button
         {
-            RaycastHit hit = RaycastFromMouse();
-
-            BridgeCreator.instance.AttemptRemoveEdgeOrVertex(hit);
+            BridgeCreator.instance.AttemptRemoveEdgeOrVertex();
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift)) 
@@ -88,9 +70,7 @@ public class BCInputMgr : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            RaycastHit hit = RaycastFromMouse();
 
-            BridgeCreator.instance.MoveSelected(hit);
         }
 
         if (Input.GetKeyDown(KeyCode.B))

@@ -96,7 +96,7 @@ public class BCSelectionMgr : MonoBehaviour
         return false;
     }
 
-    void DeselectAll()
+    public void DeselectAll()
     {
         Renderer rend;
         for (; selectedObjects.Count > 0;)
@@ -122,8 +122,10 @@ public class BCSelectionMgr : MonoBehaviour
         }*/
     }
 
-    public void UnitSelect(RaycastHit hit)
+    public void UnitSelect()
     {
+        RaycastHit hit = BridgeCreator.instance.RaycastFromMouse();
+
         bool somethingSelected = false;
         if (hit.collider != null)
         {

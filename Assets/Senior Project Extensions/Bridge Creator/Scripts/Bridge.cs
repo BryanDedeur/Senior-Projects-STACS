@@ -21,7 +21,6 @@ public class Bridge : MonoBehaviour
 
     public Dictionary<Vector3, GameObject> vertices;
     public Dictionary<Tuple<Vector3, Vector3>, Edge> edges;
-    private Dictionary<Vector3, GameObject> selectedVertices;
 
     //used for moving vertex
     private Vector3 mOffset;
@@ -303,11 +302,52 @@ public class Bridge : MonoBehaviour
         return nullVec;
     }
 
-    public GameObject MoveVertex(Vector3 oldloc, Vector3 newloc, GameObject fab)
+    private List<Edge> GetAllEdgesContainingPosition(Vector3 pos)
     {
-        RemoveVertex(oldloc);
-        return CreateVertex(newloc, fab); 
+        List<Edge> edgesWithPos = new List<Edge>();
+
+        foreach (var edgePair in edges)
+        {
+            if (edgePair.Value.pos1 == pos || edgePair.Value.pos2 == pos)
+            {
+                edgesWithPos.Add(edgePair.Value);
+            }
+        }
+
+        return edgesWithPos;
     }
+
+    public void MoveVertex(GameObject vertex, Vector3 newPos)
+    {
+        /*        RemoveVertex(oldloc);
+                return CreateVertex(newloc, fab); */
+
+        Vector3 currentPos = vertex.transform.position;
+        // get all edges containing that current position
+        List<Edge> edgesWithPos = GetAllEdgesContainingPosition(currentPos);
+
+        foreach (Edge edge in edgesWithPos)
+        {
+
+            Vector3 otherPos = edge.pos1;
+            if (edge.pos1 == currentPos)
+            {
+                otherPos = edge.pos2;
+            }
+
+            CreateEdge(newPos, otherPos, edge.transform.gameObject);
+            RemoveEdge(edge);
+        }
+
+        // remove the vertex from the dictionary
+        vertices.Remove(currentPos);
+
+        // move and add to vertex dictionary
+        vertex.transform.position = newPos;
+        vertices.Add(newPos, vertex.gameObject);
+
+    }
+
 
     public int GetVertices()
     {

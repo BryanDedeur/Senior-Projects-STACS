@@ -9,7 +9,7 @@ using System;
 
 public class BridgeCreator : MonoBehaviour
 {
-
+    public LayerMask ignoreLayer;
 
     public GameObject bridgeContainer;
     public GameObject clickWall;
@@ -20,10 +20,12 @@ public class BridgeCreator : MonoBehaviour
     public Text edgeText;
     public GameObject viewHighlight;
 
-    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
-    public Dictionary<Vector3, GameObject> vertexDictionary;
+/*    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
+    public Dictionary<Vector3, GameObject> vertexDictionary;*/
 
-    public GameObject vertexSelectedPrefab;
+    public Transform draggedFocusObject;
+    public Vector3 draggedStartPos;
+
 
     public bool mirroring;
     public bool mirrorAcrossX; // half of the length of the bridge will be cloned
@@ -79,7 +81,31 @@ public class BridgeCreator : MonoBehaviour
         Destroy(cursor.GetComponent<Collider>());
     }
 
-    public void MoveSelected(RaycastHit hit)
+    public Vector3 Snap(Vector3 p)
+    {
+        return new Vector3(Mathf.Round(p.x), Mathf.Round(p.y), Mathf.Round(p.z));
+    }
+
+    public RaycastHit RaycastFromMouse()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1000, ~ignoreLayer)) // attempt to hit an existing bridge component
+        {
+            // something was hit
+            hit.point = Snap(hit.point);
+        } else
+        {
+            // nothing was hit
+            if (Physics.Raycast(ray, out hit)) { // if no bridge component was hit try getting a point on the wall
+                // something was hit
+                hit.point = Snap(hit.point);
+            }
+        }
+        return hit;
+    }
+
+    public void AttemptMoveSelected()
     {
 /*        if (hit.collider != null)
         {
@@ -100,11 +126,52 @@ public class BridgeCreator : MonoBehaviour
             }
         }
 
-*//*        foreach (var v in boxSelectedVertx)
+        foreach (var v in boxSelectedVertx)
         {
             bridge.UnselectVertex(v);
-        }*//*
+        }
         boxSelectedVertx.Clear();*/
+        if (BCSelectionMgr.instance.selectedObjects.Count > 0)
+        {
+            RaycastHit hit = RaycastFromMouse();
+            if (hit.collider != null)
+            {
+                if (draggedFocusObject == null)
+                {
+                    if (hit.transform.gameObject.layer == 9) // make sure this is a bridge component
+                    {
+                        draggedFocusObject = hit.transform;
+                        draggedStartPos = hit.transform.position;
+                    }
+                }
+                else
+                {
+                    Vector3 offset = hit.point - draggedStartPos;
+
+                    foreach (Transform trans in BCSelectionMgr.instance.selectedObjects)
+                    {
+                        trans.position += offset;
+                    }
+
+                    draggedStartPos = draggedFocusObject.transform.position;
+                }
+            }
+        }
+    }
+
+    public void EndMovingSelected()
+    {
+        List<Transform> temp = BCSelectionMgr.instance.selectedObjects;
+        BCSelectionMgr.instance.DeselectAll();
+        foreach (Transform trans in temp)
+        {
+            if (trans.tag == "Vertex")
+            {
+                Bridge.instance.MoveVertex(trans.gameObject, trans.position + offset);
+            }
+        }
+
+        draggedFocusObject = null;
     }
 
     public void MirrorSelectedObjects()
@@ -179,9 +246,8 @@ public class BridgeCreator : MonoBehaviour
         //mirrioing logic 
         if (mirrorBool)
         {
-            Vector3 temp = position;
-            //value can be changed
-            temp.z += 8;
+            Vector3 temp = position;            
+            temp.z = -temp.z;
             if (lastVertexM == null)
             {
                 lastVertexM = bridge.CreateVertex(temp, vertexPrefab);
@@ -197,16 +263,20 @@ public class BridgeCreator : MonoBehaviour
         UpdateCountText();
     }
 
-    public void AttemptAddVertexAndConnectEdge(RaycastHit hit)
+    public void AttemptAddVertexAndConnectEdge()
     {
+        RaycastHit hit = RaycastFromMouse();
+
         if (hit.collider != null)
         {
             AddVertex(hit.point);
         }
     }
 
-    public void AttemptRemoveEdgeOrVertex(RaycastHit hit)
+    public void AttemptRemoveEdgeOrVertex()
     {
+        RaycastHit hit = RaycastFromMouse();
+
         if (hit.collider != null)
         {
             if (hit.transform.name == "Truss")
@@ -227,7 +297,7 @@ public class BridgeCreator : MonoBehaviour
         }
     }
 
-    public void AdjustDraggedVertex(RaycastHit hit)
+    public void AdjustDraggedVertex()
     {
 /*        Vector3 edgeLocation;
         Vector3 newEdgeAnchor;
@@ -259,7 +329,7 @@ public class BridgeCreator : MonoBehaviour
 
     private void UpdateCursor()
     {
-        RaycastHit hit = BCInputMgr.instance.RaycastFromMouse();
+        RaycastHit hit = RaycastFromMouse();
         if (hit.collider != null)
         {
             cursor.transform.localPosition = hit.point;
