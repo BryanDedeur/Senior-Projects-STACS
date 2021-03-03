@@ -80,7 +80,8 @@ public class UIMgr : MonoBehaviour
 
     void CheckForUINavigation()
     {
-        if (Input.GetKeyUp(KeyCode.Joystick1Button7)) {
+        if (Input.GetKeyUp(KeyCode.Joystick1Button7))
+        {
             State = EGameState.GameMenu;
         }
 
@@ -95,7 +96,8 @@ public class UIMgr : MonoBehaviour
 
     public void UpdateSelectedEntity()
     {
-        if (SelectionMgr.inst.selectedEntity != null) {
+        if (SelectionMgr.inst.selectedEntity != null)
+        {
 
             EntityTypeText.text = SelectionMgr.inst.selectedEntity.entityType.ToString();
             EntityNameText.text = SelectionMgr.inst.selectedEntity.name;
@@ -106,7 +108,7 @@ public class UIMgr : MonoBehaviour
             EntityDesiredHeadingText.text = SelectionMgr.inst.selectedEntity.desiredHeading.ToString("F1") + "deg";
             EntityAltitudeText.text = SelectionMgr.inst.selectedEntity.altitude.ToString("F1") + "m";
             EntityDesiredAltitudeText.text = SelectionMgr.inst.selectedEntity.desiredAltitude.ToString("F1") + "m";
-            if(SelectionMgr.inst.selectedEntity.entityType == EntityType.ClimbingRobot)
+            if (SelectionMgr.inst.selectedEntity.entityType == EntityType.ClimbingRobot)
                 DataFeedText.text = "Data: " + SelectionMgr.inst.selectedEntity.name;
         }
     }
@@ -127,7 +129,8 @@ public class UIMgr : MonoBehaviour
             MenuPanel.isValid = (_state == EGameState.GameMenu);
 
             //Game Controller UI/Playing switch and Navigation
-            switch (_state) {
+            switch (_state)
+            {
                 case EGameState.Briefing:
                     EventSystem.current.firstSelectedGameObject = briefingPanelOkButton.gameObject;
                     break;
@@ -206,7 +209,36 @@ public class UIMgr : MonoBehaviour
         }
 
     }
+    //-------------------------------------------------------------------------------------------------
+    public void MirrorButtonOn()
+    {
+        Debug.Log("on");
+        BridgeCreator.instance.EnableMirroring();
+    }
 
-
-
+    public void MirrorButtonOff()
+    {
+        Debug.Log("off");
+        BridgeCreator.instance.DisableMirroring();
+    }
+    public void MirrorSelectedButton()
+    {
+        Debug.Log("Selected");
+        BridgeCreator.instance.MirrorSelectedObjects();
+    }
+    public void DeselectButton()
+    {
+        BCSelectionMgr.instance.DisableBoxSelection();
+        BCSelectionMgr.instance.DeselectAll();
+    }
+    public void RestartScene()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
+    }
+  
+    public void DiscardBridge()
+    {
+        RestartScene();
+    }
 }

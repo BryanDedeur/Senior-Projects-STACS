@@ -39,7 +39,7 @@ public class BridgeCreator : MonoBehaviour
 *//*    List<Vector3> boxSelectedVertx = new List<Vector3>();
     List<GameObject> boxSelectedEdge = new List<GameObject>();*/
     //List<Vector3> vertexList = new List<Vector3>();
-    int numEdges;
+    public int numEdges;
 
     Vector3 screenPoint;
     Vector3 offset;
