@@ -136,8 +136,7 @@ public class BridgeCreator : MonoBehaviour
             RaycastHit hit = RaycastFromMouse();
             if (hit.collider != null)
             {
-                if (draggedFocusObject == null)
-                {
+                if (draggedFocusObject == null)                {
                     if (hit.transform.gameObject.layer == 9) // make sure this is a bridge component
                     {
                         draggedFocusObject = hit.transform;
@@ -206,19 +205,48 @@ public class BridgeCreator : MonoBehaviour
         
         foreach (Transform bridgeTrans in BCSelectionMgr.instance.selectedObjects)
         {
+            Vector3 zOffSet = new Vector3(0.0f, 0.0f, -4.0f);
+            
+            zOffSet.z += bridge.GetWidth();
+            zOffSet.z *= 2;
+
+  
             Edge edge = bridgeTrans.GetComponent<Edge>();
             if (edge != null) // if edge
             {
-                Vector3 newPos1 = edge.pos1 - Vector3.back * bridge.GetWidth();
-                Vector3 newPos2 = edge.pos2 - Vector3.back * bridge.GetWidth();
+                Vector3 newPos1 = edge.pos1 + zOffSet;
+                Vector3 newPos2 = edge.pos2 + zOffSet;
                 bridge.CreateEdge(newPos1, newPos2, trussPrefab);
             } else // if vertex
             {
-                Vector3 newPos = bridgeTrans.position - Vector3.back * bridge.GetWidth();
+                
+               
+                Vector3 newPos = bridgeTrans.position + zOffSet;
+                
                 bridge.CreateVertex(newPos, vertexPrefab);
             }
         }
 
+    }
+
+    public void CopySelectedObjects()//
+    {
+        RaycastHit hit = RaycastFromMouse();
+        
+        foreach (Transform bridgeTrans in BCSelectionMgr.instance.selectedObjects)
+        {
+            Edge edge = bridgeTrans.GetComponent<Edge>();
+            if (edge != null) // if edge
+            {
+                Vector3 newPos1 = edge.pos1 + hit.point;
+                Vector3 newPos2 = edge.pos2 + hit.point;
+                bridge.CreateEdge(newPos1, newPos2, trussPrefab);
+            }
+            else // if vertex
+            {
+                bridge.CreateVertex(bridgeTrans.position + hit.point, vertexPrefab);
+            }
+        }
     }
 
     void UpdateCountText()
@@ -297,7 +325,7 @@ public class BridgeCreator : MonoBehaviour
         }
     }
 
-    public void AdjustDraggedVertex()
+    public void AdjustDraggedVertex()//
     {
 /*        Vector3 edgeLocation;
         Vector3 newEdgeAnchor;

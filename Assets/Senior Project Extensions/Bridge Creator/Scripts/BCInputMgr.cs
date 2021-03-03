@@ -6,6 +6,7 @@ using System;
 public class BCInputMgr : MonoBehaviour
 {
     public static BCInputMgr instance;
+    public bool leftClickState = false; //false to indicate normal left click true to indicate box slection
 
     private void Awake()
     {
@@ -21,7 +22,7 @@ public class BCInputMgr : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Left mouse button
+        if (Input.GetMouseButtonDown(0) && !leftClickState) // Left mouse button
         {
             if (Input.GetKey(KeyCode.LeftControl))
             {
@@ -32,9 +33,10 @@ public class BCInputMgr : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(0)) // fires every frame
+        if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) == false) // fires every frame
         {
             BridgeCreator.instance.AttemptMoveSelected();
+            leftClickState = false;
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -50,11 +52,17 @@ public class BCInputMgr : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift)) 
         {
+            leftClickState = true;
+   
+        }
+        if(Input.GetMouseButtonDown(0) && leftClickState && Input.GetKey(KeyCode.LeftControl) == false)
+        {
             BCSelectionMgr.instance.EnableBoxSelection();
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
+            //leftClickState = false;
             BCSelectionMgr.instance.DisableBoxSelection();
         }
 
@@ -70,12 +78,18 @@ public class BCInputMgr : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-
+            BridgeCreator.instance.CopySelectedObjects();
         }
 
         if (Input.GetKeyDown(KeyCode.B))
         {
             BridgeCreator.instance.MirrorSelectedObjects();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            BCSelectionMgr.instance.DisableBoxSelection();
+            BCSelectionMgr.instance.DeselectAll();
+
         }
 
 

@@ -35,20 +35,29 @@ public class BCSelectionMgr : MonoBehaviour
     {
         var camera = Camera.main;
         var viewportBounds = Box.GetViewportBounds(camera, startPos, Input.mousePosition);
-        return viewportBounds.Contains(camera.WorldToViewportPoint(gameObject.transform.position));
+        if(gameObject.transform.position.z == -4)
+        {
+            return viewportBounds.Contains(camera.WorldToViewportPoint(gameObject.transform.position));
+        }
+        return false;
+        
     }
 
     public bool IsWithinSelectionBoundsVec(Vector3 p)
     {
         var camera = Camera.main;
         var viewportBounds = Box.GetViewportBounds(camera, startPos, Input.mousePosition);
-        return viewportBounds.Contains(camera.WorldToViewportPoint(p));
+        if(p.z == -4)
+        {
+            return viewportBounds.Contains(camera.WorldToViewportPoint(p));
+        }
+        return false;
     }
 
     public void EnableBoxSelection()
     {
-        startPos = Input.mousePosition;
-        boxSelecting = true;
+            startPos = Input.mousePosition;
+            boxSelecting = true;
     }
 
     public void DisableBoxSelection()
@@ -125,7 +134,6 @@ public class BCSelectionMgr : MonoBehaviour
     public void UnitSelect()
     {
         RaycastHit hit = BridgeCreator.instance.RaycastFromMouse();
-
         bool somethingSelected = false;
         if (hit.collider != null)
         {
