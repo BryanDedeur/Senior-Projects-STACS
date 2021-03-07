@@ -150,7 +150,12 @@ public class BridgeCreator : MonoBehaviour
                     foreach (Transform trans in BCSelectionMgr.instance.selectedObjects)
                     {
                         trans.position += offset;
+                        if(trans.tag == "Edge")
+                        {
+                            //not sure what to do
+                        }
                     }
+
 
                     draggedStartPos = draggedFocusObject.transform.position;
                 }
@@ -165,6 +170,10 @@ public class BridgeCreator : MonoBehaviour
         foreach (Transform trans in temp)
         {
             if (trans.tag == "Vertex")
+            {
+                Bridge.instance.MoveVertex(trans.gameObject, trans.position + offset);
+            }
+            if (trans.tag == "Edge")//need to update moved edges 
             {
                 Bridge.instance.MoveVertex(trans.gameObject, trans.position + offset);
             }
@@ -240,11 +249,17 @@ public class BridgeCreator : MonoBehaviour
             {
                 Vector3 newPos1 = edge.pos1 + hit.point;
                 Vector3 newPos2 = edge.pos2 + hit.point;
+                newPos1.z = -4.0f;
+                newPos2.z = -4.0f;
+                Debug.Log("pos:" + (edge.pos1 + hit.point));
+ 
                 bridge.CreateEdge(newPos1, newPos2, trussPrefab);
             }
             else // if vertex
             {
-                bridge.CreateVertex(bridgeTrans.position + hit.point, vertexPrefab);
+                Vector3 temp = bridgeTrans.position + hit.point;
+                temp.z = -4.0f;
+                bridge.CreateVertex(temp, vertexPrefab);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System;
 
 public class BCInputMgr : MonoBehaviour
@@ -22,28 +23,36 @@ public class BCInputMgr : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !leftClickState) // Left mouse button
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if (Input.GetKey(KeyCode.LeftControl))
+
+            if (Input.GetMouseButtonDown(0) && !leftClickState) // Left mouse button
             {
-                BCSelectionMgr.instance.UnitSelect();
-            } else
-            {
-                BridgeCreator.instance.AttemptAddVertexAndConnectEdge();
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    BCSelectionMgr.instance.UnitSelect();
+                }
+                else
+                {
+                    BridgeCreator.instance.AttemptAddVertexAndConnectEdge();
+                }
             }
+
+            if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) == false) // fires every frame
+            {
+                BridgeCreator.instance.AttemptMoveSelected();
+                leftClickState = false;
+            }
+
         }
 
-        if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) == false) // fires every frame
-        {
-            BridgeCreator.instance.AttemptMoveSelected();
-            leftClickState = false;
-        }
 
         if (Input.GetMouseButtonUp(0))
         {
             BridgeCreator.instance.EndMovingSelected();
             //BridgeCreator.instance.AdjustDraggedVertex(hit);
         }
+
 
         if (Input.GetMouseButtonDown(1)) // Right mouse button
         {
@@ -63,7 +72,8 @@ public class BCInputMgr : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             //leftClickState = false;
-            BCSelectionMgr.instance.DisableBoxSelection();
+            BCSelectionMgr.instance.DisableHighLight();
+          //  BCSelectionMgr.instance.DisableBoxSelection();
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -93,6 +103,14 @@ public class BCInputMgr : MonoBehaviour
         }
 
 
+    }
+    public static bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 
 }

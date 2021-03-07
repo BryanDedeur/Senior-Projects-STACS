@@ -86,6 +86,27 @@ public class BCSelectionMgr : MonoBehaviour
         }
     }
 
+    public void DisableHighLight()
+    {
+        boxSelecting = false;
+        bool somethingSelected = false;
+        foreach (var pair in Bridge.instance.vertices)
+        {
+            if (IsWithinSelectionBounds(pair.Value))
+            {
+                somethingSelected = AdjustSelectedObjects(pair.Value.transform);
+            }
+        }
+
+        foreach (var pair in Bridge.instance.edges)
+        {
+            if (IsWithinSelectionBounds(pair.Value.gameObject))
+            {
+                somethingSelected = AdjustSelectedObjects(pair.Value.transform);
+            }
+        }
+    }
+
     public bool AdjustSelectedObjects(Transform trans)
     {
         if (selectedObjects.Contains(trans))
