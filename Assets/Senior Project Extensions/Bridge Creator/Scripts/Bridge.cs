@@ -21,6 +21,9 @@ public class Bridge : MonoBehaviour
 
     public Dictionary<Vector3, GameObject> vertices;
     public Dictionary<Tuple<Vector3, Vector3>, Edge> edges;
+    public Dictionary<int, Edge> edgesId;
+
+    private int id;
 
     //used for moving vertex
     private Vector3 mOffset;
@@ -46,6 +49,8 @@ public class Bridge : MonoBehaviour
 
         vertices = new Dictionary<Vector3, GameObject>();
         edges = new Dictionary<Tuple<Vector3, Vector3>, Edge>();
+        edgesId = new Dictionary<int, Edge>();
+        id = 0;
 
     }
 
@@ -55,6 +60,11 @@ public class Bridge : MonoBehaviour
         SetWidth(platform.transform.localScale.z);
         SetLength(platform.transform.localScale.x);
 
+    }
+
+    public int GetId()
+    {
+        return id;
     }
 
     public void SetLength(float newLength)
@@ -142,9 +152,13 @@ public class Bridge : MonoBehaviour
         edge = newTruss.gameObject.AddComponent<Edge>();
         edge.pos1 = v1;
         edge.pos2 = v2;
+        edge.id = id;
 
         edges.Add(new Tuple<Vector3, Vector3>(v1, v2), edge);
+        edgesId.Add(id, edge);
 
+
+        id++;
         return edge;
     }
 
@@ -152,6 +166,8 @@ public class Bridge : MonoBehaviour
     { 
         return CreateEdge(v1.transform.position, v2.transform.position, truss);
     }
+
+
 
 
 
@@ -321,7 +337,7 @@ public class Bridge : MonoBehaviour
     {
         /*        RemoveVertex(oldloc);
                 return CreateVertex(newloc, fab); */
-
+        Debug.Log("New Vertex at:" + newPos);
         Vector3 currentPos = vertex.transform.position;
         // get all edges containing that current position
         List<Edge> edgesWithPos = GetAllEdgesContainingPosition(currentPos);
@@ -345,6 +361,7 @@ public class Bridge : MonoBehaviour
         // move and add to vertex dictionary
         vertex.transform.position = newPos;
         vertices.Add(newPos, vertex.gameObject);
+ 
 
     }
 

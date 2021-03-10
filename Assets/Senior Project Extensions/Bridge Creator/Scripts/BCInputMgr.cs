@@ -7,8 +7,8 @@ using System;
 public class BCInputMgr : MonoBehaviour
 {
     public static BCInputMgr instance;
-    public bool leftClickState = false; //false to indicate normal left click true to indicate box slection
-
+    public bool boxState = false; //false to indicate normal left click true to indicate box slection
+    public bool endMove = false;
     private void Awake()
     {
         // this keeps instance a singlton
@@ -26,7 +26,7 @@ public class BCInputMgr : MonoBehaviour
         if (!EventSystem.current.IsPointerOverGameObject())
         {
 
-            if (Input.GetMouseButtonDown(0) && !leftClickState) // Left mouse button
+            if (Input.GetMouseButtonDown(0) && !boxState) // Left mouse button
             {
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
@@ -41,15 +41,17 @@ public class BCInputMgr : MonoBehaviour
             if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) == false) // fires every frame
             {
                 BridgeCreator.instance.AttemptMoveSelected();
-                leftClickState = false;
+                endMove = true;
+                boxState = false;
             }
 
         }
 
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && endMove)
         {
             BridgeCreator.instance.EndMovingSelected();
+            endMove = false;
             //BridgeCreator.instance.AdjustDraggedVertex(hit);
         }
 
@@ -61,10 +63,10 @@ public class BCInputMgr : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift)) 
         {
-            leftClickState = true;
+            boxState = true;
    
         }
-        if(Input.GetMouseButtonDown(0) && leftClickState && Input.GetKey(KeyCode.LeftControl) == false)
+        if(Input.GetMouseButtonDown(0) && boxState && Input.GetKey(KeyCode.LeftControl) == false)
         {
             BCSelectionMgr.instance.EnableBoxSelection();
         }
