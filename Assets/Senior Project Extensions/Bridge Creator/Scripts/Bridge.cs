@@ -29,6 +29,9 @@ public class Bridge : MonoBehaviour
     private Vector3 mOffset;
     private float mZCoord;
 
+    public string bridgeName = "Default Bridge";
+    public string bridgePath = "Bridges/";
+
     private void Awake()
     {
         // this keeps instance a singlton
@@ -52,6 +55,60 @@ public class Bridge : MonoBehaviour
         edgesId = new Dictionary<int, Edge>();
         id = 0;
 
+    }
+
+    private float GetSumEdges()
+    {
+        float distance = 0;
+        foreach (var edgeRef in edges)
+        {
+            distance += edgeRef.Value.transform.localScale.z;
+        }
+        return distance;
+    }
+
+    public int GetVertexId(Vector3 pos)
+    {
+        int index = 0;
+        foreach (var vertex in vertices)
+        {
+            if (vertex.Key == pos)
+            {
+                return index;  // According to question, you are after the key 
+            }
+            index++;
+        }
+        return index;
+    }
+
+    private string FormatConnectionsToString() // connections between edges vertices
+    {
+        string output = "";
+        output += vertices.Count.ToString() + "\n";
+        output += edges.Count.ToString() + "\n";
+        output += GetSumEdges().ToString() + "\n";
+        foreach (var edgeRef in edges)
+        {
+            output += GetVertexId(edgeRef.Value.pos1).ToString() + " " + GetVertexId(edgeRef.Value.pos2).ToString() + " " + edgeRef.Value.transform.localScale.z.ToString() + "\n";
+        }
+
+        return output;
+    }
+
+    private string FormatVertexPositionsToString() // vertex positions
+    {
+        string output = "";
+        foreach (var vert in vertices)
+        {
+            output += GetVertexId(vert.Key).ToString() + " " + vert.Key.x.ToString() + " " + vert.Key.y.ToString() + " " + vert.Key.z.ToString() + " " + "\n";
+        }
+        return output;
+    }
+
+    public void Save()
+    {
+        FileIO.instance.WriteToFile(bridgePath + bridgeName + ".txt", FormatConnectionsToString());
+        FileIO.instance.WriteToFile(bridgePath + bridgeName + "-positions.txt", FormatVertexPositionsToString());
     }
 
     public void SetPlatform(GameObject platformPrefab)
