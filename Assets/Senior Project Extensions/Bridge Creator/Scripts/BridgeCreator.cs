@@ -42,7 +42,7 @@ public class BridgeCreator : MonoBehaviour
     public int numEdges;
 
     Vector3 screenPoint;
-    Vector3 offset;
+    Vector3 totalOffset;
 
     public GameObject[] trussPrefabs;
     public GameObject[] vertexPrefabs;
@@ -59,6 +59,7 @@ public class BridgeCreator : MonoBehaviour
     private GameObject cursor;
 
     public static BridgeCreator instance;
+
     private void Awake()
     {
         // this keeps instance a singlton
@@ -141,12 +142,13 @@ public class BridgeCreator : MonoBehaviour
                     {
                         draggedFocusObject = hit.transform;
                         draggedStartPos = hit.transform.position;
+                        totalOffset = Vector3.zero;
                     }
                 }
                 else
                 {
                     Vector3 offset = hit.point - draggedStartPos;
-
+                    totalOffset += offset;
                     foreach (Transform trans in BCSelectionMgr.instance.selectedObjects)
                     {
                         trans.position += offset;
@@ -161,7 +163,6 @@ public class BridgeCreator : MonoBehaviour
 
                     }
 
-
                     draggedStartPos = draggedFocusObject.transform.position;
                 }
             }
@@ -173,19 +174,28 @@ public class BridgeCreator : MonoBehaviour
 
         List<Transform> temp = BCSelectionMgr.instance.selectedObjects;
 
-
         foreach (Transform trans in temp)
         {
-           
             if (trans.tag == "Vertex")
             {
-  
-                Bridge.instance.CreateVertex(trans.position + offset, vertexPrefab);
+
+                List<Edge> connected = bridge.GetAllEdgesContainingPosition(trans.position - totalOffset);
+                foreach (Edge connectedEdge in connected)
+                {
+                    bridge.CreateEdge(connectedEdge.pos1 + totalOffset, connectedEdge.pos2 + totalOffset, connectedEdge.transform.gameObject);
+                    bridge.RemoveEdge(connectedEdge);
+                }
+
+                bridge.RemoveVertex(trans.position - totalOffset);
+                //bridge.RemoveVertex(trans.position);
+                bridge.CreateVertex(trans.position, vertexPrefab);
+
+
             }
-            if (trans.tag == "Edge")//need to update moved edges 
+/*            if (trans.tag == "Edge")//need to update moved edges 
             {
                 
-            }
+            }*/
         }
         BCSelectionMgr.instance.DeselectAll();
         draggedFocusObject = null;

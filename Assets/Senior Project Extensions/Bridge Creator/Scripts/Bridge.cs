@@ -149,7 +149,11 @@ public class Bridge : MonoBehaviour
         newTruss.LookAt(v1);
         newTruss.parent = transform;
 
-        edge = newTruss.gameObject.AddComponent<Edge>();
+        edge = newTruss.gameObject.GetComponent<Edge>();
+        if (edge == null)
+        {
+            edge = newTruss.gameObject.AddComponent<Edge>();
+        }
         edge.pos1 = v1;
         edge.pos2 = v2;
         edge.id = id;
@@ -166,10 +170,6 @@ public class Bridge : MonoBehaviour
     { 
         return CreateEdge(v1.transform.position, v2.transform.position, truss);
     }
-
-
-
-
 
     /*    //same as create edge but takes vector3s DOES NOT ADD TO EDGES LIST
          public GameObject AddEdge(Vector3 v1, Vector3 v2, GameObject truss)
@@ -318,7 +318,7 @@ public class Bridge : MonoBehaviour
         return nullVec;
     }
 
-    private List<Edge> GetAllEdgesContainingPosition(Vector3 pos)
+    public List<Edge> GetAllEdgesContainingPosition(Vector3 pos)
     {
         List<Edge> edgesWithPos = new List<Edge>();
 

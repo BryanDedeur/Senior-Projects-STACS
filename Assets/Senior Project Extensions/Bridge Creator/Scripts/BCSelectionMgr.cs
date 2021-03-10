@@ -128,14 +128,20 @@ public class BCSelectionMgr : MonoBehaviour
 
     public void DeselectAll()
     {
+
         Renderer rend;
         for (; selectedObjects.Count > 0;)
         {
             rend = selectedObjects[0].GetComponent<Renderer>();
             rend.material.color = Color.white;
-
+            if (selectedObjects[0].transform.tag == "Truss")
+            {
+                print(selectedObjects[0].transform.position);
+            }
             selectedObjects.RemoveAt(0);
+
         }
+        selectedObjects.Clear();
     }
 
     private void SelectObjectsInRadius(Vector3 position) // instead of doing this I made the vertex colliders larger
