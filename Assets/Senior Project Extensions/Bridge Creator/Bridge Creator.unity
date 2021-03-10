@@ -4896,7 +4896,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff1d5a23f1c956a4fba09812de63d198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftClickState: 0
+  boxState: 0
+  endMove: 0
 --- !u!4 &1109949182
 Transform:
   m_ObjectHideFlags: 0
@@ -7762,7 +7763,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 20
   m_Depth: -1
   m_CullingMask:
@@ -7787,7 +7788,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1685431517}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -101.6}
+  m_LocalPosition: {x: 0, y: 0, z: -43.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -7810,6 +7811,7 @@ MonoBehaviour:
   deltaY: 1
   camSpeed: 20
   rotationSpeed: 12
+  zoomAmount: 5
 --- !u!1 &1692646515
 GameObject:
   m_ObjectHideFlags: 0

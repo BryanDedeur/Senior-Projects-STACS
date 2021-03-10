@@ -17,6 +17,8 @@ public class BCCameraController : MonoBehaviour
     public float camSpeed = 20.0f;
     public float rotationSpeed = 12.0f;
 
+    public float zoomAmount = 5f;
+
     private bool rotationLocked, leftViewControls, topViewControls, bottomViewControls;
 
     private float offset = 100;
@@ -94,6 +96,16 @@ public class BCCameraController : MonoBehaviour
         }
     }
 
+    private void ZoomIn()
+    {
+        Camera.main.transform.position += Camera.main.transform.forward * zoomAmount;
+    }
+
+    private void ZoomOut()
+    {
+        Camera.main.transform.position -= Camera.main.transform.forward * zoomAmount;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -114,6 +126,15 @@ public class BCCameraController : MonoBehaviour
             bottomViewControls = true;
         else
             bottomViewControls = false;
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f) // forward
+        {
+            ZoomIn();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f) // backwards
+        {
+            ZoomOut();
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
             rotationLocked = false;
