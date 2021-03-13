@@ -268,8 +268,8 @@ public class BridgeCreator : MonoBehaviour
             Edge edge = bridgeTrans.GetComponent<Edge>();
             if (edge != null) // if edge
             {
-                Vector3 newPos1 = edge.pos1 + hit.point;
-                Vector3 newPos2 = edge.pos2 + hit.point;
+                Vector3 newPos1 = hit.point - edge.pos1;
+                Vector3 newPos2 = hit.point - edge.pos2;
                 newPos1.z = -4.0f;
                 newPos2.z = -4.0f;
                 newObjects.Add(bridge.CreateEdge(newPos1, newPos2, trussPrefab).transform);
@@ -278,7 +278,7 @@ public class BridgeCreator : MonoBehaviour
             }
             else // if vertex
             {
-                Vector3 temp = bridgeTrans.position + hit.point;
+                Vector3 temp = hit.point - bridgeTrans.position;
                 temp.z = -4.0f;
                 newObjects.Add(bridge.CreateVertex(temp, vertexPrefab).transform);
             }
