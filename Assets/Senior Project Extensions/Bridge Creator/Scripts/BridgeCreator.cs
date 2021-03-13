@@ -258,9 +258,10 @@ public class BridgeCreator : MonoBehaviour
 
     }
 
-    public void CopySelectedObjects()//
+    public List<Transform> CopySelectedObjects()//
     {
         RaycastHit hit = RaycastFromMouse();
+        List<Transform> newObjects = new List<Transform>();
         
         foreach (Transform bridgeTrans in BCSelectionMgr.instance.selectedObjects)
         {
@@ -271,17 +272,20 @@ public class BridgeCreator : MonoBehaviour
                 Vector3 newPos2 = edge.pos2 + hit.point;
                 newPos1.z = -4.0f;
                 newPos2.z = -4.0f;
-                Debug.Log("pos:" + (edge.pos1 + hit.point));
- 
-                bridge.CreateEdge(newPos1, newPos2, trussPrefab);
+                newObjects.Add(bridge.CreateEdge(newPos1, newPos2, trussPrefab).transform);
+               
+               
             }
             else // if vertex
             {
                 Vector3 temp = bridgeTrans.position + hit.point;
                 temp.z = -4.0f;
-                bridge.CreateVertex(temp, vertexPrefab);
+                newObjects.Add(bridge.CreateVertex(temp, vertexPrefab).transform);
             }
         }
+        print(newObjects.Count);
+        return newObjects;
+
     }
 
     void UpdateCountText()

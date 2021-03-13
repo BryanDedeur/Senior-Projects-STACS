@@ -189,6 +189,8 @@ public class Bridge : MonoBehaviour
 
     public Edge CreateEdge(Vector3 v1, Vector3 v2, GameObject truss)
     {
+        Debug.Log("CreateEdge1:" + v1);
+        Debug.Log("CreateEdge2:" + v2);
         Edge edge = EdgeExists(v1, v2);
         if (edge != null)
         {

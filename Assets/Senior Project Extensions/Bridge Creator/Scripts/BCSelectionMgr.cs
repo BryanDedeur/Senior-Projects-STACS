@@ -126,6 +126,20 @@ public class BCSelectionMgr : MonoBehaviour
         return false;
     }
 
+    public void AdjustListObjects(List<Transform> list)
+    {
+        foreach(Transform trans in list)
+        {
+     
+                selectedObjects.Add(trans);
+                Renderer rend = trans.GetComponent<Renderer>();
+                rend.material.color = Color.green;
+           
+            
+        }
+      
+    }
+
     public void DeselectAll()
     {
 
@@ -175,6 +189,7 @@ public class BCSelectionMgr : MonoBehaviour
             DeselectAll();
         }
     }
+
 
     void OnGUI()
     {
