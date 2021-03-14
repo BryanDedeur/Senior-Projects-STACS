@@ -108,30 +108,7 @@ public class BridgeCreator : MonoBehaviour
 
     public void AttemptMoveSelected()
     {
-/*        if (hit.collider != null)
-        {
-            foreach (var v in boxSelectedVertx)
-            {
-                bridge.CreateVertex(v + hit.point, vertexPrefab);
-                //add location to list of vertex 
-                //vertexList.Add(v + hit.point);
-                edgeFixer = bridge.CreateVertex(v + hit.point, vertexPrefab);
-
-                Vector3 newEdgeAnchor = bridge.UpdateEdge(v);
-                while (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
-                {
-
-                    bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
-                    newEdgeAnchor = bridge.UpdateEdge(v);
-                }
-            }
-        }
-
-        foreach (var v in boxSelectedVertx)
-        {
-            bridge.UnselectVertex(v);
-        }
-        boxSelectedVertx.Clear();*/
+     
         if (BCSelectionMgr.instance.selectedObjects.Count > 0)
         {
             RaycastHit hit = RaycastFromMouse();
@@ -166,6 +143,11 @@ public class BridgeCreator : MonoBehaviour
                     draggedStartPos = draggedFocusObject.transform.position;
                 }
             }
+            else
+            {
+                print("deselect");
+                BCSelectionMgr.instance.DeselectAll();
+            }
         }
     }
 
@@ -176,7 +158,7 @@ public class BridgeCreator : MonoBehaviour
 
         foreach (Transform trans in temp)
         {
-            if (trans.tag == "Vertex")
+            if (trans.tag == "Vertex" && totalOffset != Vector3.zero)
             {
 
                 List<Edge> connected = bridge.GetAllEdgesContainingPosition(trans.position - totalOffset);
@@ -187,7 +169,6 @@ public class BridgeCreator : MonoBehaviour
                 }
 
                 bridge.RemoveVertex(trans.position - totalOffset);
-                //bridge.RemoveVertex(trans.position);
                 bridge.CreateVertex(trans.position, vertexPrefab);
 
 
@@ -201,36 +182,31 @@ public class BridgeCreator : MonoBehaviour
         draggedFocusObject = null;
     }
 
+    public void DeleteSelectedObjects()
+    {
+        print("Big:" + BCSelectionMgr.instance.selectedObjects.Count);
+        if (BCSelectionMgr.instance.selectedObjects.Count > 0)
+        {
+            foreach (Transform trans in BCSelectionMgr.instance.selectedObjects)
+            {
+
+                if (trans.tag == "Truss")
+                {
+                    Edge edge = trans.GetComponent<Edge>();
+                    bridge.RemoveEdge(edge.pos1, edge.pos2);
+                }
+                else
+                {
+                    bridge.RemoveVertex(trans.position);
+                }
+            }
+        }
+        print("Exit");
+    }
+
     public void MirrorSelectedObjects()
     {
-/*        //  Debug.Log("Count : " + boxSelectedVertx.Count);
-        List<Vector3> temp = new List<Vector3>(boxSelectedVertx);
-        foreach (var v in temp)
-        {
-            Vector3 newLocatation = v;
-            newLocatation.z += 8;
-            bridge.CreateVertex(newLocatation, vertexPrefab);
 
-            Vector3 newEdgeAnchor = bridge.UpdateEdge(v);
-            while (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000) //check for null vector
-            {
-                newEdgeAnchor.z += 8;
-                bridge.CreateEdge(newLocatation, newEdgeAnchor, trussPrefab);
-                Vector3 newVec = newEdgeAnchor;
-                newVec.z -= 8;
-                bridge.CreateEdge(v, newVec, trussPrefab);
-
-                newEdgeAnchor = bridge.UpdateEdge(v);
-            }
-            boxSelectedVertx.Remove(v);
-        }*/
-/*        List<GameObject> tempE = new List<GameObject>(boxSelectedEdge);
-        foreach (var e in tempE)
-        {
-            bridge.UnSelectEdge(e);
-            boxSelectedEdge.Remove(e);
-        }*/
-        
         foreach (Transform bridgeTrans in BCSelectionMgr.instance.selectedObjects)
         {
             Vector3 zOffSet = new Vector3(0.0f, 0.0f, -4.0f);
@@ -265,11 +241,12 @@ public class BridgeCreator : MonoBehaviour
         
         foreach (Transform bridgeTrans in BCSelectionMgr.instance.selectedObjects)
         {
+            Vector3 off = new Vector3(4.0f, 4.0f, -4.0f);
             Edge edge = bridgeTrans.GetComponent<Edge>();
             if (edge != null) // if edge
             {
-                Vector3 newPos1 = hit.point - edge.pos1;
-                Vector3 newPos2 = hit.point - edge.pos2;
+                Vector3 newPos1 =  edge.pos1 + off;
+                Vector3 newPos2 =  edge.pos2 + off;
                 newPos1.z = -4.0f;
                 newPos2.z = -4.0f;
                 newObjects.Add(bridge.CreateEdge(newPos1, newPos2, trussPrefab).transform);
@@ -278,7 +255,7 @@ public class BridgeCreator : MonoBehaviour
             }
             else // if vertex
             {
-                Vector3 temp = hit.point - bridgeTrans.position;
+                Vector3 temp = bridgeTrans.position + off;
                 temp.z = -4.0f;
                 newObjects.Add(bridge.CreateVertex(temp, vertexPrefab).transform);
             }

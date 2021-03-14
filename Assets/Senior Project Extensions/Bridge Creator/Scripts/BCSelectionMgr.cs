@@ -156,6 +156,7 @@ public class BCSelectionMgr : MonoBehaviour
 
         }
         selectedObjects.Clear();
+
     }
 
     private void SelectObjectsInRadius(Vector3 position) // instead of doing this I made the vertex colliders larger

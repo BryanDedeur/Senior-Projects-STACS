@@ -107,6 +107,7 @@ public class Bridge : MonoBehaviour
 
     public void Save()
     {
+        print("save");
         FileIO.instance.WriteToFile(bridgePath + bridgeName + ".txt", FormatConnectionsToString());
         FileIO.instance.WriteToFile(bridgePath + bridgeName + "-positions.txt", FormatVertexPositionsToString());
     }
@@ -296,9 +297,10 @@ public class Bridge : MonoBehaviour
             edge = edges[edgeKey2];
             edges.Remove(edgeKey2);
         }
-
-        Destroy(edge.gameObject);
-
+        if (edge != null)
+        {
+            Destroy(edge.gameObject);
+        }
     }
 
     public void RemoveEdge(Edge edge)

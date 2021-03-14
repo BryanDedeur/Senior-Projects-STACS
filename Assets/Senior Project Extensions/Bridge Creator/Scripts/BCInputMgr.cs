@@ -114,6 +114,17 @@ public class BCInputMgr : MonoBehaviour
 
         }
 
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            BridgeCreator.instance.DeleteSelectedObjects();
+            BCSelectionMgr.instance.DeselectAll();
+            print("WTFFF");
+            print("Counter:" + BCSelectionMgr.instance.selectedObjects.Count);
+
+        }
+
+
+
 
     }
     public static bool IsPointerOverUIObject()

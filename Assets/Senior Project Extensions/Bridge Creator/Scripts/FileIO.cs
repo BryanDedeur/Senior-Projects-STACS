@@ -32,19 +32,18 @@ public class FileIO : MonoBehaviour
                     Debug.Log(fileName + " already exists.");
                     return;
                 }*/
-        print("writing to file");
+        //add to the end of file
+        print(fileName);
+        
         var sr = File.CreateText(fileName);
         sr.WriteLine(output);
         sr.Close();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.Q))
-        {
-           
-            WriteToFile("Bridges/test.txt", "yoyoy");
-        }
+
     }
 }
