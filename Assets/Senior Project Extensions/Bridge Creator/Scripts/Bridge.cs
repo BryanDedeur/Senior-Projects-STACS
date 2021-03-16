@@ -108,8 +108,8 @@ public class Bridge : MonoBehaviour
     public void Save()
     {
         print("save");
-        FileIO.instance.WriteToFile(bridgePath + bridgeName + ".txt", FormatConnectionsToString());
-        FileIO.instance.WriteToFile(bridgePath + bridgeName + "-positions.txt", FormatVertexPositionsToString());
+        FileIO.instance.WriteToFile(bridgePath + bridgeName + ".txt", FormatConnectionsToString(), true);
+        FileIO.instance.WriteToFile(bridgePath + bridgeName + "-positions.txt", FormatVertexPositionsToString(), true);
     }
 
     public void SetPlatform(GameObject platformPrefab)

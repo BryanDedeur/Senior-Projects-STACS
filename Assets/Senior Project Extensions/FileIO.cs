@@ -25,7 +25,7 @@ public class FileIO : MonoBehaviour
     {
         //WriteToFile("Bridges/test.txt", "Hello world");   
     }
-    public void WriteToFile(string fileName, string output)
+    public void WriteToFile(string fileName, string output, bool overwrite)
     {
         /*        if (File.Exists(fileName))
                 {
@@ -35,10 +35,17 @@ public class FileIO : MonoBehaviour
         //add to the end of file
         print(fileName);
         
-        var sr = File.CreateText(fileName);
-        sr.WriteLine(output);
-        sr.Close();
-        
+        if (overwrite)
+        {
+            StreamWriter sr = File.CreateText(fileName);
+            sr.WriteLine(output);
+            sr.Close();
+        } else
+        {
+            TextWriter tw = new StreamWriter(fileName, true);
+            tw.WriteLine(output);
+            tw.Close();
+        }
     }
 
     // Update is called once per frame

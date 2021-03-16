@@ -23,6 +23,9 @@ public class TestEvalution : MonoBehaviour
     // TODO consider loading the targets
 
     public bool testMode;
+    private bool testEnded = false;
+
+    public string resultsPath = "Results/results.txt";
 
     private void Awake()
     {
@@ -62,7 +65,11 @@ public class TestEvalution : MonoBehaviour
 
     public float DefectsError()
     {
-        return actualDefects / totalDefectsFound;
+        if (totalDefectsFound > 0)
+        {
+            return actualDefects / totalDefectsFound;
+        }
+        return 0;
     }
 
     public float FinalGrade()
@@ -98,7 +105,24 @@ public class TestEvalution : MonoBehaviour
 
     public void EndTest()
     {
+        testEnded = true;
+        WriteToFile();
+    }
 
+    public void WriteToFile()
+    {
+        string output = "";
+
+        output += "NA" + "\t"; // TODO get bridge name
+        output += "NA" + "\t"; // TODO get bridge diffculty
+        output += testMode.ToString() + "\t";
+        output += FinalGrade().ToString() + "\t";
+        output += totalRobotTravelDistance.ToString() + "\t";
+        output += totalTime.ToString() + "\t";
+        output += totalBatteryUsage.ToString() + "\t";
+        output += totalDefectsFound.ToString();
+
+        FileIO.instance.WriteToFile(resultsPath, output, false);
     }
 
     private void Update()
@@ -106,7 +130,9 @@ public class TestEvalution : MonoBehaviour
         UpdateRobotPositionTracking();
         totalTime += Time.deltaTime;
 
-        if (totalTime > targetTime)
+
+
+        if (totalTime > targetTime && testMode && !testEnded)
         {
             EndTest();
         }
