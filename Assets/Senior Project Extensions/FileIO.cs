@@ -48,9 +48,14 @@ public class FileIO : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public string ReadFromFile(string fileName)
     {
+        string fileInfo = "";
 
+        StreamReader reader = new StreamReader(fileName);
+        fileInfo = reader.ReadToEnd();
+        reader.Close();
+
+        return fileInfo;
     }
 }
