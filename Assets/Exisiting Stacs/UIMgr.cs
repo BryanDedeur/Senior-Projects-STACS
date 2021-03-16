@@ -20,8 +20,9 @@ public enum EGameState
 public enum EGameType
 {
     None = 0,
+    Sandbox,
     Practice,
-    Quiz
+    Test
 }
 
 public class UIMgr : MonoBehaviour
@@ -58,6 +59,7 @@ public class UIMgr : MonoBehaviour
     void Start()
     {
         State = EGameState.Briefing;
+        Type = EGameType.Sandbox;
         CameraViewPanels.Clear();
     }
     public bool show = false;
@@ -91,6 +93,7 @@ public class UIMgr : MonoBehaviour
     public void UpdateProto()
     {
         BriefingPanel.isValid = show;
+        SandboxPanel.isValid = show;
     }
 
 
@@ -240,5 +243,52 @@ public class UIMgr : MonoBehaviour
     public void DiscardBridge()
     {
         RestartScene();
+    }
+    public StacsPanel SandboxPanel;
+    public StacsPanel PracticePanel;
+    public StacsPanel testPanel;
+
+
+    public EGameType priorType;
+    public EGameType _type = EGameType.None;
+    //[System.Serializable]
+    public EGameType Type
+    {
+        get { return _type; }
+        set
+        {
+            priorType = _type;
+            _type = value;
+
+            SandboxPanel.isValid = (_type == EGameType.Sandbox);
+            PracticePanel.isValid = (_type == EGameType.Practice);
+            testPanel.isValid = (_type == EGameType.Test);
+
+            //Game Controller UI/Playing switch and Navigation
+            switch (_type)
+            {
+                case EGameType.Sandbox:
+                    EventSystem.current.firstSelectedGameObject = MenuMgr.instance.SandboxButton.gameObject;
+                    break;
+               /* case EGameType.Practice:
+                    EventSystem.current.firstSelectedGameObject = null;
+                    briefingPanelOkButton.Select();
+                    break;
+              */
+                case EGameType.Practice:
+                    EventSystem.current.firstSelectedGameObject =MenuMgr.instance.PracticeButton.gameObject;
+                    MenuMgr.instance.PracticeButton.Select();
+                    break;
+                case EGameType.Test:
+                    EventSystem.current.firstSelectedGameObject = helpDoneButton.gameObject;
+                    MenuMgr.instance.TestButton.Select();
+                    break;
+                default:
+                    EventSystem.current.firstSelectedGameObject = null;
+                    break;
+            }
+
+
+        }
     }
 }

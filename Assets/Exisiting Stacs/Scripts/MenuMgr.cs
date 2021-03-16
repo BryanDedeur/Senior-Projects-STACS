@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public class MenuMgr : MonoBehaviour
 {
+    public static MenuMgr instance;
+
+
     //used in SetMusicVolume
     public AudioMixer musicMixer;
     //used in SetNoiseVolume
@@ -24,6 +27,17 @@ public class MenuMgr : MonoBehaviour
     public GameObject deleteTitle;
     public GameObject loadTitle;
     public GameObject editTitle;
+    public GameObject BridgeSelectionPanel;
+    public GameObject SimulationPanel;
+    public GameObject TitlePanel;
+    public GameObject UnrLogo;
+
+
+    //Buttons
+    public Button SandboxButton;
+    public Button PracticeButton;
+    public Button TestButton;
+
     //To change the screen size
     private void Start()
     {
@@ -55,7 +69,15 @@ public class MenuMgr : MonoBehaviour
         screenDropdown.RefreshShownValue();
           
     }
-    
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+  
+    }
+
     public void LaunchScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
@@ -157,5 +179,18 @@ public class MenuMgr : MonoBehaviour
         }
 
     }
+
+    //All buttons that bring you to bridge selection
+    public void ToBridgeSelectionPanel()
+    {
+        BridgeSelectionPanel.SetActive(true);
+        SimulationPanel.SetActive(false);
+        TitlePanel.SetActive(false);
+        UnrLogo.SetActive(false);
+    }
+
+
+
+
 
 }

@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Senior Project Extensions/Menu/MainMenu.unity
     guid: 3fcc9726069a51e4ea4d87bd5553a5d0
-  - enabled: 0
+  - enabled: 1
     path: Assets/Exisiting Stacs/Scenes/SteelTrussBridge.unity
     guid: 194d010fa798e1d46802afcad8f979da
   - enabled: 1
