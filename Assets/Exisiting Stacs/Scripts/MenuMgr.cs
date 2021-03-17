@@ -28,6 +28,7 @@ public class MenuMgr : MonoBehaviour
     public GameObject loadTitle;
     public GameObject editTitle;
     public GameObject BridgeSelectionPanel;
+    public GameObject TestBridgeSelectionPanel;
     public GameObject SimulationPanel;
     public GameObject TitlePanel;
     public GameObject UnrLogo;
@@ -188,7 +189,14 @@ public class MenuMgr : MonoBehaviour
         TitlePanel.SetActive(false);
         UnrLogo.SetActive(false);
     }
-
+    //All buttons that bring you to bridge selection
+    public void ToTESTBridgeSelectionPanel()
+    {
+        TestBridgeSelectionPanel.SetActive(true);
+        SimulationPanel.SetActive(false);
+        TitlePanel.SetActive(false);
+        UnrLogo.SetActive(false);
+    }
 
 
 

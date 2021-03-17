@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Results : MonoBehaviour
 {
     private string filePath = "Results/results.txt";
+    public GameObject ResultsText;
+    public Transform Panel;
 
     public void DisplayUI(List<string[]> valuesParsed)
     {
@@ -13,9 +16,13 @@ public class Results : MonoBehaviour
             string temp = "";
             for (int j = 0; j < valuesParsed[i].Length; j++)
             { // value - adjust the UI value in the row
+                
+                ResultsText.GetComponent<Text>().text = valuesParsed[i][j];
+                Instantiate(ResultsText, Panel);
                 temp += valuesParsed[i][j] + " ";
             }
             print(temp);
+
         }
 
     }
