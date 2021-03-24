@@ -48,25 +48,25 @@ public class BCCameraController : MonoBehaviour
 
     public void TopView()
     {
-        rig.transform.position = Vector3.up * offset;
+        rig.transform.position = Vector3.zero;
         SetNewAngles(90, 0);
     }
 
     public void BottomView()
     {
-        rig.transform.position = -Vector3.up * offset;
+        rig.transform.position = Vector3.zero;
         SetNewAngles(270, 0);
     }
 
     public void LeftView()
     {
-        rig.transform.position = Vector3.forward * offset;
+        rig.transform.position = Vector3.zero;
         SetNewAngles(0, 180);
     }
 
     public void RightView()
     {
-        rig.transform.position = -Vector3.forward * offset;
+        rig.transform.position = Vector3.zero;
         SetNewAngles(0, 0);
     }
 
