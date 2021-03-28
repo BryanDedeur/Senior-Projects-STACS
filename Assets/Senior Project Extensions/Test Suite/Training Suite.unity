@@ -3856,8 +3856,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 373896160}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 568.1663, y: -428.63797, z: -977.3048}
+  m_LocalRotation: {x: -0.06120415, y: 0.091199644, z: 0.0056158616, w: 0.99393415}
+  m_LocalPosition: {x: 59.58307, y: -588.94086, z: -953.52057}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -19646,6 +19646,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1547038718}
     m_Modifications:
+    - target: {fileID: 1341322855131346096, guid: b1e85ca15bf12a149b411dfd94196586,
+        type: 3}
+      propertyPath: m_Text
+      value: 'Training '
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341322855131346102, guid: b1e85ca15bf12a149b411dfd94196586,
+        type: 3}
+      propertyPath: m_Name
+      value: TitleText
+      objectReference: {fileID: 0}
     - target: {fileID: 1341322855527465872, guid: b1e85ca15bf12a149b411dfd94196586,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
