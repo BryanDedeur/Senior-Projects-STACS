@@ -18,6 +18,7 @@ public class BridgeCreator : MonoBehaviour
 
     public Text vertexText;
     public Text edgeText;
+    public Text distanceText;
     public GameObject viewHighlight;
 
 /*    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
@@ -269,6 +270,7 @@ public class BridgeCreator : MonoBehaviour
     {
         edgeText.text = bridge.GetEdges().ToString();
         vertexText.text = bridge.GetVertices().ToString();
+        distanceText.text = bridge.edgeDistance.ToString();
     }
 
     // Adds a vertex and potentially creates and edge

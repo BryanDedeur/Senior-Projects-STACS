@@ -10,6 +10,8 @@ public class Bridge : MonoBehaviour
     public static Bridge instance;
     private GameObject container; // holds all the bridge components
 
+    public float edgeDistance = 0;
+
     private float platformLength;
     private float platformWidth;
 
@@ -209,6 +211,8 @@ public class Bridge : MonoBehaviour
         newTruss.LookAt(v1);
         newTruss.parent = transform;
 
+        edgeDistance += dist;
+
         edge = newTruss.gameObject.GetComponent<Edge>();
         if (edge == null)
         {
@@ -217,6 +221,7 @@ public class Bridge : MonoBehaviour
         edge.pos1 = v1;
         edge.pos2 = v2;
         edge.id = id;
+        edge.distance = dist;
 
         edges.Add(new Tuple<Vector3, Vector3>(v1, v2), edge);
         edgesId.Add(id, edge);
@@ -299,6 +304,7 @@ public class Bridge : MonoBehaviour
         }
         if (edge != null)
         {
+            edgeDistance -= edge.distance;
             Destroy(edge.gameObject);
         }
     }
