@@ -64,6 +64,9 @@ public class AIMgr : MonoBehaviour
             }
         }
 
+    
+
+
         if (Input.GetMouseButtonUp(1)) {
             isOffsetting = false;
             SetEndPos();
@@ -144,6 +147,7 @@ public class AIMgr : MonoBehaviour
             Debug.Log("Error in start position: " + startPos + " or end position: " + endPos);
         if(targetEntity == null) {
             //Debug.Log("Endposition = " + (start + offset).ToString());
+            Debug.Log("Move:" + startPos + " ofsett:" + offset);
             HandleMove(SelectionMgr.inst.selectedEntities, start + offset);
         } else {
             if (Input.GetKey(KeyCode.LeftControl))
@@ -188,6 +192,16 @@ public class AIMgr : MonoBehaviour
             uai.AddCommand(c);
         else
             uai.SetCommand(c);
+    }
+
+    public void HandleClear(List<StacsEntity> entities)
+    {
+        foreach(StacsEntity entity in entities)
+        {
+            UnitAI uai = entity.GetComponent<UnitAI>();
+            uai.StopAndRemoveAllCommands();
+        }
+      
     }
 
 

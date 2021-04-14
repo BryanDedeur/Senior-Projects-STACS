@@ -16,7 +16,7 @@ public class TestEvalution : MonoBehaviour
 
     public float totalBatteryUsage = 0;
     public float targetTotalBatteryUsage = 0;
-  
+
     public int totalDefectsFound = 0;
     public int actualDefects = 0;
 
@@ -29,6 +29,7 @@ public class TestEvalution : MonoBehaviour
 
     private void Awake()
     {
+        //this will start the robot moving 
         trackedRobotPreviousPos = new List<Vector3>();
         foreach (GameObject robot in trackedRobots)
         {
@@ -90,8 +91,8 @@ public class TestEvalution : MonoBehaviour
 
     public void PrintGrade(float grade)
     {
-       Debug.Log("You scored a:" + grade);
-        
+        Debug.Log("You scored a:" + grade);
+
     }
 
     public void UpdateRobotPositionTracking()
@@ -125,13 +126,34 @@ public class TestEvalution : MonoBehaviour
         FileIO.instance.WriteToFile(resultsPath, output, false);
     }
 
+    //for easy test select robot then press o 
+    //robot will start rount then after 15 second all commands will be cleared
+    //test is complete when robot reached the way point
+    IEnumerator easyError()
+    {
+        yield return new WaitForSeconds(15);
+        AIMgr.inst.HandleClear(SelectionMgr.inst.selectedEntities);
+    }
+
+    void easyTest()
+    {
+        Vector3 testEasy = new Vector3(-19.2f, 18.3f, -16.0f);
+      
+        AIMgr.inst.HandleMove(SelectionMgr.inst.selectedEntities, testEasy);
+        StartCoroutine(easyError());
+    }
+
+
     private void Update()
     {
         UpdateRobotPositionTracking();
         totalTime += Time.deltaTime;
 
-
-
+    if (Input.GetKey(KeyCode.O)) //start robot on path to point 5 but point 7 will block it
+    {
+        easyTest();
+    }
+             
         if (totalTime > targetTime && testMode && !testEnded)
         {
             EndTest();
