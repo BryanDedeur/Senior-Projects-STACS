@@ -143,21 +143,40 @@ public class TestEvalution : MonoBehaviour
         StartCoroutine(easyError());
     }
 
+    bool checkEnd()
+    {
+        Debug.Log("Checking end");
+
+        Vector3 targetPos = new Vector3(-19.3f, 18.3f, -15.25f); //position of pink way point 
+        float distance;
+        Debug.Log("Num:" + trackedRobots.Count);
+        foreach (GameObject robot in trackedRobots)
+        {
+            distance = Vector3.Distance(robot.transform.position, targetPos);
+            Debug.Log("Distance:" + distance);
+            if(distance < 5.0f)
+            {
+                Debug.Log("test edndy");
+                EndTest();
+            }
+          
+        }
+  
+        return true;
+    }
+
 
     private void Update()
     {
         UpdateRobotPositionTracking();
         totalTime += Time.deltaTime;
 
-    if (Input.GetKey(KeyCode.O)) //start robot on path to point 5 but point 7 will block it
+    if (Input.GetKey(KeyCode.O)) //start robot on path to point 5 but the robot will stop
     {
         easyTest();
     }
-             
-        if (totalTime > targetTime && testMode && !testEnded)
-        {
-            EndTest();
-        }
+        checkEnd();
+
     }
 
 }
