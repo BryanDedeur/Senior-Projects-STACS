@@ -127,10 +127,12 @@ public class Bridge : MonoBehaviour
         }
         print(checkArray);
         PlayerPrefs.DeleteAll();
-        for (int i = 4; i < tempArray.Length; i += 3)
+        for (int i = 4; i < tempArray.Length; i += 5)
         {
-            BridgeCreator.instance.AddVertex(new Vector3(tempArray[i], tempArray[i + 1], tempArray[1 + 2]));
+            CreateVertex(new Vector3(tempArray[i], tempArray[i + 1], tempArray[i + 2]), BridgeCreator.instance.vertexPrefab);
+            //AddVertex(new Vector3(tempArray[i], tempArray[i + 1], tempArray[1 + 2]));
         }
+        //BridgeCreator.instance.UpdateText();
 
     }
 

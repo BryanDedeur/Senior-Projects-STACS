@@ -72,12 +72,14 @@ public class BridgeCreator : MonoBehaviour
         {
             Destroy(this);
         }
+
+        bridge = bridgeContainer.GetComponent<Bridge>();
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        bridge = bridgeContainer.GetComponent<Bridge>();
         bridge.SetPlatform(platformPrefabs[0]);
         cursor = Instantiate(vertexPrefab.transform).gameObject;
         Destroy(cursor.GetComponent<Collider>());

@@ -43,11 +43,20 @@ public class MenuMgr : MonoBehaviour
     public Button PracticeButton;
     public Button TestButton;
 
+    private void Awake()
+    {
+        screenSize = Screen.resolutions;
+
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+
     //To change the screen size
     private void Start()
     {
-        //gets array of all possible screen sizes
-        screenSize = Screen.resolutions;
+
         //Clears current size options
         screenDropdown.ClearOptions();
         //Turn the screenSize array into a string - Needs to be a string to be used in AddOptions
@@ -59,12 +68,12 @@ public class MenuMgr : MonoBehaviour
         {
             //creates the string that the user will see, ie 1600 x 900
             string option = screenSize[i].width + " x " + screenSize[i].height;
-            options.Add(option); 
+            options.Add(option);
             //compares the sizes
-            if(screenSize[i].width == Screen.currentResolution.width && screenSize[i].height == Screen.currentResolution.height)
+            if (screenSize[i].width == Screen.currentResolution.width && screenSize[i].height == Screen.currentResolution.height)
             {
                 //if they are the same, then it's stored
-                currentSize = i; 
+                currentSize = i;
             }
         }
         //add size options to the dropdown
@@ -72,15 +81,7 @@ public class MenuMgr : MonoBehaviour
         //updates the current size in unity
         screenDropdown.value = currentSize;
         screenDropdown.RefreshShownValue();
-          
-    }
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-  
+
     }
 
     public void LaunchScene(string sceneName)
@@ -121,6 +122,7 @@ public class MenuMgr : MonoBehaviour
     //Screen Size -- updates the screen size
     public void SetScreenSize(int sizeNum)
     {
+
         Resolution size = screenSize[sizeNum];
         Screen.SetResolution(size.width, size.height, Screen.fullScreen); 
     }
