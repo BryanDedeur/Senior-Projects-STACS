@@ -132,7 +132,7 @@ public class UIMgr : MonoBehaviour
             priorState = _state;
             _state = value;
 
-            if (BriefingPanel != null && HelpPanel != null && MenuPanel != null)
+            if (BriefingPanel != null)
             {
                 BriefingPanel.isValid = (_state == EGameState.Briefing);
                 HelpPanel.isValid = (_state == EGameState.ShowHelp);
@@ -170,6 +170,7 @@ public class UIMgr : MonoBehaviour
     public void StartGame()
     {
         //Debug.Log("GameStarting");
+        TestEvalution.inst.easyTest();
         State = EGameState.Monitoring;
     }
 
@@ -302,5 +303,16 @@ public class UIMgr : MonoBehaviour
 
 
         }
+    }
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        //PauseVolume();
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+        //ResumeVolume();
     }
 }

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class TestEvalution : MonoBehaviour
 {
-    public List<GameObject> trackedRobots;
+    public static TestEvalution inst;
+    public List<StacsEntity> trackedRobots;
     private List<Vector3> trackedRobotPreviousPos;
 
     //to cac total grade average grades from all secions
@@ -29,9 +30,10 @@ public class TestEvalution : MonoBehaviour
 
     private void Awake()
     {
+        inst = this;
         //this will start the robot moving 
         trackedRobotPreviousPos = new List<Vector3>();
-        foreach (GameObject robot in trackedRobots)
+        foreach (StacsEntity robot in trackedRobots)
         {
             trackedRobotPreviousPos.Add(robot.transform.position);
         }
@@ -108,6 +110,7 @@ public class TestEvalution : MonoBehaviour
     {
         testEnded = true;
         WriteToFile();
+        UIMgr.inst.PauseGame();
     }
 
     public void WriteToFile()
@@ -131,16 +134,18 @@ public class TestEvalution : MonoBehaviour
     //test is complete when robot reached the way point
     IEnumerator easyError()
     {
+        Debug.Log("Error");
         yield return new WaitForSeconds(15);
-        AIMgr.inst.HandleClear(SelectionMgr.inst.selectedEntities);
+        AIMgr.inst.HandleClear(trackedRobots);
     }
 
-    void easyTest()
+    public void easyTest()
     {
         Vector3 testEasy = new Vector3(-19.2f, 18.3f, -16.0f);
-      
-        AIMgr.inst.HandleMove(SelectionMgr.inst.selectedEntities, testEasy);
-        StartCoroutine(easyError());
+        AIMgr.inst.HandleMove(trackedRobots, testEasy);
+
+        // AIMgr.inst.HandleMove(SelectionMgr.inst.selectedEntities, testEasy);
+        StartCoroutine(easyError());    //wait 15 seconds then do it
     }
 
     bool checkEnd()
@@ -149,19 +154,19 @@ public class TestEvalution : MonoBehaviour
 
         Vector3 targetPos = new Vector3(-19.3f, 18.3f, -15.25f); //position of pink way point 
         float distance;
-        Debug.Log("Num:" + trackedRobots.Count);
-        foreach (GameObject robot in trackedRobots)
+
+        foreach (StacsEntity robot in trackedRobots)
         {
             distance = Vector3.Distance(robot.transform.position, targetPos);
             Debug.Log("Distance:" + distance);
-            if(distance < 5.0f)
+            if (distance < 5.0f)
             {
                 Debug.Log("test edndy");
                 EndTest();
             }
-          
+
         }
-  
+
         return true;
     }
 
@@ -171,10 +176,10 @@ public class TestEvalution : MonoBehaviour
         UpdateRobotPositionTracking();
         totalTime += Time.deltaTime;
 
-    if (Input.GetKey(KeyCode.O)) //start robot on path to point 5 but the robot will stop
-    {
-        easyTest();
-    }
+        if (Input.GetKey(KeyCode.O)) //start robot on path to point 5 but the robot will stop
+        {
+            easyTest();
+        }
         checkEnd();
 
     }
