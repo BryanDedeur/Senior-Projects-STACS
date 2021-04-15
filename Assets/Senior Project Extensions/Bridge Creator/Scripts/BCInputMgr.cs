@@ -9,7 +9,8 @@ public class BCInputMgr : MonoBehaviour
     public static BCInputMgr instance;
     public bool boxState = false; //false to indicate normal left click true to indicate box slection
     public bool endMove = false;
-   
+    public GameObject SaveBridgePanel;
+
     private void Awake()
     {
         // this keeps instance a singlton
@@ -26,106 +27,101 @@ public class BCInputMgr : MonoBehaviour
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
+                if (Input.GetMouseButtonDown(0) && !boxState) // Left mouse button
+                {
+                    if (Input.GetKey(KeyCode.LeftControl))
+                    {
 
-            if (Input.GetMouseButtonDown(0) && !boxState) // Left mouse button
-            {
-                if (Input.GetKey(KeyCode.LeftControl))
-                {
-                   
-                    BCSelectionMgr.instance.UnitSelect();
+                        BCSelectionMgr.instance.UnitSelect();
+                    }
+                    else
+                    {
+                        BridgeCreator.instance.AttemptAddVertexAndConnectEdge();
+                    }
                 }
-                else
+
+                if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) == false) // fires every frame
                 {
-                    BridgeCreator.instance.AttemptAddVertexAndConnectEdge();
+
+                    BridgeCreator.instance.AttemptMoveSelected();
+                    endMove = true;
+                    boxState = false;
                 }
+
             }
 
-            if (Input.GetMouseButton(0) && Input.GetKey(KeyCode.LeftShift) == false) // fires every frame
+
+            if (Input.GetMouseButtonUp(0) && endMove)
             {
-               
-                BridgeCreator.instance.AttemptMoveSelected();
-                endMove = true;
-                boxState = false;
+                BridgeCreator.instance.EndMovingSelected();
+                endMove = false;
+                //BridgeCreator.instance.AdjustDraggedVertex(hit);
             }
 
-        }
+
+            if (Input.GetMouseButtonDown(1)) // Right mouse button
+            {
+                BridgeCreator.instance.AttemptRemoveEdgeOrVertex();
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                boxState = true;
+
+            }
+            if (Input.GetMouseButtonDown(0) && boxState && Input.GetKey(KeyCode.LeftControl) == false)
+            {
+
+                BCSelectionMgr.instance.EnableBoxSelection();
+            }
+
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                //leftClickState = false;
+                BCSelectionMgr.instance.DisableHighLight();
+                //  BCSelectionMgr.instance.DisableBoxSelection();
+            }
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                BridgeCreator.instance.EnableMirroring();
+            }
+
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                BridgeCreator.instance.DisableMirroring();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Backspace))
+            {
+                List<Transform> newObjects = new List<Transform>(BridgeCreator.instance.CopySelectedObjects());
+                BCSelectionMgr.instance.DeselectAll();
+                BCSelectionMgr.instance.AdjustListObjects(newObjects);
 
 
-        if (Input.GetMouseButtonUp(0) && endMove)
-        {
-            BridgeCreator.instance.EndMovingSelected();
-            endMove = false;
-            //BridgeCreator.instance.AdjustDraggedVertex(hit);
-        }
+            }
 
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                BridgeCreator.instance.MirrorSelectedObjects();
+                BCSelectionMgr.instance.DeselectAll();
 
-        if (Input.GetMouseButtonDown(1)) // Right mouse button
-        {
-            BridgeCreator.instance.AttemptRemoveEdgeOrVertex();
-        }
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                BCSelectionMgr.instance.DisableBoxSelection();
+                BCSelectionMgr.instance.DeselectAll();
 
-        if (Input.GetKeyDown(KeyCode.LeftShift)) 
-        {
-            boxState = true;
-   
-        }
-        if(Input.GetMouseButtonDown(0) && boxState && Input.GetKey(KeyCode.LeftControl) == false)
-        {
-           
-            BCSelectionMgr.instance.EnableBoxSelection();
-        }
+            }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            //leftClickState = false;
-            BCSelectionMgr.instance.DisableHighLight();
-          //  BCSelectionMgr.instance.DisableBoxSelection();
-        }
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                BridgeCreator.instance.DeleteSelectedObjects();
+                BCSelectionMgr.instance.DeselectAll();
+                print("WTFFF");
+                print("Counter:" + BCSelectionMgr.instance.selectedObjects.Count);
 
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            BridgeCreator.instance.EnableMirroring();
-        }
-
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            BridgeCreator.instance.DisableMirroring();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            List<Transform> newObjects = new List<Transform>(BridgeCreator.instance.CopySelectedObjects());
-            BCSelectionMgr.instance.DeselectAll();
-            BCSelectionMgr.instance.AdjustListObjects(newObjects);
-
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            BridgeCreator.instance.MirrorSelectedObjects();
-            BCSelectionMgr.instance.DeselectAll();
-
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            BCSelectionMgr.instance.DisableBoxSelection();
-            BCSelectionMgr.instance.DeselectAll();
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            BridgeCreator.instance.DeleteSelectedObjects();
-            BCSelectionMgr.instance.DeselectAll();
-            print("WTFFF");
-            print("Counter:" + BCSelectionMgr.instance.selectedObjects.Count);
-
-        }
-
-
-
-
+            }
     }
     public static bool IsPointerOverUIObject()
     {

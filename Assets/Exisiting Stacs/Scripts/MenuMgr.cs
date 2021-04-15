@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEditor;
 
 
 public class MenuMgr : MonoBehaviour
@@ -33,6 +34,8 @@ public class MenuMgr : MonoBehaviour
     public GameObject SimulationPanel;
     public GameObject TitlePanel;
     public GameObject UnrLogo;
+    public string existingBridge;
+    public string existingBridgeString = "existingBridge";
 
 
     //Buttons
@@ -207,6 +210,15 @@ public class MenuMgr : MonoBehaviour
         UnrLogo.SetActive(false);
     }
 
+    public void ExploreFiles()
+    {
+        existingBridge = EditorUtility.OpenFilePanel("Select Existing Bridge", "", "txt");
+        if(existingBridge != null)
+        {
+            PlayerPrefs.SetString(existingBridgeString, existingBridge.ToString());
+            SceneManager.LoadScene(1);
+        }
+    }
 
 
 }

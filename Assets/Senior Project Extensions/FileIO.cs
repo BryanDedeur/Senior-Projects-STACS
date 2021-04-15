@@ -51,7 +51,6 @@ public class FileIO : MonoBehaviour
     public string ReadFromFile(string fileName)
     {
         string fileInfo = "";
-
         StreamReader reader = new StreamReader(fileName);
         fileInfo = reader.ReadToEnd();
         reader.Close();

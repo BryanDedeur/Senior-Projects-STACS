@@ -124,84 +124,84 @@ public class BCCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(1)) // right mouse
-        {
-            StartMouseOrbit();
-        }
-
-        if (Input.GetMouseButton(1))
-        {
-            ContinueOrbit();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            testbool = true;
-        }
-
-/*        if (viewDirection == CameraDirection.Left)
-            leftViewControls = true;
-        else
-            leftViewControls = false;
-        if (viewDirection == CameraDirection.Top)
-            topViewControls = true;
-        else
-            topViewControls = false;
-        if (viewDirection == CameraDirection.Bottom)
-            bottomViewControls = true;
-        else
-            bottomViewControls = false;*/
-
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f) // forward
-        {
-            ZoomIn();
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0f) // backwards
-        {
-            ZoomOut();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            rotationLocked = false;
-        if (Input.GetKeyUp(KeyCode.Space))
-            rotationLocked = true;
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            if (!rotationLocked)
-                SetNewAngles(transform.parent.localEulerAngles.x, transform.parent.localEulerAngles.y + (rotationSpeed * Time.deltaTime));
-            else
+            if (Input.GetMouseButtonDown(1)) // right mouse
             {
-                rig.position += -transform.right * camSpeed * Time.deltaTime;
+                StartMouseOrbit();
+            }
+
+            if (Input.GetMouseButton(1))
+            {
+                ContinueOrbit();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                testbool = true;
+            }
+
+            /*        if (viewDirection == CameraDirection.Left)
+                        leftViewControls = true;
+                    else
+                        leftViewControls = false;
+                    if (viewDirection == CameraDirection.Top)
+                        topViewControls = true;
+                    else
+                        topViewControls = false;
+                    if (viewDirection == CameraDirection.Bottom)
+                        bottomViewControls = true;
+                    else
+                        bottomViewControls = false;*/
+
+            if (Input.GetAxis("Mouse ScrollWheel") > 0f) // forward
+            {
+                ZoomIn();
+            }
+            else if (Input.GetAxis("Mouse ScrollWheel") < 0f) // backwards
+            {
+                ZoomOut();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                rotationLocked = false;
+            if (Input.GetKeyUp(KeyCode.Space))
+                rotationLocked = true;
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                if (!rotationLocked)
+                    SetNewAngles(transform.parent.localEulerAngles.x, transform.parent.localEulerAngles.y + (rotationSpeed * Time.deltaTime));
+                else
+                {
+                    rig.position += -transform.right * camSpeed * Time.deltaTime;
+                }
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                if (!rotationLocked)
+                    SetNewAngles(transform.parent.localEulerAngles.x, transform.parent.localEulerAngles.y - (rotationSpeed * Time.deltaTime));
+
+                else
+                {
+                    rig.position += transform.right * camSpeed * Time.deltaTime;
+                }
+            }
+            if (Input.GetKey(KeyCode.W))
+            {
+                if (!rotationLocked)
+                    SetNewAngles(transform.parent.localEulerAngles.x + (rotationSpeed * Time.deltaTime), transform.parent.localEulerAngles.y);
+                else
+                {
+                    rig.position += transform.up * camSpeed * Time.deltaTime;
+                }
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                if (!rotationLocked)
+                    SetNewAngles(transform.parent.localEulerAngles.x - (rotationSpeed * Time.deltaTime), transform.parent.localEulerAngles.y);
+                else
+                {
+                    rig.position += -transform.up * camSpeed * Time.deltaTime;
+                }
             }
         }
-        if (Input.GetKey(KeyCode.D))
-        {
-            if (!rotationLocked)
-                SetNewAngles(transform.parent.localEulerAngles.x, transform.parent.localEulerAngles.y - (rotationSpeed * Time.deltaTime));
-
-            else
-            {
-                rig.position += transform.right * camSpeed * Time.deltaTime;
-            }
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            if (!rotationLocked)
-                SetNewAngles(transform.parent.localEulerAngles.x + (rotationSpeed * Time.deltaTime), transform.parent.localEulerAngles.y);
-            else
-            {
-                rig.position += transform.up * camSpeed * Time.deltaTime;
-            }
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            if (!rotationLocked)
-                SetNewAngles(transform.parent.localEulerAngles.x - (rotationSpeed * Time.deltaTime), transform.parent.localEulerAngles.y);
-            else
-            {
-                rig.position += -transform.up * camSpeed * Time.deltaTime;
-            }
-        }
-    }
 }

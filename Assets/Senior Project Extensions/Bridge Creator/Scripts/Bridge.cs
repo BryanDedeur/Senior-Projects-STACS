@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 // This class is a container for holding bridge info and functions
 public class Bridge : MonoBehaviour
@@ -24,6 +25,8 @@ public class Bridge : MonoBehaviour
     public Dictionary<Vector3, GameObject> vertices;
     public Dictionary<Tuple<Vector3, Vector3>, Edge> edges;
     public Dictionary<int, Edge> edgesId;
+    public string existingBridgeString = "existingBridge";
+    
 
     private int id;
 
@@ -33,6 +36,7 @@ public class Bridge : MonoBehaviour
 
     public string bridgeName = "Default Bridge";
     public string bridgePath = "Bridges/";
+    public InputField newBridgeName;
 
     private void Awake()
     {
@@ -56,6 +60,7 @@ public class Bridge : MonoBehaviour
         edges = new Dictionary<Tuple<Vector3, Vector3>, Edge>();
         edgesId = new Dictionary<int, Edge>();
         id = 0;
+        Load();
 
     }
 
@@ -89,29 +94,44 @@ public class Bridge : MonoBehaviour
         output += vertices.Count.ToString() + "\n";
         output += edges.Count.ToString() + "\n";
         output += GetSumEdges().ToString() + "\n";
-        foreach (var edgeRef in edges)
-        {
-            output += GetVertexId(edgeRef.Value.pos1).ToString() + " " + GetVertexId(edgeRef.Value.pos2).ToString() + " " + edgeRef.Value.transform.localScale.z.ToString() + "\n";
-        }
-
-        return output;
-    }
-
-    private string FormatVertexPositionsToString() // vertex positions
-    {
-        string output = "";
         foreach (var vert in vertices)
         {
             output += GetVertexId(vert.Key).ToString() + " " + vert.Key.x.ToString() + " " + vert.Key.y.ToString() + " " + vert.Key.z.ToString() + " " + "\n";
         }
+        foreach (var edgeRef in edges)
+        {
+            output += GetVertexId(edgeRef.Value.pos1).ToString() + " " + GetVertexId(edgeRef.Value.pos2).ToString() + " " + edgeRef.Value.transform.localScale.z.ToString() + "\n";
+        }
         return output;
     }
+
 
     public void Save()
     {
         print("save");
+        bridgeName = newBridgeName.text;
         FileIO.instance.WriteToFile(bridgePath + bridgeName + ".txt", FormatConnectionsToString(), true);
-        FileIO.instance.WriteToFile(bridgePath + bridgeName + "-positions.txt", FormatVertexPositionsToString(), true);
+    }
+
+    public void Load()
+    {
+        string[] tempFile;
+        string checkArray = null;
+        print("Loading " + PlayerPrefs.GetString(existingBridgeString));
+        tempFile = FileIO.instance.ReadFromFile(PlayerPrefs.GetString(existingBridgeString)).Split(' ', '\n');
+        float[] tempArray = new float[tempFile.Length];
+        for (int i = 0; i < tempFile.Length-2 ; i++)
+        {
+            float.TryParse(tempFile[i], out tempArray[i]);
+            checkArray += tempArray[i].ToString() + ' ';
+        }
+        print(checkArray);
+        PlayerPrefs.DeleteAll();
+        for (int i = 4; i < tempArray.Length; i += 3)
+        {
+            BridgeCreator.instance.AddVertex(new Vector3(tempArray[i], tempArray[i + 1], tempArray[1 + 2]));
+        }
+
     }
 
     public void SetPlatform(GameObject platformPrefab)
