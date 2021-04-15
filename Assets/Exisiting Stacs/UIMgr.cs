@@ -171,15 +171,9 @@ public class UIMgr : MonoBehaviour
     //on briefing panel Ok button click
     public void StartGame()
     {
-<<<<<<< Updated upstream
-        //Debug.Log("GameStarting");
+
         TestEvalution.inst.easyTest();
         State = EGameState.Monitoring;
-=======
-        Debug.Log("GameStarting");
-        TestEvalution.inst.easyTest();
-        State = EGameState.Monitoring;      
->>>>>>> Stashed changes
     }
 
     public void HandleMenuHelp()

@@ -143,13 +143,7 @@ public class TestEvalution : MonoBehaviour
     {
         Vector3 testEasy = new Vector3(-19.2f, 18.3f, -16.0f);
         AIMgr.inst.HandleMove(trackedRobots, testEasy);
-<<<<<<< Updated upstream
 
-        // AIMgr.inst.HandleMove(SelectionMgr.inst.selectedEntities, testEasy);
-=======
-           
-       // AIMgr.inst.HandleMove(SelectionMgr.inst.selectedEntities, testEasy);
->>>>>>> Stashed changes
         StartCoroutine(easyError());    //wait 15 seconds then do it
     }
 
@@ -159,11 +153,6 @@ public class TestEvalution : MonoBehaviour
 
         Vector3 targetPos = new Vector3(-19.3f, 18.3f, -15.25f); //position of pink way point 
         float distance;
-<<<<<<< Updated upstream
-
-=======
-        
->>>>>>> Stashed changes
         foreach (StacsEntity robot in trackedRobots)
         {
             distance = Vector3.Distance(robot.transform.position, targetPos);
