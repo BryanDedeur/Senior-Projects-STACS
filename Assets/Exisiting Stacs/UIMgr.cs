@@ -28,6 +28,8 @@ public enum EGameType
 public class UIMgr : MonoBehaviour
 {
     public static UIMgr inst;
+
+    
     private void Awake()
     {
         inst = this;
@@ -169,9 +171,15 @@ public class UIMgr : MonoBehaviour
     //on briefing panel Ok button click
     public void StartGame()
     {
+<<<<<<< Updated upstream
         //Debug.Log("GameStarting");
         TestEvalution.inst.easyTest();
         State = EGameState.Monitoring;
+=======
+        Debug.Log("GameStarting");
+        TestEvalution.inst.easyTest();
+        State = EGameState.Monitoring;      
+>>>>>>> Stashed changes
     }
 
     public void HandleMenuHelp()
