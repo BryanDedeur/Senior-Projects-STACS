@@ -4057,8 +4057,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 443912214}
-  m_LocalRotation: {x: -0.06570239, y: 0.65454614, z: 0.057265386, w: 0.75098157}
-  m_LocalPosition: {x: -46.6, y: -51.16, z: -15.5}
+  m_LocalRotation: {x: 0.11305381, y: 0.04201596, z: 0.004785269, w: -0.9926886}
+  m_LocalPosition: {x: -38.42169, y: -17.742422, z: -19.912146}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4697,8 +4697,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534929266}
-  m_LocalRotation: {x: 0.07937147, y: 0.033489462, z: 0.0026678613, w: -0.9962788}
-  m_LocalPosition: {x: -32.990284, y: -33.24207, z: -104.31926}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -38.76, y: -17.133001, z: -14.891001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6163,37 +6163,37 @@ PrefabInstance:
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -57.07
+      value: -39.227
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.227
+      value: 21.333
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15.375
+      value: -14.72
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
@@ -6203,12 +6203,12 @@ PrefabInstance:
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 3488172292732993877, guid: ec76c9ac91413ad41acdd12216df3087,
         type: 3}
@@ -15579,7 +15579,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739fd57aed557de43b7f110ff8edad67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackedRobots: []
+  trackedRobots:
+  - {fileID: 1309955748}
   totalRobotTravelDistance: 0
   targetTotalRobotTravelDistance: 1000
   totalTime: 0
@@ -17597,6 +17598,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1547038718}
     m_Modifications:
+    - target: {fileID: 485835861498424107, guid: c787723c831b37f44b356516475a694b,
+        type: 3}
+      propertyPath: m_Text
+      value: "Welcome to the steel bridge easy test. The goal of this operation is
+        to guide the single climbing robot to the pink waypoint. In this situation
+        the robot is stuck and you must manually take control of the robot.Once you
+        click 'ok' the test will begin. Good luck.\r\n"
+      objectReference: {fileID: 0}
     - target: {fileID: 485835861711902472, guid: c787723c831b37f44b356516475a694b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

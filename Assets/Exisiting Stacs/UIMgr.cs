@@ -172,7 +172,7 @@ public class UIMgr : MonoBehaviour
     public void StartGame()
     {
 
-        TestEvalution.inst.easyTest();
+        TestEvalution.inst.easyTest1();
         State = EGameState.Monitoring;
     }
 

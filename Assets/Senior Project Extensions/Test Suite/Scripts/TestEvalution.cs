@@ -134,18 +134,35 @@ public class TestEvalution : MonoBehaviour
     //test is complete when robot reached the way point
     IEnumerator easyError()
     {
-        Debug.Log("Error");
+        Debug.Log("Error for test started");
         yield return new WaitForSeconds(15);
         AIMgr.inst.HandleClear(trackedRobots);
     }
 
-    public void easyTest()
+    public void easyTest1()
     {
         Vector3 testEasy = new Vector3(-19.2f, 18.3f, -16.0f);
         AIMgr.inst.HandleMove(trackedRobots, testEasy);
 
         StartCoroutine(easyError());    //wait 15 seconds then do it
     }
+
+    public void easyTest2()
+    {
+        Debug.Log("easytest2");
+       // Vector3 testEasy = new Vector3(-39.227f, 20.0f, -14.72f);
+       // AIMgr.inst.HandleMove(trackedRobots, testEasy);
+        //trackedRobots.desiredSpeed += deltaSpeed * Time.deltaTime;
+
+        foreach(StacsEntity robot in trackedRobots)
+        {
+            Debug.Log("bobo");
+            robot.desiredSpeed = 4.0f; 
+        }
+
+      //  StartCoroutine(easyError());    //wait 15 seconds then do it
+    }
+
 
     bool checkEnd()
     {
@@ -176,7 +193,7 @@ public class TestEvalution : MonoBehaviour
 
         if (Input.GetKey(KeyCode.O)) //start robot on path to point 5 but the robot will stop
         {
-            easyTest();
+            easyTest2();
         }
         checkEnd();
 
