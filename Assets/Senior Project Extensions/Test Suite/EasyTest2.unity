@@ -4057,8 +4057,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 443912214}
-  m_LocalRotation: {x: 0.11305381, y: 0.04201596, z: 0.004785269, w: -0.9926886}
-  m_LocalPosition: {x: -38.42169, y: -17.742422, z: -19.912146}
+  m_LocalRotation: {x: 0.12836693, y: 0.06599513, z: 0.0085615795, w: -0.98949146}
+  m_LocalPosition: {x: 409.08862, y: -360.52203, z: -782.2243}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -11406,6 +11406,9 @@ MonoBehaviour:
   briefingPanelOkButton: {fileID: 231488749}
   menuHelpButton: {fileID: 0}
   helpDoneButton: {fileID: 0}
+  resultsPagePanel: {fileID: 0}
+  mTest: 1
+  mTestType: 3
   show: 0
   Graph: {fileID: 1830769999}
   priorState: 0
@@ -11414,11 +11417,6 @@ MonoBehaviour:
     type: 3}
   CameraViewPanelsParent: {fileID: 1681458056}
   CameraViewPanels: []
-  SandboxPanel: {fileID: 0}
-  PracticePanel: {fileID: 0}
-  testPanel: {fileID: 0}
-  priorType: 0
-  _type: 0
 --- !u!114 &1411429360
 MonoBehaviour:
   m_ObjectHideFlags: 0

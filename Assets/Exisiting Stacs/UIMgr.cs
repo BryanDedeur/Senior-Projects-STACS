@@ -25,6 +25,14 @@ public enum EGameType
     Test
 }
 
+public enum TestState
+{
+    EasyTest1,
+    EasyTest2,
+    MediumTest,
+    HardTest,
+}
+
 public class UIMgr : MonoBehaviour
 {
     public static UIMgr inst;
@@ -58,7 +66,11 @@ public class UIMgr : MonoBehaviour
     public Button helpDoneButton;
 
 
-    public GameObject resultsPagePanel; 
+    public GameObject resultsPagePanel;
+
+    public TestState mTest;
+    public EGameType mTestType;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -175,8 +187,14 @@ public class UIMgr : MonoBehaviour
     //on briefing panel Ok button click
     public void StartGame()
     {
-
-        TestEvalution.inst.easyTest1();
+        if (mTest == TestState.EasyTest1)
+        {
+            TestEvalution.inst.easyTest1();
+        }
+        if (mTest == TestState.EasyTest2)
+        {
+            TestEvalution.inst.easyTest2();
+        }
         State = EGameState.Monitoring;
     }
 

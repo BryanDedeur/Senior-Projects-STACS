@@ -118,9 +118,28 @@ public class TestEvalution : MonoBehaviour
     {
         string output = "";
 
-        output += "NA" + "\t"; // TODO get bridge name
-        output += "NA" + "\t"; // TODO get bridge diffculty
-        output += testMode.ToString() + "\t";
+        output += "Steel Truss Bridge" + "\t"; // TODO get bridge name
+        if(UIMgr.inst.mTest == TestState.EasyTest1 || UIMgr.inst.mTest == TestState.EasyTest2)
+        {
+            output += "Easy" + "\t";
+        }
+        if (UIMgr.inst.mTest == TestState.MediumTest)
+        {
+            output += "Medium" + "\t";
+        }
+        if (UIMgr.inst.mTest == TestState.HardTest)
+        {
+            output += "Hard" + "\t";
+        }
+        if (UIMgr.inst.mTestType == EGameType.Test)
+        {
+            output += "Test" + "\t";
+        }
+        if (UIMgr.inst.mTestType == EGameType.Practice)
+        {
+            output += "Practice Test" + "\t";
+        }
+        //output += testMode.ToString() + "\t";
         output += FinalGrade().ToString() + "\t";
         output += totalRobotTravelDistance.ToString() + "\t";
         output += totalTime.ToString() + "\t";
