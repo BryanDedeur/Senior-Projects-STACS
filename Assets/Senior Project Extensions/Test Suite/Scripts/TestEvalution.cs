@@ -114,6 +114,16 @@ public class TestEvalution : MonoBehaviour
         UIMgr.inst.resultsPagePanel.SetActive(true);
     }
 
+    public void FailTest()
+    {
+        Debug.Log("Fail Test");
+        //gnna add a fail ui stuff
+        testEnded = true;
+        WriteToFileFail();
+        UIMgr.inst.PauseGame();
+        UIMgr.inst.resultsPagePanelFailed.SetActive(true);
+    }
+
     public void WriteToFile()
     {
         string output = "";
@@ -149,22 +159,65 @@ public class TestEvalution : MonoBehaviour
         FileIO.instance.WriteToFile(resultsPath, output, false);
     }
 
+    public void WriteToFileFail()
+    {
+        string output = "";
+
+        output += "Steel Truss Bridge" + "\t"; // TODO get bridge name
+        if (UIMgr.inst.mTest == TestState.EasyTest1 || UIMgr.inst.mTest == TestState.EasyTest2)
+        {
+            output += "Easy" + "\t";
+        }
+        if (UIMgr.inst.mTest == TestState.MediumTest)
+        {
+            output += "Medium" + "\t";
+        }
+        if (UIMgr.inst.mTest == TestState.HardTest)
+        {
+            output += "Hard" + "\t";
+        }
+        if (UIMgr.inst.mTestType == EGameType.Test)
+        {
+            output += "Test" + "\t";
+        }
+        if (UIMgr.inst.mTestType == EGameType.Practice)
+        {
+            output += "Practice Test" + "\t";
+        }
+        //output += testMode.ToString() + "\t";
+        output += "0" + "\t";
+        output += totalRobotTravelDistance.ToString() + "\t";
+        output += totalTime.ToString() + "\t";
+        output += totalBatteryUsage.ToString() + "\t";
+        output += totalDefectsFound.ToString();
+
+        FileIO.instance.WriteToFile(resultsPath, output, false);
+    }
     //for easy test select robot then press o 
     //robot will start rount then after 15 second all commands will be cleared
     //test is complete when robot reached the way point
-    IEnumerator easyError()
+    IEnumerator Error()
     {
-        Debug.Log("Error for test started");
-        yield return new WaitForSeconds(15);
-        AIMgr.inst.HandleClear(trackedRobots);
+        if (UIMgr.inst.mTest == TestState.EasyTest1)
+        {
+            Debug.Log("Error easy");
+            yield return new WaitForSeconds(15);
+            AIMgr.inst.HandleClear(trackedRobots);
+        }
+        else if(UIMgr.inst.mTest == TestState.MediumTest)
+        {
+            Debug.Log("Error for medium started");
+            yield return new WaitForSeconds(15);
+            AIMgr.inst.HandleClear(trackedRobots[0]);
+        }
     }
 
-    public void easyTest1()
+      public void easyTest1()
     {
         Vector3 testEasy = new Vector3(-19.2f, 18.3f, -16.0f);
         AIMgr.inst.HandleMove(trackedRobots, testEasy);
 
-        StartCoroutine(easyError());    //wait 15 seconds then do it
+        StartCoroutine(Error());    //wait 15 seconds then do it
     }
 
     public void easyTest2()
@@ -180,26 +233,54 @@ public class TestEvalution : MonoBehaviour
             robot.desiredSpeed = 4.0f; 
         }
 
-      //  StartCoroutine(easyError());    //wait 15 seconds then do it
+    }
+
+    public void mediumTest()
+    {
+        Debug.Log("Medium Test");
+        Vector3 testEasy = new Vector3(0f, 31.11f, -15.25f);
+        AIMgr.inst.HandleMove(trackedRobots[0], testEasy);
+        trackedRobots[1].desiredSpeed = 4.0f;
+        StartCoroutine(Error());
+
+
     }
 
 
     bool checkEnd()
     {
         Debug.Log("Checking end");
-
-        Vector3 targetPos = new Vector3(-19.3f, 18.3f, -15.25f); //position of pink way point 
+        int counter = 0;
         float distance;
         foreach (StacsEntity robot in trackedRobots)
         {
-            distance = Vector3.Distance(robot.transform.position, targetPos);
-            Debug.Log("Distance:" + distance);
-            if (distance < 5.0f)
+
+            if(UIMgr.inst.mTest == TestState.EasyTest1 || UIMgr.inst.mTest == TestState.EasyTest2)
             {
-                Debug.Log("test edndy");
-                EndTest();
+                Vector3 targetPos = new Vector3(-19.3f, 18.3f, -15.25f); //position of pink way point 
+                distance = Vector3.Distance(robot.transform.position, targetPos);
+                if(distance < 3.0f)
+                {
+                    Debug.Log("test edndy");
+                    EndTest();
+                }
+            }
+            else if (UIMgr.inst.mTest == TestState.MediumTest)
+            {
+                Vector3 targetPos = new Vector3(0.0f, 31.11f, -15.25f); //position of pink way point 
+                distance = Vector3.Distance(robot.transform.position, targetPos);
+                Debug.Log(distance);
+                if (distance < 4.0f)
+                {
+                    counter++;
+                }
             }
 
+        }
+        if(counter == 2)
+        {
+            Debug.Log("test medium");
+            EndTest();
         }
 
         return true;
@@ -211,10 +292,6 @@ public class TestEvalution : MonoBehaviour
         UpdateRobotPositionTracking();
         totalTime += Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.O)) //start robot on path to point 5 but the robot will stop
-        {
-            easyTest2();
-        }
         if(testEnded == false )
         {
             checkEnd();

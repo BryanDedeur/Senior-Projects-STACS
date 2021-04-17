@@ -5,6 +5,7 @@ using UnityEngine;
 public class UnitAI : MonoBehaviour
 {
     public StacsEntity entity; //public only for ease of debugging
+
     // Start is called before the first frame update
     void Start()
     {
@@ -124,6 +125,16 @@ public class UnitAI : MonoBehaviour
             m.potentialLine.gameObject.SetActive(entity.isSelected);
         }
 
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+       
+        if (collision.collider.tag == "Robot")
+        {
+            TestEvalution.inst.FailTest();
+        }
 
     }
 

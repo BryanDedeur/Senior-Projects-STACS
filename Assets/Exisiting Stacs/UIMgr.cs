@@ -67,7 +67,9 @@ public class UIMgr : MonoBehaviour
 
 
     public GameObject resultsPagePanel;
+    public GameObject resultsPagePanelFailed;
 
+    
     public TestState mTest;
     public EGameType mTestType;
 
@@ -194,6 +196,10 @@ public class UIMgr : MonoBehaviour
         if (mTest == TestState.EasyTest2)
         {
             TestEvalution.inst.easyTest2();
+        }
+        if (mTest == TestState.MediumTest)
+        {
+            TestEvalution.inst.mediumTest();
         }
         State = EGameState.Monitoring;
     }

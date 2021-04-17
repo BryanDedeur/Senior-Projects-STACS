@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Truss
   - Vertex
+  - Robot
   layers:
   - Default
   - TransparentFX

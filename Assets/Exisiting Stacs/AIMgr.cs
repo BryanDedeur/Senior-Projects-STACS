@@ -186,6 +186,15 @@ public class AIMgr : MonoBehaviour
         }
     }
 
+    public void HandleMove(StacsEntity entities, Vector3 point)
+    {
+        
+            Move m = new Move(entities, point);
+            UnitAI uai = entities.GetComponent<UnitAI>();
+            AddOrSet(m, uai);
+        
+    }
+
     void AddOrSet(Command c, UnitAI uai)
     {
         if (Input.GetKey(KeyCode.LeftShift))
@@ -202,6 +211,15 @@ public class AIMgr : MonoBehaviour
             uai.StopAndRemoveAllCommands();
         }
       
+    }
+
+    public void HandleClear(StacsEntity entities)
+    {
+  
+            UnitAI uai = entities.GetComponent<UnitAI>();
+            uai.StopAndRemoveAllCommands();
+        
+
     }
 
 

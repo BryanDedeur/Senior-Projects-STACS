@@ -4,3 +4,15 @@ NA	NA	True	0.6666667	33.44219	34.6441	0	0
 Steel Truss Bridge	Easy	True	0.6666667	33.44573	34.69491	0	0
 Steel Truss Bridge	Easy	Test	0.6666667	33.64581	29.71638	0	0
 Steel Truss Bridge	Easy	Test	0.6666667	0.8682384	48.66817	0	0
+Steel Truss Bridge	Easy	Test	0.6666667	20.33746	62.31251	0	0
+Steel Truss Bridge	Medium	Test	0.6666667	35.35305	31.19935	0	0
+Steel Truss Bridge	Medium	Test	0.6666667	35.31647	33.19312	0	0
+Steel Truss Bridge	Medium	Test	0.6666667	102.1428	30.18103	0	0
+Steel Truss Bridge	Medium	Test	0.6666667	102.1428	30.18103	0	0
+Steel Truss Bridge	Medium	Test	0.6666667	99.65578	26.89815	0	0
+Steel Truss Bridge	Medium	Test	0.6666667	99.65578	26.89815	0	0
+Steel Truss Bridge	Medium	Test	0	99.65846	27.49262	0	0
+Steel Truss Bridge	Medium	Test	0	99.65846	27.49262	0	0
+Steel Truss Bridge	Medium	Test	0	99.68756	118.0923	0	0
+Steel Truss Bridge	Medium	Test	0	99.68756	118.0923	0	0
+Steel Truss Bridge	Medium	Test	0.6666667	48.59134	73.29226	0	0
