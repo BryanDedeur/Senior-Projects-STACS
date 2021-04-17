@@ -21,6 +21,12 @@ EditorBuildSettings:
     path: Assets/Senior Project Extensions/Test Suite/EasyTest1.unity
     guid: 210c1ea117106634e968da3be7557187
   - enabled: 1
+    path: Assets/Senior Project Extensions/Test Suite/EasyTest2.unity
+    guid: 44895e6cf3737ca47bbcbb825c00a9db
+  - enabled: 1
+    path: Assets/Senior Project Extensions/Test Suite/MediumTest.unity
+    guid: d0d53cff3321d0d49bf5a1906c6f4c5d
+  - enabled: 1
     path: Assets/Senior Project Extensions/Test Suite/Sandbox Suite.unity
     guid: 5dce8275a02498044a9490c6b97f210f
   - enabled: 1
