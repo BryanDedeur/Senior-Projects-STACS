@@ -196,7 +196,10 @@ public class TestEvalution : MonoBehaviour
         {
             easyTest2();
         }
-        checkEnd();
+        if(testEnded == false )
+        {
+            checkEnd();
+        }
 
     }
 
