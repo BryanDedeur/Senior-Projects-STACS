@@ -57,11 +57,12 @@ public class UIMgr : MonoBehaviour
     public Button menuHelpButton;
     public Button helpDoneButton;
 
+
+    public GameObject resultsPagePanel; 
     // Start is called before the first frame update
     void Start()
     {
         State = EGameState.Briefing;
-        Type = EGameType.Sandbox;
         CameraViewPanels.Clear();
     }
     public bool show = false;
@@ -95,7 +96,6 @@ public class UIMgr : MonoBehaviour
     public void UpdateProto()
     {
         BriefingPanel.isValid = show;
-        SandboxPanel.isValid = show;
     }
 
 
@@ -134,11 +134,14 @@ public class UIMgr : MonoBehaviour
             priorState = _state;
             _state = value;
 
+            //If I was using the HelpPanel and MenuPanel, I would put &&  HelpPanel != null && MenuPanel != null
             if (BriefingPanel != null)
             {
                 BriefingPanel.isValid = (_state == EGameState.Briefing);
-                HelpPanel.isValid = (_state == EGameState.ShowHelp);
-                MenuPanel.isValid = (_state == EGameState.GameMenu);
+
+                //I personally did not use these states -> Since I did not know how
+                //HelpPanel.isValid = (_state == EGameState.ShowHelp);
+                //MenuPanel.isValid = (_state == EGameState.GameMenu);
             
 
                 //Game Controller UI/Playing switch and Navigation
@@ -151,7 +154,7 @@ public class UIMgr : MonoBehaviour
                         EventSystem.current.firstSelectedGameObject = null;
                         briefingPanelOkButton.Select();
                         break;
-                    case EGameState.GameMenu:
+                   /* case EGameState.GameMenu:
                         EventSystem.current.firstSelectedGameObject = menuHelpButton.gameObject;
                         menuHelpButton.Select();
                         break;
@@ -159,6 +162,7 @@ public class UIMgr : MonoBehaviour
                         EventSystem.current.firstSelectedGameObject = helpDoneButton.gameObject;
                         helpDoneButton.Select();
                         break;
+                    */
                     default:
                         EventSystem.current.firstSelectedGameObject = null;
                         break;
@@ -255,66 +259,13 @@ public class UIMgr : MonoBehaviour
     {
         RestartScene();
     }
-    public StacsPanel SandboxPanel;
-    public StacsPanel PracticePanel;
-    public StacsPanel testPanel;
-
-
-    public EGameType priorType;
-    public EGameType _type = EGameType.None;
-    //[System.Serializable]
-    public EGameType Type
-    {
-        get { return _type; }
-        set
-        {
-            priorType = _type;
-            _type = value;
-
-            if (SandboxPanel != null && PracticePanel != null && testPanel != null)
-            {
-
-                SandboxPanel.isValid = (_type == EGameType.Sandbox);
-                PracticePanel.isValid = (_type == EGameType.Practice);
-                testPanel.isValid = (_type == EGameType.Test);
-
-                //Game Controller UI/Playing switch and Navigation
-                switch (_type)
-                {
-                    case EGameType.Sandbox:
-                        EventSystem.current.firstSelectedGameObject = MenuMgr.instance.SandboxButton.gameObject;
-                        break;
-                    /* case EGameType.Practice:
-                         EventSystem.current.firstSelectedGameObject = null;
-                         briefingPanelOkButton.Select();
-                         break;
-                   */
-                    case EGameType.Practice:
-                        EventSystem.current.firstSelectedGameObject = MenuMgr.instance.PracticeButton.gameObject;
-                        MenuMgr.instance.PracticeButton.Select();
-                        break;
-                    case EGameType.Test:
-                        EventSystem.current.firstSelectedGameObject = helpDoneButton.gameObject;
-                        MenuMgr.instance.TestButton.Select();
-                        break;
-                    default:
-                        EventSystem.current.firstSelectedGameObject = null;
-                        break;
-                }
-            }
-
-
-        }
-    }
     public void PauseGame()
     {
         Time.timeScale = 0;
-        //PauseVolume();
     }
 
     public void ResumeGame()
     {
         Time.timeScale = 1;
-        //ResumeVolume();
     }
 }

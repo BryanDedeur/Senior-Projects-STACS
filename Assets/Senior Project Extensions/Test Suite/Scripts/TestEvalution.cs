@@ -111,6 +111,7 @@ public class TestEvalution : MonoBehaviour
         testEnded = true;
         WriteToFile();
         UIMgr.inst.PauseGame();
+        UIMgr.inst.resultsPagePanel.SetActive(true);
     }
 
     public void WriteToFile()
