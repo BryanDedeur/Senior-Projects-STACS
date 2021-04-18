@@ -25,6 +25,7 @@ public class TestEvalution : MonoBehaviour
 
     public bool testMode;
     private bool testEnded = false;
+    private bool errorOccured = false;
 
     public string resultsPath = "Results/results.txt";
 
@@ -203,6 +204,8 @@ public class TestEvalution : MonoBehaviour
             Debug.Log("Error easy");
             yield return new WaitForSeconds(15);
             AIMgr.inst.HandleClear(trackedRobots);
+
+           
         }
         else if(UIMgr.inst.mTest == TestState.MediumTest)
         {
@@ -210,6 +213,7 @@ public class TestEvalution : MonoBehaviour
             yield return new WaitForSeconds(15);
             AIMgr.inst.HandleClear(trackedRobots[0]);
         }
+        errorOccured = true;
     }
 
       public void easyTest1()
@@ -223,15 +227,11 @@ public class TestEvalution : MonoBehaviour
     public void easyTest2()
     {
         Debug.Log("easytest2");
-       // Vector3 testEasy = new Vector3(-39.227f, 20.0f, -14.72f);
-       // AIMgr.inst.HandleMove(trackedRobots, testEasy);
-        //trackedRobots.desiredSpeed += deltaSpeed * Time.deltaTime;
-
         foreach(StacsEntity robot in trackedRobots)
         {
-            Debug.Log("bobo");
             robot.desiredSpeed = 4.0f; 
         }
+        errorOccured = true;
 
     }
 
@@ -242,6 +242,7 @@ public class TestEvalution : MonoBehaviour
         AIMgr.inst.HandleMove(trackedRobots[0], testEasy);
         trackedRobots[1].desiredSpeed = 4.0f;
         StartCoroutine(Error());
+        
 
 
     }
@@ -279,11 +280,31 @@ public class TestEvalution : MonoBehaviour
         }
         if(counter == 2)
         {
-            Debug.Log("test medium");
-            EndTest();
+           EndTest();
         }
 
         return true;
+    }
+
+    public void hint()
+    {
+        Debug.Log("hint");
+        if (trackedRobots[0].speed == 0.0f && UIMgr.inst.mTest == TestState.EasyTest1)
+        {
+
+            UIMgr.inst.PauseGame();
+            UIMgr.inst.hintPanel.SetActive(true);
+            errorOccured = false;
+
+        }
+        if(UIMgr.inst.mTest == TestState.EasyTest2 && totalRobotTravelDistance > 0.7f)
+        {
+            UIMgr.inst.PauseGame();
+            UIMgr.inst.hintPanel.SetActive(true);
+            errorOccured = false;
+        }
+
+        
     }
 
 
@@ -296,6 +317,12 @@ public class TestEvalution : MonoBehaviour
         {
             checkEnd();
         }
+        if(errorOccured && UIMgr.inst.mTestType == EGameType.Practice )
+        {
+            Debug.Log("wow");
+            hint();
+        }
+        
 
     }
 

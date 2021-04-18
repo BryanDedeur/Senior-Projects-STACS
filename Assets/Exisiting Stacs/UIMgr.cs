@@ -66,6 +66,7 @@ public class UIMgr : MonoBehaviour
     public Button helpDoneButton;
 
 
+    public GameObject hintPanel;
     public GameObject resultsPagePanel;
     public GameObject resultsPagePanelFailed;
 
@@ -285,11 +286,14 @@ public class UIMgr : MonoBehaviour
     }
     public void PauseGame()
     {
+
+        Debug.Log("pause");
         Time.timeScale = 0;
     }
 
     public void ResumeGame()
     {
+        Debug.Log("resume");
         Time.timeScale = 1;
     }
 }
