@@ -157,7 +157,7 @@ public class TestEvalution : MonoBehaviour
         output += totalBatteryUsage.ToString() + "\t";
         output += totalDefectsFound.ToString();
 
-        FileIO.instance.WriteToFile(resultsPath, output, false);
+        FileIO.instance.WriteToFile(resultsPath, output, false, false);
     }
 
     public void WriteToFileFail()
@@ -192,7 +192,7 @@ public class TestEvalution : MonoBehaviour
         output += totalBatteryUsage.ToString() + "\t";
         output += totalDefectsFound.ToString();
 
-        FileIO.instance.WriteToFile(resultsPath, output, false);
+        FileIO.instance.WriteToFile(resultsPath, output, false, false);
     }
     //for easy test select robot then press o 
     //robot will start rount then after 15 second all commands will be cleared

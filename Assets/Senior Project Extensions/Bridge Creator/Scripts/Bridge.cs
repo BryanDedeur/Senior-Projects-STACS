@@ -60,10 +60,11 @@ public class Bridge : MonoBehaviour
         edges = new Dictionary<Tuple<Vector3, Vector3>, Edge>();
         edgesId = new Dictionary<int, Edge>();
         id = 0;
-        Load();
+        if(PlayerPrefs.GetString(existingBridgeString) != null)
+            Load();
 
     }
-
+    
     private float GetSumEdges()
     {
         float distance = 0;
@@ -110,7 +111,7 @@ public class Bridge : MonoBehaviour
     {
         print("save");
         bridgeName = newBridgeName.text;
-        FileIO.instance.WriteToFile(bridgePath + bridgeName + ".txt", FormatConnectionsToString(), true);
+        FileIO.instance.WriteToFile(bridgeName + ".txt", FormatConnectionsToString(), true, true);
     }
 
     public void Load()
@@ -121,7 +122,7 @@ public class Bridge : MonoBehaviour
         tempVertices = FileIO.instance.ReadBridgeFile(PlayerPrefs.GetString(existingBridgeString))[0].Split(' ');
         tempEdges = FileIO.instance.ReadBridgeFile(PlayerPrefs.GetString(existingBridgeString))[1].Split(' ');
         float[] tempArray = new float[tempVertices.Length];
-        for (int i = 0; i < tempVertices.GetLength(0)-2 ; i++)
+        for (int i = 0; i < tempVertices.Length-1 ; i++)
         {
             float.TryParse(tempVertices[i], out tempArray[i]);
             checkArray += tempArray[i].ToString() + ' ';
@@ -136,6 +137,7 @@ public class Bridge : MonoBehaviour
         for (int i = 0; i < tempEdges.Length-1; i++)
         {
             int.TryParse(tempEdges[i], out intArray[i]);
+            print(intArray[i]);
         }
         for (int i = 0; i < intArray.Length-1; i += 2)
         {

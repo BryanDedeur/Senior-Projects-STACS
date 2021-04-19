@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEditor;
 
 public class FileIO : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class FileIO : MonoBehaviour
     {
         //WriteToFile("Bridges/test.txt", "Hello world");   
     }
-    public void WriteToFile(string fileName, string output, bool overwrite)
+    public void WriteToFile(string fileName, string output, bool overwrite, bool isBridgeFile)
     {
         /*        if (File.Exists(fileName))
                 {
@@ -34,17 +35,40 @@ public class FileIO : MonoBehaviour
                 }*/
         //add to the end of file
         print(fileName);
-        
-        if (overwrite)
+        if (isBridgeFile == true)
         {
-            StreamWriter sr = File.CreateText(fileName);
-            sr.WriteLine(output);
-            sr.Close();
-        } else
+            var path = EditorUtility.SaveFilePanel(
+            "Save Bridge as txt file",
+            "DefaultBridge",
+            fileName,
+            "txt");
+            if (overwrite)
+            {
+                StreamWriter sr = File.CreateText(path);
+                sr.WriteLine(output);
+                sr.Close();
+            }
+            else
+            {
+                TextWriter tw = new StreamWriter(path, true);
+                tw.WriteLine(output);
+                tw.Close();
+            }
+
+        }
+        else 
         {
-            TextWriter tw = new StreamWriter(fileName, true);
-            tw.WriteLine(output);
-            tw.Close();
+            if (overwrite)
+            {
+                StreamWriter sr = File.CreateText(fileName);
+                sr.WriteLine(output);
+                sr.Close();
+            } else
+            {
+                TextWriter tw = new StreamWriter(fileName, true);
+                tw.WriteLine(output);
+                tw.Close();
+            }
         }
     }
 

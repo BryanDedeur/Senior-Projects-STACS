@@ -34,7 +34,6 @@ public class MenuMgr : MonoBehaviour
     public GameObject SimulationPanel;
     public GameObject TitlePanel;
     public GameObject UnrLogo;
-    public string existingBridge;
     public string existingBridgeString = "existingBridge";
 
 
@@ -46,11 +45,11 @@ public class MenuMgr : MonoBehaviour
     private void Awake()
     {
         screenSize = Screen.resolutions;
-
         if (instance == null)
         {
             instance = this;
         }
+        PlayerPrefs.DeleteAll();
     }
 
     //To change the screen size
@@ -214,8 +213,8 @@ public class MenuMgr : MonoBehaviour
 
     public void ExploreFiles()
     {
-        existingBridge = EditorUtility.OpenFilePanel("Select Existing Bridge", "", "txt");
-        if(existingBridge != null)
+        var existingBridge = EditorUtility.OpenFilePanel("Select Existing Bridge", "", "txt");
+        if(existingBridge.Length != 0)
         {
             PlayerPrefs.SetString(existingBridgeString, existingBridge.ToString());
             SceneManager.LoadScene(1);

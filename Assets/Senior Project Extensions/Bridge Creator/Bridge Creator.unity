@@ -2028,6 +2028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edgeDistance: 0
+  existingBridgeString: existingBridge
   bridgeName: Default Bridge
   bridgePath: Bridges/
   newBridgeName: {fileID: 1827183656}
@@ -3164,6 +3165,7 @@ MonoBehaviour:
   vertexPrefabs: []
   platformPrefabs:
   - {fileID: 8670752210327266803, guid: 711c822e50b79724ca7bea8aa2d2eaf2, type: 3}
+  lastVertex: {fileID: 0}
 --- !u!1 &489025545
 GameObject:
   m_ObjectHideFlags: 0
@@ -4610,7 +4612,7 @@ GameObject:
   - component: {fileID: 825580192}
   - component: {fileID: 825580191}
   m_Layer: 5
-  m_Name: LocationText
+  m_Name: OverwriteText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4666,9 +4668,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Your bridge file will be saved within STACS''s ''Bridges'' Folder
-
-    ( \Senior-Projects-STACS\Bridges )'
+  m_Text: 'Note: Other bridge files with the same name will be overwritten.'
 --- !u!222 &825580192
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9331,6 +9331,11 @@ MonoBehaviour:
   briefingPanelOkButton: {fileID: 0}
   menuHelpButton: {fileID: 0}
   helpDoneButton: {fileID: 0}
+  hintPanel: {fileID: 0}
+  resultsPagePanel: {fileID: 0}
+  resultsPagePanelFailed: {fileID: 0}
+  mTest: 0
+  mTestType: 0
   show: 0
   Graph: {fileID: 0}
   priorState: 0
@@ -9338,11 +9343,6 @@ MonoBehaviour:
   CameraViewPanelPrefab: {fileID: 0}
   CameraViewPanelsParent: {fileID: 0}
   CameraViewPanels: []
-  SandboxPanel: {fileID: 0}
-  PracticePanel: {fileID: 0}
-  testPanel: {fileID: 0}
-  priorType: 0
-  _type: 0
 --- !u!4 &1488344415
 Transform:
   m_ObjectHideFlags: 0
