@@ -52,7 +52,7 @@ public class BridgeCreator : MonoBehaviour
 
     private Bridge bridge;
 
-    private GameObject lastVertex;
+    public GameObject lastVertex;
     private GameObject lastVertexM;
     private GameObject edgeFixer;
 /*    private Vector3 selectedVertex;
@@ -83,6 +83,7 @@ public class BridgeCreator : MonoBehaviour
         bridge.SetPlatform(platformPrefabs[0]);
         cursor = Instantiate(vertexPrefab.transform).gameObject;
         Destroy(cursor.GetComponent<Collider>());
+        UpdateCountText();
     }
 
     public Vector3 Snap(Vector3 p)

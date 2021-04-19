@@ -57,4 +57,36 @@ public class FileIO : MonoBehaviour
 
         return fileInfo;
     }
+
+    public string[] ReadBridgeFile(string fileName)
+    {
+        string[] tempInfo;
+        string vertexInfo = "";
+        string connectionInfo = null;
+        string[] fileInfo = new string[2];
+        StreamReader reader = new StreamReader(fileName);
+        //fileInfo = reader.ReadToEnd();
+        while(!reader.EndOfStream)
+        {
+            tempInfo = reader.ReadLine().Split(' ');
+            if (tempInfo.Length == 5)
+            {
+                vertexInfo += tempInfo[1] + " ";
+                vertexInfo += tempInfo[2] + " ";
+                vertexInfo += tempInfo[3] + " ";
+            }
+            if (tempInfo.Length == 3)
+            {
+                connectionInfo += tempInfo[0] + " ";
+                connectionInfo += tempInfo[1] + " ";
+            }
+        }
+        print("vertex info:" + vertexInfo + '\n');
+        print("Connection info:" + connectionInfo + '\n');
+        reader.Close();
+        fileInfo[0] = vertexInfo;
+        fileInfo[1] = connectionInfo;
+
+        return fileInfo;
+    }
 }

@@ -115,25 +115,49 @@ public class Bridge : MonoBehaviour
 
     public void Load()
     {
-        string[] tempFile;
+        string[] tempVertices, tempEdges;
         string checkArray = null;
         print("Loading " + PlayerPrefs.GetString(existingBridgeString));
-        tempFile = FileIO.instance.ReadFromFile(PlayerPrefs.GetString(existingBridgeString)).Split(' ', '\n');
-        float[] tempArray = new float[tempFile.Length];
-        for (int i = 0; i < tempFile.Length-2 ; i++)
+        tempVertices = FileIO.instance.ReadBridgeFile(PlayerPrefs.GetString(existingBridgeString))[0].Split(' ');
+        tempEdges = FileIO.instance.ReadBridgeFile(PlayerPrefs.GetString(existingBridgeString))[1].Split(' ');
+        float[] tempArray = new float[tempVertices.Length];
+        for (int i = 0; i < tempVertices.GetLength(0)-2 ; i++)
         {
-            float.TryParse(tempFile[i], out tempArray[i]);
+            float.TryParse(tempVertices[i], out tempArray[i]);
             checkArray += tempArray[i].ToString() + ' ';
         }
         print(checkArray);
-        PlayerPrefs.DeleteAll();
-        for (int i = 4; i < tempArray.Length; i += 5)
+        for (int i = 0; i < tempArray.GetLength(0)-2; i += 3)
         {
             CreateVertex(new Vector3(tempArray[i], tempArray[i + 1], tempArray[i + 2]), BridgeCreator.instance.vertexPrefab);
             //AddVertex(new Vector3(tempArray[i], tempArray[i + 1], tempArray[1 + 2]));
         }
-        //BridgeCreator.instance.UpdateText();
+        int[] intArray = new int[tempEdges.Length];
+        for (int i = 0; i < tempEdges.Length-1; i++)
+        {
+            int.TryParse(tempEdges[i], out intArray[i]);
+        }
+        for (int i = 0; i < intArray.Length-1; i += 2)
+        {
+            BridgeCreator.instance.lastVertex = CreateVertex(GetVertexKey(intArray[i]), BridgeCreator.instance.vertexPrefab);
+            CreateEdge(BridgeCreator.instance.lastVertex, CreateVertex(GetVertexKey(intArray[i + 1]), BridgeCreator.instance.vertexPrefab), BridgeCreator.instance.trussPrefab);
+        }
+        PlayerPrefs.DeleteAll();
+        BridgeCreator.instance.lastVertex = null;
 
+    }
+
+    private Vector3 GetVertexKey(int index)
+    {
+        int count = 0;
+        foreach (var vert in vertices)
+        {
+            if (index == count)
+                return vert.Key;
+            else
+                count++;
+        }
+        return new Vector3(0, 0, 0);
     }
 
     public void SetPlatform(GameObject platformPrefab)
