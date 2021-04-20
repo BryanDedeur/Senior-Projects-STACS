@@ -83,6 +83,16 @@ public class MenuMgr : MonoBehaviour
 
     }
 
+    public void SetSandboxBridge()
+    {
+        var existingBridge = EditorUtility.OpenFilePanel("Select Existing Bridge", "", "txt");
+        if (existingBridge.Length != 0)
+        {
+            PlayerPrefs.SetString(existingBridgeString, existingBridge.ToString());
+            SceneManager.LoadScene("SandboxSuite");
+        }
+    }
+
     public void LaunchScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
@@ -158,33 +168,36 @@ public class MenuMgr : MonoBehaviour
         whichButtonPressed = 3;
     }
     //the bridge menu fucntion
-    public void BridgeSelectionOperation(string sceneName)
-    {
-        //If I had clicked the load button
-        if (whichButtonPressed == 1)
+    /*    public void BridgeSelectionOperation(string sceneName)
         {
-            LaunchScene(sceneName); 
-        }
-        //If I had clicked the delete button
-        if (whichButtonPressed == 2)
-        {
-            Debug.Log("in Delete");
-            if(sceneName == "SteelTrussBridge")
-            {
-                Debug.Log("This bridge can not be deleted");
-            }
-        }
-        //if I clicked the edit button
-        if (whichButtonPressed == 3) 
-        {
-            Debug.Log("in Edit");
-            if (sceneName == "SteelTrussBridge")
-            {
-                Debug.Log("This bridge can not be edited");
-            }
-        }
+            print("OKAY");
 
-    }
+            //If I had clicked the load button
+            if (whichButtonPressed == 1)
+            {
+                LaunchScene(sceneName);
+                print("NICE");
+            }
+            //If I had clicked the delete button
+            if (whichButtonPressed == 2)
+            {
+                Debug.Log("in Delete");
+                if(sceneName == "SteelTrussBridge")
+                {
+                    Debug.Log("This bridge can not be deleted");
+                }
+            }
+            //if I clicked the edit button
+            if (whichButtonPressed == 3) 
+            {
+                Debug.Log("in Edit");
+                if (sceneName == "SteelTrussBridge")
+                {
+                    Debug.Log("This bridge can not be edited");
+                }
+            }
+
+        }*/
 
     //All buttons that bring you to bridge selection
     public void ToBridgeSelectionPanel()
