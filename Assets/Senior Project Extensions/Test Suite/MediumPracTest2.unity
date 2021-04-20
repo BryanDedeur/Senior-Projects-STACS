@@ -11697,7 +11697,7 @@ MonoBehaviour:
   hintPanel: {fileID: 85262196}
   resultsPagePanel: {fileID: 0}
   resultsPagePanelFailed: {fileID: 0}
-  mTest: 1
+  mTest: 2
   mTestType: 2
   show: 0
   Graph: {fileID: 1830769999}

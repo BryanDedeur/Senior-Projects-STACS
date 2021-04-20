@@ -4848,8 +4848,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534929266}
-  m_LocalRotation: {x: 0.13458936, y: 0.002972938, z: 0.00040429144, w: -0.99089694}
-  m_LocalPosition: {x: 41.940628, y: -23.231188, z: -34.621082}
+  m_LocalRotation: {x: 0.083153896, y: 0.2984007, z: 0.026106693, w: -0.950453}
+  m_LocalPosition: {x: -2.06, y: -29.060001, z: -52.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -11996,9 +11996,10 @@ MonoBehaviour:
   briefingPanelOkButton: {fileID: 231488749}
   menuHelpButton: {fileID: 0}
   helpDoneButton: {fileID: 0}
+  hintPanel: {fileID: 0}
   resultsPagePanel: {fileID: 1497328531}
   resultsPagePanelFailed: {fileID: 255450390}
-  mTest: 2
+  mTest: 3
   mTestType: 3
   show: 0
   Graph: {fileID: 1830769999}
