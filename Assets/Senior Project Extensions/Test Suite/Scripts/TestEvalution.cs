@@ -114,21 +114,97 @@ public class TestEvalution : MonoBehaviour
                 grade = 0;
             }
         }
-        else if (UIMgr.inst.mTest == TestState.EasyTest2 && UIMgr.inst.mTestType == EGameType.Test) //medium test
+        else if (UIMgr.inst.mTest == TestState.MediumTest && UIMgr.inst.mTestType == EGameType.Test) //medium test
         {
-
+            if (totalTime < 35)
+            {
+                grade = 100;
+            }
+            else if (totalTime >= 35 && totalTime < 40)
+            {
+                grade = 90;
+            }
+            else if (totalTime >= 40 && totalTime < 45)
+            {
+                grade = 80;
+            }
+            else if (totalTime >= 45 && totalTime < 50)
+            {
+                grade = 70;
+            }
+            else if (totalTime >= 50)
+            {
+                grade = 0;
+            }
         }
-        else if (UIMgr.inst.mTest == TestState.MediumTest && UIMgr.inst.mTestType == EGameType.Test) //hard  test
+        else if (UIMgr.inst.mTest == TestState.HardTest && UIMgr.inst.mTestType == EGameType.Test) //hard  test
         {
-
+            if (totalTime < 35)
+            {
+                grade = 100;
+            }
+            else if (totalTime >= 35 && totalTime < 40)
+            {
+                grade = 90;
+            }
+            else if (totalTime >= 40 && totalTime < 45)
+            {
+                grade = 80;
+            }
+            else if (totalTime >= 45 && totalTime < 50)
+            {
+                grade = 70;
+            }
+            else if (totalTime >= 50)
+            {
+                grade = 0;
+            }
         }
         else if (UIMgr.inst.mTest == TestState.EasyTest1 && UIMgr.inst.mTestType == EGameType.Practice) //easy prac test
         {
-
+            if (totalTime < 35)
+            {
+                grade = 100;
+            }
+            else if (totalTime >= 35 && totalTime < 40)
+            {
+                grade = 90;
+            }
+            else if (totalTime >= 40 && totalTime < 45)
+            {
+                grade = 80;
+            }
+            else if (totalTime >= 45 && totalTime < 50)
+            {
+                grade = 70;
+            }
+            else if (totalTime >= 50)
+            {
+                grade = 0;
+            }
         }
-        else if (UIMgr.inst.mTest == TestState.EasyTest2 && UIMgr.inst.mTestType == EGameType.Practice) // medium prac test
+        else if (UIMgr.inst.mTest == TestState.MediumTest && UIMgr.inst.mTestType == EGameType.Practice) // medium prac test
         {
-
+            if (totalTime < 35)
+            {
+                grade = 100;
+            }
+            else if (totalTime >= 35 && totalTime < 40)
+            {
+                grade = 90;
+            }
+            else if (totalTime >= 40 && totalTime < 45)
+            {
+                grade = 80;
+            }
+            else if (totalTime >= 45 && totalTime < 50)
+            {
+                grade = 70;
+            }
+            else if (totalTime >= 50)
+            {
+                grade = 0;
+            }
         }
         return grade;
     }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9089,7 +9089,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1471770623
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9326,6 +9326,7 @@ MonoBehaviour:
   EntityDesiredHeadingText: {fileID: 0}
   EntityAltitudeText: {fileID: 0}
   EntityDesiredAltitudeText: {fileID: 0}
+  GradeText: {fileID: 0}
   DataFeedText: {fileID: 0}
   gameMenuButton: {fileID: 0}
   briefingPanelOkButton: {fileID: 0}
