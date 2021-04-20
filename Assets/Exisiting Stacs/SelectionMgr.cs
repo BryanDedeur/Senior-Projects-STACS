@@ -20,6 +20,7 @@ public class SelectionMgr : MonoBehaviour
     public Vector3 startMousePosition;
     public RectTransform SelectionBoxPanel;
     public RectTransform UICanvas;
+    
 
     public float toggleTimer = 0.5f;
     // Update is called once per frame
