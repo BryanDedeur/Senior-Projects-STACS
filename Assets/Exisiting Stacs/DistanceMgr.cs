@@ -138,8 +138,9 @@ public class DistanceMgr : MonoBehaviour
     void Update()
     {
         if (isInitialized)
-            Debug.Log("bu");
-        // UpdatePotentials();
+        {
+
+        }
         else
             Initialize();
     }

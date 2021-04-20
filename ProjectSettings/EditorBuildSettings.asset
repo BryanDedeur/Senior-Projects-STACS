@@ -30,7 +30,7 @@ EditorBuildSettings:
     path: Assets/Senior Project Extensions/Test Suite/MediumPracTest2.unity
     guid: 063a90a4475ad4d40acf9c36135f14b3
   - enabled: 1
-    path: Assets/Senior Project Extensions/Test Suite/Sandbox Suite.unity
+    path: Assets/Senior Project Extensions/Sandbox/SandboxSuite.unity
     guid: 5dce8275a02498044a9490c6b97f210f
   - enabled: 1
     path: Assets/Senior Project Extensions/Test Suite/Training Suite.unity
