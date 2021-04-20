@@ -176,7 +176,7 @@ public class TestEvalution : MonoBehaviour
         string output = "";
 
         output += "Steel Truss Bridge" + "\t"; // TODO get bridge name
-        if(UIMgr.inst.mTest == TestState.EasyTest1 || UIMgr.inst.mTest == TestState.EasyTest2)
+        if(UIMgr.inst.mTest == TestState.EasyTest1)
         {
             output += "Easy" + "\t";
         }
@@ -211,7 +211,7 @@ public class TestEvalution : MonoBehaviour
         string output = "";
 
         output += "Steel Truss Bridge" + "\t"; // TODO get bridge name
-        if (UIMgr.inst.mTest == TestState.EasyTest1 || UIMgr.inst.mTest == TestState.EasyTest2)
+        if (UIMgr.inst.mTest == TestState.EasyTest1)
         {
             output += "Easy" + "\t";
         }
@@ -253,7 +253,7 @@ public class TestEvalution : MonoBehaviour
 
            
         }
-        else if(UIMgr.inst.mTest == TestState.MediumTest)
+        else if(UIMgr.inst.mTest == TestState.HardTest)
         {
             Debug.Log("Error for medium started");
             yield return new WaitForSeconds(15);
@@ -270,10 +270,10 @@ public class TestEvalution : MonoBehaviour
         StartCoroutine(Error());    //wait 15 seconds then do it
     }
 
-    public void easyTest2()
+    public void mediumTest()
     {
-        Debug.Log("easytest2");
-        foreach(StacsEntity robot in trackedRobots)
+        //Debug.Log("MediumTest");
+        foreach (StacsEntity robot in trackedRobots)
         {
             robot.desiredSpeed = 4.0f; 
         }
@@ -281,9 +281,9 @@ public class TestEvalution : MonoBehaviour
 
     }
 
-    public void mediumTest()
+    public void hardTest()
     {
-        Debug.Log("Medium Test");
+        //Debug.Log("Hard Test");
         Vector3 testEasy = new Vector3(0f, 31.11f, -15.25f);
         AIMgr.inst.HandleMove(trackedRobots[0], testEasy);
         trackedRobots[1].desiredSpeed = 4.0f;
@@ -301,7 +301,7 @@ public class TestEvalution : MonoBehaviour
         foreach (StacsEntity robot in trackedRobots)
         {
 
-            if(UIMgr.inst.mTest == TestState.EasyTest1 || UIMgr.inst.mTest == TestState.EasyTest2)
+            if(UIMgr.inst.mTest == TestState.EasyTest1 || UIMgr.inst.mTest == TestState.MediumTest)
             {
                 Vector3 targetPos = new Vector3(-19.3f, 18.3f, -15.25f); //position of pink way point 
                 distance = Vector3.Distance(robot.transform.position, targetPos);
@@ -310,7 +310,7 @@ public class TestEvalution : MonoBehaviour
                     EndTest();
                 }
             }
-            else if (UIMgr.inst.mTest == TestState.MediumTest)
+            else if (UIMgr.inst.mTest == TestState.HardTest)
             {
                 Vector3 targetPos = new Vector3(0.0f, 31.11f, -15.25f); //position of pink way point 
                 distance = Vector3.Distance(robot.transform.position, targetPos);
@@ -341,7 +341,7 @@ public class TestEvalution : MonoBehaviour
             errorOccured = false;
 
         }
-        if(UIMgr.inst.mTest == TestState.EasyTest2 && totalRobotTravelDistance > 0.7f)
+        if(UIMgr.inst.mTest == TestState.MediumTest && totalRobotTravelDistance > 0.7f)
         {
             UIMgr.inst.PauseGame();
             UIMgr.inst.hintPanel.SetActive(true);
