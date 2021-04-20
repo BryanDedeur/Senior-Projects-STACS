@@ -18701,10 +18701,10 @@ PrefabInstance:
     - target: {fileID: 485835861498424107, guid: c787723c831b37f44b356516475a694b,
         type: 3}
       propertyPath: m_Text
-      value: "Welcome to the steel bridge easy test. The goal of this operation is
-        to guide the single climbing robot to the pink waypoint. Once you click 'ok'
-        the robot will start on its predetermined path and the test will begin. Good
-        luck.\r\n"
+      value: "Welcome to the steel bridge practice test. The goal of this operation
+        is to guide the single climbing robot to the pink waypoint. Once you click
+        'ok' the robot will start on its predetermined path and the test will begin.
+        Good luck.\r\n"
       objectReference: {fileID: 0}
     - target: {fileID: 485835861711902472, guid: c787723c831b37f44b356516475a694b,
         type: 3}
