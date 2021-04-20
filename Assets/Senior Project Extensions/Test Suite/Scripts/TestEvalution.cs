@@ -229,8 +229,11 @@ public class TestEvalution : MonoBehaviour
         testEnded = true;
         WriteToFile();
         UIMgr.inst.PauseGame();
+        Debug.Log("next");
         UIMgr.inst.resultsPagePanel.SetActive(true);
+        Debug.Log("wows");
         UIMgr.inst.GradeText.text = FinalGrade().ToString("0");
+        UIMgr.inst.ResumeGame();
     }
 
     public void FailTest()
@@ -241,6 +244,7 @@ public class TestEvalution : MonoBehaviour
         WriteToFileFail();
         UIMgr.inst.PauseGame();
         UIMgr.inst.resultsPagePanelFailed.SetActive(true);
+        UIMgr.inst.ResumeGame();
     }
 
 
