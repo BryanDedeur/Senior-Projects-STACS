@@ -31,6 +31,7 @@ public class MenuMgr : MonoBehaviour
     public GameObject BridgeSelectionPanel;
     public GameObject TestBridgeSelectionPanel;
     public GameObject PracticeBridgeSelectionPanel;
+    public GameObject BridgeCreationSelectionPanel;
     public GameObject SimulationPanel;
     public GameObject TitlePanel;
     public GameObject UnrLogo;
@@ -219,6 +220,14 @@ public class MenuMgr : MonoBehaviour
     public void ToPracticeBridgeSelectionPanel()
     {
         PracticeBridgeSelectionPanel.SetActive(true);
+        SimulationPanel.SetActive(false);
+        TitlePanel.SetActive(false);
+        UnrLogo.SetActive(false);
+    }
+    //All buttons that bring you to bridge selection
+    public void ToBridgeCreatorSelectionPanel()
+    {
+        BridgeCreationSelectionPanel.SetActive(true);
         SimulationPanel.SetActive(false);
         TitlePanel.SetActive(false);
         UnrLogo.SetActive(false);
