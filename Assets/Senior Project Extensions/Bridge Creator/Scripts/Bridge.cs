@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 // This class is a container for holding bridge info and functions
 public class Bridge : MonoBehaviour
@@ -37,6 +38,7 @@ public class Bridge : MonoBehaviour
     public string bridgeName = "Default Bridge";
     public string bridgePath = "Bridges/";
     public InputField newBridgeName;
+    public GameObject sandBoxObject;
 
     private void Awake()
     {
@@ -49,20 +51,33 @@ public class Bridge : MonoBehaviour
         {
             Destroy(this);
         }
+        DontDestroyOnLoad(instance);
     }
 
     // Start is called before the first frame update
     void Start()
     {
         container = this.transform.gameObject;
-
         vertices = new Dictionary<Vector3, GameObject>();
         edges = new Dictionary<Tuple<Vector3, Vector3>, Edge>();
         edgesId = new Dictionary<int, Edge>();
-        id = 0;
-        if(PlayerPrefs.GetString(existingBridgeString) != null)
+        if (PlayerPrefs.GetString(existingBridgeString) != "")
             Load();
-
+        if (PlayerPrefs.GetString("nextScene") == "SandboxMode")
+        {
+            SceneManager.LoadSceneAsync("SandboxSuite 1", LoadSceneMode.Additive);
+            container = this.transform.gameObject;
+            vertices = new Dictionary<Vector3, GameObject>();
+            edges = new Dictionary<Tuple<Vector3, Vector3>, Edge>();
+            edgesId = new Dictionary<int, Edge>();
+            if (PlayerPrefs.GetString(existingBridgeString) != "")
+                Load();
+            if (PlayerPrefs.GetString("nextScene") == "SandboxMode")
+            {
+                Destroy(Camera.current);
+                SceneManager.LoadSceneAsync(9);
+            }
+        }
     }
     
     private float GetSumEdges()
@@ -144,7 +159,7 @@ public class Bridge : MonoBehaviour
             BridgeCreator.instance.lastVertex = CreateVertex(GetVertexKey(intArray[i]), BridgeCreator.instance.vertexPrefab);
             CreateEdge(BridgeCreator.instance.lastVertex, CreateVertex(GetVertexKey(intArray[i + 1]), BridgeCreator.instance.vertexPrefab), BridgeCreator.instance.trussPrefab);
         }
-        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetString(existingBridgeString, "");
         BridgeCreator.instance.lastVertex = null;
 
     }

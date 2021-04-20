@@ -29,7 +29,6 @@ public class BCCameraController : MonoBehaviour
 
     private void Awake()
     {
-        // this keeps instance a singlton
         if (instance == null)
         {
             instance = this;
@@ -38,6 +37,7 @@ public class BCCameraController : MonoBehaviour
         {
             Destroy(this);
         }
+        testbool = true;
     }
 
     private void Start()

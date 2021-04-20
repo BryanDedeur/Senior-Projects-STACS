@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Audio;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class MenuMgr : MonoBehaviour
@@ -51,6 +50,8 @@ public class MenuMgr : MonoBehaviour
             instance = this;
         }
         PlayerPrefs.DeleteAll();
+        for(int i = 0; i < 3; i++)
+            Destroy(GameObject.Find("Bridge"));
     }
 
     //To change the screen size
@@ -90,7 +91,8 @@ public class MenuMgr : MonoBehaviour
         if (existingBridge.Length != 0)
         {
             PlayerPrefs.SetString(existingBridgeString, existingBridge.ToString());
-            SceneManager.LoadScene("SandboxSuite");
+            PlayerPrefs.SetString("nextScene", "SandboxMode");
+            SceneManager.LoadScene("Bridge Creator");
         }
     }
 

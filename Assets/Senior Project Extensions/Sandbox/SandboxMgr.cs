@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SandboxMgr : MonoBehaviour
 {
@@ -9,10 +10,21 @@ public class SandboxMgr : MonoBehaviour
     private GameObject robotFolder;
     public List<GameObject> robots;
     public GameObject player;
-    public float spawnOffset = 1; 
+    public float spawnOffset = 1;
+    public static SandboxMgr instance;
+    public GameObject bridgeObject;
     
     private void Awake()
     {
+
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != null)
+        {
+            Destroy(this);
+        }
         robotFolder = new GameObject();
         robotFolder.name = "Robots";
         robots = new List<GameObject>();
@@ -35,5 +47,5 @@ public class SandboxMgr : MonoBehaviour
     {
         return player.transform.position + player.transform.forward * spawnOffset;  
     }
-
+    
 }

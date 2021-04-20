@@ -297,4 +297,8 @@ public class UIMgr : MonoBehaviour
         Debug.Log("resume");
         Time.timeScale = 1;
     }
+    public void DeleteBridge()
+    {
+        Destroy(Bridge.instance);
+    }
 }
