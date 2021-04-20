@@ -3071,7 +3071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3856,8 +3856,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 373896160}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 568.1663, y: -428.63797, z: -977.3048}
+  m_LocalRotation: {x: -0.10361271, y: 0.01432514, z: 0.0014926938, w: 0.99451345}
+  m_LocalPosition: {x: 659.77234, y: -414.40244, z: -907.0292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -12181,11 +12181,17 @@ MonoBehaviour:
   EntityDesiredHeadingText: {fileID: 209288950}
   EntityAltitudeText: {fileID: 490074067}
   EntityDesiredAltitudeText: {fileID: 1526949581}
+  GradeText: {fileID: 0}
   DataFeedText: {fileID: 918300746}
   gameMenuButton: {fileID: 0}
   briefingPanelOkButton: {fileID: 231488749}
   menuHelpButton: {fileID: 0}
   helpDoneButton: {fileID: 0}
+  hintPanel: {fileID: 0}
+  resultsPagePanel: {fileID: 0}
+  resultsPagePanelFailed: {fileID: 0}
+  mTest: 0
+  mTestType: 0
   show: 0
   Graph: {fileID: 1830769999}
   priorState: 0
@@ -12194,11 +12200,6 @@ MonoBehaviour:
     type: 3}
   CameraViewPanelsParent: {fileID: 1681458056}
   CameraViewPanels: []
-  SandboxPanel: {fileID: 0}
-  PracticePanel: {fileID: 0}
-  testPanel: {fileID: 0}
-  priorType: 0
-  _type: 0
 --- !u!114 &1411429360
 MonoBehaviour:
   m_ObjectHideFlags: 0
