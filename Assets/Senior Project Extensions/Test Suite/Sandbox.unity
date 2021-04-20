@@ -3862,8 +3862,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 373896160}
-  m_LocalRotation: {x: -0.1998783, y: 0.12105344, z: 0.024893342, w: 0.9719954}
-  m_LocalPosition: {x: 469.25116, y: -509.05823, z: -518.47076}
+  m_LocalRotation: {x: 0.31637725, y: 0.35265568, z: 0.12805417, w: -0.8712873}
+  m_LocalPosition: {x: -86.97578, y: -20.587593, z: -18.946953}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -15016,6 +15016,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: HandleMenuQuitTask
+      objectReference: {fileID: 0}
+    - target: {fileID: 5246226975256394729, guid: af14a948945a9f1498d20da587446720,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1787466588}
+    - target: {fileID: 5246226975256394729, guid: af14a948945a9f1498d20da587446720,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SpawnClimbing
+      objectReference: {fileID: 0}
+    - target: {fileID: 7028429936769226978, guid: af14a948945a9f1498d20da587446720,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1787466588}
+    - target: {fileID: 7028429936769226978, guid: af14a948945a9f1498d20da587446720,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SpawnDrone
+      objectReference: {fileID: 0}
+    - target: {fileID: 7291259668210066015, guid: af14a948945a9f1498d20da587446720,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1787466588}
+    - target: {fileID: 7291259668210066015, guid: af14a948945a9f1498d20da587446720,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DespawnRobot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af14a948945a9f1498d20da587446720, type: 3}
