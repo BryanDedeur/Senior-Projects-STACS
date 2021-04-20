@@ -56,6 +56,7 @@ public class UIMgr : MonoBehaviour
     public Text EntityHeadingText; public Text EntityDesiredHeadingText;
     public Text EntityAltitudeText; public Text EntityDesiredAltitudeText;
 
+    public Text GradeText;
     public Text DataFeedText;
 
     //public GameObject myCanvas;

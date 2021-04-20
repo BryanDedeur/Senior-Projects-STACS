@@ -78,18 +78,59 @@ public class TestEvalution : MonoBehaviour
 
     public float FinalGrade()
     {
-        float distance = DistanceError();
-        float battery = BatteryError();
-        float defects = DefectsError();
-        float a = 1;
-        float b = 1;
-        float c = 1;
-        //a, b, c, are weight that we may want to change
+        /* float distance = DistanceError();
+         float battery = BatteryError();
+         float defects = DefectsError();
+         float a = 1;
+         float b = 1;
+         float c = 1;
+         //a, b, c, are weight that we may want to change
 
 
-        float final = a * distance + b * battery + c * defects;
-        final /= 3;
-        return final;
+         float final = a * distance + b * battery + c * defects;
+         final /= 3;
+         return final;   */
+        float grade = 0;
+        if (UIMgr.inst.mTest == TestState.EasyTest1 && UIMgr.inst.mTestType == EGameType.Test) //easy test
+        {
+            if (totalTime < 35)
+            {
+                grade = 100;
+            }
+            else if (totalTime >= 35 && totalTime < 40)
+            {
+                grade = 90;
+            }
+            else if (totalTime >= 40 && totalTime < 45)
+            {
+                grade = 80;
+            }
+            else if (totalTime >= 45 && totalTime < 50)
+            {
+                grade = 70;
+            }
+            else if (totalTime >= 50)
+            {
+                grade = 0;
+            }
+        }
+        else if (UIMgr.inst.mTest == TestState.EasyTest2 && UIMgr.inst.mTestType == EGameType.Test) //medium test
+        {
+
+        }
+        else if (UIMgr.inst.mTest == TestState.MediumTest && UIMgr.inst.mTestType == EGameType.Test) //hard  test
+        {
+
+        }
+        else if (UIMgr.inst.mTest == TestState.EasyTest1 && UIMgr.inst.mTestType == EGameType.Practice) //easy prac test
+        {
+
+        }
+        else if (UIMgr.inst.mTest == TestState.EasyTest2 && UIMgr.inst.mTestType == EGameType.Practice) // medium prac test
+        {
+
+        }
+        return grade;
     }
 
     public void PrintGrade(float grade)
@@ -113,6 +154,7 @@ public class TestEvalution : MonoBehaviour
         WriteToFile();
         UIMgr.inst.PauseGame();
         UIMgr.inst.resultsPagePanel.SetActive(true);
+        UIMgr.inst.GradeText.text = FinalGrade().ToString("0");
     }
 
     public void FailTest()
@@ -124,6 +166,10 @@ public class TestEvalution : MonoBehaviour
         UIMgr.inst.PauseGame();
         UIMgr.inst.resultsPagePanelFailed.SetActive(true);
     }
+
+
+ 
+
 
     public void WriteToFile()
     {
@@ -250,7 +296,6 @@ public class TestEvalution : MonoBehaviour
 
     bool checkEnd()
     {
-        Debug.Log("Checking end");
         int counter = 0;
         float distance;
         foreach (StacsEntity robot in trackedRobots)
@@ -262,7 +307,6 @@ public class TestEvalution : MonoBehaviour
                 distance = Vector3.Distance(robot.transform.position, targetPos);
                 if(distance < 3.0f)
                 {
-                    Debug.Log("test edndy");
                     EndTest();
                 }
             }
