@@ -195,13 +195,13 @@ public class UIMgr : MonoBehaviour
         {
             TestEvalution.inst.easyTest1();
         }
-        if (mTest == TestState.EasyTest2)
-        {
-            TestEvalution.inst.easyTest2();
-        }
         if (mTest == TestState.MediumTest)
         {
             TestEvalution.inst.mediumTest();
+        }
+        if (mTest == TestState.HardTest)
+        {
+            TestEvalution.inst.hardTest();
         }
         State = EGameState.Monitoring;
     }
