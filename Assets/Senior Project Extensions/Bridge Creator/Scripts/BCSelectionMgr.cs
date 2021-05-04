@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// establishes methods for selecting single and multiple objects in the bridge creator scene
+/// </summary>
 public class BCSelectionMgr : MonoBehaviour
 {
     public static BCSelectionMgr instance;
@@ -16,10 +18,12 @@ public class BCSelectionMgr : MonoBehaviour
     private Vector2 startPos;
     private Vector2 endPos;
     public List<Transform> selectedObjects;
-
+    /// <summary>
+    /// called once upon application initialization
+    /// </summary>
     private void Awake()
     {
-        // this keeps instance a singlton
+        //establishes BCSelection manager as a referenceable singleton
         if (instance == null)
         {
             instance = this;
@@ -30,7 +34,11 @@ public class BCSelectionMgr : MonoBehaviour
             Destroy(this);
         }
     }
-
+    /// <summary>
+    /// determines if a given GameObject is within bounds for selection
+    /// </summary>
+    /// <param name="gameObject"></param>
+    /// <returns> only returns true if the GameObject is within bounds </returns>
     public bool IsWithinSelectionBounds(GameObject gameObject)
     {
         var camera = Camera.main;
@@ -42,7 +50,11 @@ public class BCSelectionMgr : MonoBehaviour
         return false;
         
     }
-
+    /// <summary>
+    /// determines if a vector3 point in the scene is within selection bounds
+    /// </summary>
+    /// <param name="p"></param>
+    /// <returns> only returns true if the point is within selection bounds </returns>
     public bool IsWithinSelectionBoundsVec(Vector3 p)
     {
         var camera = Camera.main;
@@ -53,13 +65,17 @@ public class BCSelectionMgr : MonoBehaviour
         }
         return false;
     }
-
+    /// <summary>
+    /// sets box selection methods to enabled
+    /// </summary>
     public void EnableBoxSelection()
     {
             startPos = Input.mousePosition;
             boxSelecting = true;
     }
-
+    /// <summary>
+    /// disables box selection methods
+    /// </summary>
     public void DisableBoxSelection()
     {
         boxSelecting = false;
@@ -85,7 +101,9 @@ public class BCSelectionMgr : MonoBehaviour
             DeselectAll();
         }
     }
-
+    /// <summary>
+    /// disables higlighting of box selection
+    /// </summary>
     public void DisableHighLight()
     {
         boxSelecting = false;
@@ -107,6 +125,11 @@ public class BCSelectionMgr : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// updates a selection container based on selected objects
+    /// </summary>
+    /// <param name="trans"></param>
+    /// <returns> whether adjusted objects are selected or not selected </returns>
     public bool AdjustSelectedObjects(Transform trans)
     {
         if (selectedObjects.Contains(trans))
@@ -123,9 +146,11 @@ public class BCSelectionMgr : MonoBehaviour
             rend.material.color = Color.green;
             return true;
         }
-        return false;
     }
-
+    /// <summary>
+    /// updates the list of selected objects based upon the slection or box selection
+    /// </summary>
+    /// <param name="list"></param>
     public void AdjustListObjects(List<Transform> list)
     {
         foreach(Transform trans in list)
@@ -139,7 +164,9 @@ public class BCSelectionMgr : MonoBehaviour
         }
       
     }
-
+    /// <summary>
+    /// allows all selected objects to be unselected
+    /// </summary>
     public void DeselectAll()
     {
 
@@ -158,21 +185,9 @@ public class BCSelectionMgr : MonoBehaviour
         selectedObjects.Clear();
 
     }
-
-    private void SelectObjectsInRadius(Vector3 position) // instead of doing this I made the vertex colliders larger
-    {
-/*        ///loop through list of vertex assign radius 2 and see if the hit is within that radius 
-        foreach (var v in Bridge.instance.vertexList)
-        {
-            //set z componet to the same as the vector
-            if (Vector3.Distance(position, v) < 2)
-            {
-                bridge.SelectVertex(v);
-                selectedVertex = v;
-            }
-        }*/
-    }
-
+    /// <summary>
+    /// method for adjusting whether an object is part of a group selection or whether to deselect all 
+    /// </summary>
     public void UnitSelect()
     {
         RaycastHit hit = BridgeCreator.instance.RaycastFromMouse();
@@ -191,7 +206,9 @@ public class BCSelectionMgr : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// creates a visible selection box for the user
+    /// </summary>
     void OnGUI()
     {
         if (boxSelecting)
