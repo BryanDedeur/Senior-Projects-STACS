@@ -118,7 +118,6 @@ public class BCInputMgr : MonoBehaviour
             {
                 BridgeCreator.instance.DeleteSelectedObjects();
                 BCSelectionMgr.instance.DeselectAll();
-                print("WTFFF");
                 print("Counter:" + BCSelectionMgr.instance.selectedObjects.Count);
 
             }
