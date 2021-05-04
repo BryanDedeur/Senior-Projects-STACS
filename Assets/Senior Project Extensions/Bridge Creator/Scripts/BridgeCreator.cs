@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 using UnityEditor.Experimental.UIElements.GraphView;
 using System;
 
+/// <summary>
+/// A class that holds the helper methods to create the bridge.
+/// </summary>
 public class BridgeCreator : MonoBehaviour
 {
     public LayerMask ignoreLayer;
@@ -21,12 +24,8 @@ public class BridgeCreator : MonoBehaviour
     public Text distanceText;
     public GameObject viewHighlight;
 
-/*    public Dictionary<Tuple<Vector3, Vector3>, GameObject> edgeDictionary;
-    public Dictionary<Vector3, GameObject> vertexDictionary;*/
-
     public Transform draggedFocusObject;
     public Vector3 draggedStartPos;
-
 
     public bool mirroring;
     public bool mirrorAcrossX; // half of the length of the bridge will be cloned
@@ -34,12 +33,7 @@ public class BridgeCreator : MonoBehaviour
     public bool mirrorAcrossZ; // both sides of the road will be mirrored
 
     public bool mirrorBool;
-    //public bool updatePosition;
 
-/*    Vector3 mousePosition1;
-*//*    List<Vector3> boxSelectedVertx = new List<Vector3>();
-    List<GameObject> boxSelectedEdge = new List<GameObject>();*/
-    //List<Vector3> vertexList = new List<Vector3>();
     public int numEdges;
 
     Vector3 screenPoint;
@@ -55,8 +49,7 @@ public class BridgeCreator : MonoBehaviour
     public GameObject lastVertex;
     private GameObject lastVertexM;
     private GameObject edgeFixer;
-/*    private Vector3 selectedVertex;
-*/   
+
     private GameObject cursor;
 
     public static BridgeCreator instance;
@@ -86,11 +79,20 @@ public class BridgeCreator : MonoBehaviour
         UpdateCountText();
     }
 
+    /// <summary>
+    /// rounds a point in 3D space to the nearest whole number.
+    /// </summary>
+    /// <param name="p">a Vector3 with floats in x y and z.</param>
+    /// <returns>a new Vector3 with rounded using Mathf.Round for x y and z</returns>
     public Vector3 Snap(Vector3 p)
     {
         return new Vector3(Mathf.Round(p.x), Mathf.Round(p.y), Mathf.Round(p.z));
     }
 
+    /// <summary>
+    /// raycasts from the mouse 2d position to 3d space and snaps the 3d point
+    /// </summary>
+    /// <returns>the vector3 of the snapped coordinate</returns>
     public RaycastHit RaycastFromMouse()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -110,6 +112,9 @@ public class BridgeCreator : MonoBehaviour
         return hit;
     }
 
+    /// <summary>
+    /// attempts to move selected items after several frame updates
+    /// </summary>
     public void AttemptMoveSelected()
     {
      
@@ -155,16 +160,17 @@ public class BridgeCreator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// deselects all selected removes selected vertexs and creates new ones at the right positions
+    /// </summary>
     public void EndMovingSelected()
     {
-
         List<Transform> temp = BCSelectionMgr.instance.selectedObjects;
 
         foreach (Transform trans in temp)
         {
             if (trans.tag == "Vertex" && totalOffset != Vector3.zero)
             {
-
                 List<Edge> connected = bridge.GetAllEdgesContainingPosition(trans.position - totalOffset);
                 foreach (Edge connectedEdge in connected)
                 {
@@ -174,18 +180,15 @@ public class BridgeCreator : MonoBehaviour
 
                 bridge.RemoveVertex(trans.position - totalOffset);
                 bridge.CreateVertex(trans.position, vertexPrefab);
-
-
             }
-/*            if (trans.tag == "Edge")//need to update moved edges 
-            {
-                
-            }*/
         }
         BCSelectionMgr.instance.DeselectAll();
         draggedFocusObject = null;
     }
 
+    /// <summary>
+    /// deselects all the selected bridge objects (edges, and nodes)
+    /// </summary>
     public void DeleteSelectedObjects()
     {
         print("Big:" + BCSelectionMgr.instance.selectedObjects.Count);
@@ -193,7 +196,6 @@ public class BridgeCreator : MonoBehaviour
         {
             foreach (Transform trans in BCSelectionMgr.instance.selectedObjects)
             {
-
                 if (trans.tag == "Truss")
                 {
                     Edge edge = trans.GetComponent<Edge>();
@@ -208,9 +210,11 @@ public class BridgeCreator : MonoBehaviour
         print("Exit");
     }
 
+    /// <summary>
+    /// mirrors selected objects accross the z axis of the scene or accross the road of the bidge
+    /// </summary>
     public void MirrorSelectedObjects()
     {
-
         foreach (Transform bridgeTrans in BCSelectionMgr.instance.selectedObjects)
         {
             Vector3 zOffSet = new Vector3(0.0f, 0.0f, -4.0f);
@@ -218,7 +222,6 @@ public class BridgeCreator : MonoBehaviour
             zOffSet.z += bridge.GetWidth();
             zOffSet.z *= 2;
 
-  
             Edge edge = bridgeTrans.GetComponent<Edge>();
             if (edge != null) // if edge
             {
@@ -227,18 +230,18 @@ public class BridgeCreator : MonoBehaviour
                 bridge.CreateEdge(newPos1, newPos2, trussPrefab);
             } else // if vertex
             {
-                
-               
                 Vector3 newPos = bridgeTrans.position + zOffSet;
                 
                 bridge.CreateVertex(newPos, vertexPrefab);
-               
             }
         }
-
     }
 
-    public List<Transform> CopySelectedObjects()//
+    /// <summary>
+    /// copies all the selected objects
+    /// </summary>
+    /// <returns>all the new objects copied</returns>
+    public List<Transform> CopySelectedObjects()
     {
         RaycastHit hit = RaycastFromMouse();
         List<Transform> newObjects = new List<Transform>();
@@ -266,9 +269,11 @@ public class BridgeCreator : MonoBehaviour
         }
         print(newObjects.Count);
         return newObjects;
-
     }
 
+    /// <summary>
+    /// updates the statistics about the bridge for the UI
+    /// </summary>
     void UpdateCountText()
     {
         edgeText.text = bridge.GetEdges().ToString();
@@ -276,7 +281,10 @@ public class BridgeCreator : MonoBehaviour
         distanceText.text = bridge.edgeDistance.ToString();
     }
 
-    // Adds a vertex and potentially creates and edge
+    /// <summary>
+    /// adds a vertex and potentially creates and edge
+    /// </summary>
+    /// <param name="isbn">position is the to create a new vertex </param>
     public void AddVertex(Vector3 position)
     {
         if (lastVertex == null)
@@ -312,6 +320,9 @@ public class BridgeCreator : MonoBehaviour
         UpdateCountText();
     }
 
+    /// <summary>
+    /// adds another vertex and and connects an edge
+    /// </summary>
     public void AttemptAddVertexAndConnectEdge()
     {
         RaycastHit hit = RaycastFromMouse();
@@ -322,6 +333,9 @@ public class BridgeCreator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// attempts to remove an bridge object
+    /// </summary>
     public void AttemptRemoveEdgeOrVertex()
     {
         RaycastHit hit = RaycastFromMouse();
@@ -346,36 +360,25 @@ public class BridgeCreator : MonoBehaviour
         }
     }
 
-    public void AdjustDraggedVertex()//
-    {
-/*        Vector3 edgeLocation;
-        Vector3 newEdgeAnchor;
-
-        edgeFixer = bridge.MoveVertex(selectedVertex, hit.point, vertexPrefab);
-        //vertexList.Add(hit.point);
-        newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
-
-        for (int i = 0; i < numEdges; i++)
-        {
-            if (newEdgeAnchor.x != 100000 && newEdgeAnchor.y != 100000 && newEdgeAnchor.z != 100000)
-            {
-                bridge.CreateEdge(bridge.CreateVertex(newEdgeAnchor, vertexPrefab), edgeFixer, trussPrefab);
-                //vertexList.Add(newEdgeAnchor);
-                newEdgeAnchor = bridge.UpdateEdge(selectedVertex);
-            }
-        }*/
-    }
-
+    /// <summary>
+    /// enables the mirroring for newly placed bridge objects
+    /// </summary>
     public void EnableMirroring()
     {
         mirrorBool = true;
     }
 
+    /// <summary>
+    /// disables the mirroring for newly placed bridge objects
+    /// </summary>
     public void DisableMirroring()
     {
         mirrorBool = false;
     }
 
+    /// <summary>
+    /// updates the cursor indicator and shows it to the user in 3d space
+    /// </summary>
     private void UpdateCursor()
     {
         RaycastHit hit = RaycastFromMouse();
