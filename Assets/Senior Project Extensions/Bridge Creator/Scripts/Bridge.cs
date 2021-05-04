@@ -79,7 +79,11 @@ public class Bridge : MonoBehaviour
             }
         }
     }
-    
+
+    /// <summary>
+    /// sums up the edge distances
+    /// </summary>
+    /// <returns>float distance of sum of edges</returns>
     private float GetSumEdges()
     {
         float distance = 0;
@@ -90,6 +94,11 @@ public class Bridge : MonoBehaviour
         return distance;
     }
 
+    /// <summary>
+    /// gets the vertex int ID
+    /// </summary>
+    /// <param name="pos">a vector 3 position</param>
+    /// <returns>the int ID</returns>
     public int GetVertexId(Vector3 pos)
     {
         int index = 0;
@@ -104,6 +113,10 @@ public class Bridge : MonoBehaviour
         return index;
     }
 
+    /// <summary>
+    /// helps save the bridge by encoding bridge connections
+    /// </summary>
+    /// <returns>the ecoded string</returns>
     private string FormatConnectionsToString() // connections between edges vertices
     {
         string output = "";
@@ -121,7 +134,9 @@ public class Bridge : MonoBehaviour
         return output;
     }
 
-
+    /// <summary>
+    /// encodes a bridge into a saveable string of data
+    /// </summary>
     public void Save()
     {
         print("save");
@@ -129,6 +144,9 @@ public class Bridge : MonoBehaviour
         FileIO.instance.WriteToFile(bridgeName + ".txt", FormatConnectionsToString(), true, true);
     }
 
+    /// <summary>
+    /// decodes bridge data into an actual bridge
+    /// </summary>
     public void Load()
     {
         string[] tempVertices, tempEdges;
@@ -164,6 +182,11 @@ public class Bridge : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// converts a vertex key into a vector3 object
+    /// </summary>
+    /// <param name="index">a int key</param>
+    /// <returns>a vector3 of a vertex</returns>
     private Vector3 GetVertexKey(int index)
     {
         int count = 0;
@@ -177,45 +200,79 @@ public class Bridge : MonoBehaviour
         return new Vector3(0, 0, 0);
     }
 
+    /// <summary>
+    /// sets the type of platform on the bridge
+    /// </summary>
+    /// <param name="platformPrefab">the prefrab describing the look of the bridge</param>
     public void SetPlatform(GameObject platformPrefab)
     {
         platform = Instantiate(platformPrefab, Vector3.zero, Quaternion.identity, container.transform);
         SetWidth(platform.transform.localScale.z);
         SetLength(platform.transform.localScale.x);
-
     }
 
+    /// <summary>
+    /// gets the int ID of the bridge
+    /// </summary>
+    /// <returns>the id</returns>
     public int GetId()
     {
         return id;
     }
 
+    /// <summary>
+    /// sets a new bridge length
+    /// </summary>
+    /// <param name="newLength">sets a new bridge length</param>
     public void SetLength(float newLength)
     {
         platformLength = newLength;
         platform.transform.localScale = new Vector3(platformLength, 1, platform.transform.localScale.z);
     }
 
+    /// <summary>
+    /// gets the length of the bridge
+    /// </summary>
+    /// <returns>the float length of the bridge</returns>
     public float GetLength()
     {
         return platformLength;
     }
 
+    /// <summary>
+    /// sets the width of a bridge
+    /// </summary>
+    /// <param name="newWidth">the width of the bridge</param>
     public void SetWidth(float newWidth)
     {
         platformWidth = newWidth;
     }
 
+    /// <summary>
+    /// gets the platform width of a bridge
+    /// </summary>
+    /// <returns>a width</returns>
     public float GetWidth()
     {
         return platformWidth;
     }
 
+    /// <summary>
+    /// checks if a vertex exists
+    /// </summary>
+    /// <param name="position">a vector3 position</param>
+    /// <returns>the vertex bridge object</returns>
     public bool VertexExists(Vector3 position)
     {
         return vertices.ContainsKey(position);
     }
 
+    /// <summary>
+    /// checks if an edge exists
+    /// </summary>
+    /// <param name="position1">a vertex position</param>
+    /// <param name="position2">a second vertex position</param>
+    /// <returns>the edge bridge object</returns>
     public Edge EdgeExists(Vector3 position1, Vector3 position2)
     {
         Tuple<Vector3, Vector3> edgeKey1 = new Tuple<Vector3, Vector3>(position1, position2);
@@ -235,6 +292,12 @@ public class Bridge : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// creates a vertex
+    /// </summary>
+    /// <param name="p">the vertex position</param>
+    /// <param name="vertex">the vertex object</param>
+    /// <returns>the new bridge vertex object</returns>
     public GameObject CreateVertex(Vector3 p, GameObject vertex)
     {
         Debug.Log("create:" + p);
@@ -253,6 +316,13 @@ public class Bridge : MonoBehaviour
         return newVertex.gameObject;
     }
 
+    /// <summary>
+    /// creates an edge
+    /// </summary>
+    /// <param name="v1">bridge object vector</param>
+    /// <param name="v2">bridge object vector</param>
+    /// <param name="truss">truss object type</param>
+    /// <returns>the edge object</returns>
     public Edge CreateEdge(Vector3 v1, Vector3 v2, GameObject truss)
     {
         Debug.Log("CreateEdge1:" + v1);
@@ -294,30 +364,22 @@ public class Bridge : MonoBehaviour
         return edge;
     }
 
+    /// <summary>
+    /// creates an edge inbetween two vertices
+    /// </summary>
+    /// <param name="v1">bridge object vector</param>
+    /// <param name="v2">bridge object vector</param>
+    /// <param name="truss">truss object type</param>
+    /// <returns>the new edge object</returns>
     public Edge CreateEdge(GameObject v1, GameObject v2, GameObject truss)
     { 
         return CreateEdge(v1.transform.position, v2.transform.position, truss);
     }
 
-    /*    //same as create edge but takes vector3s DOES NOT ADD TO EDGES LIST
-         public GameObject AddEdge(Vector3 v1, Vector3 v2, GameObject truss)
-        {
-            Tuple<Vector3, Vector3> edgeKey = new Tuple<Vector3, Vector3>(v1, v2);
-
-            // create a new truss
-            Transform newTruss = Instantiate(truss.transform);
-            newTruss.name = "Truss";
-
-            Vector3 diff = v1 - v2;
-            float dist = diff.magnitude;
-            newTruss.localScale = new Vector3(truss.transform.localScale.x, truss.transform.localScale.y, dist);
-            newTruss.position = v2 + (diff / 2.0f);
-            newTruss.LookAt(v1);
-            newTruss.parent = transform;
-
-            return newTruss.gameObject;
-        }*/
-
+    /// <summary>
+    /// removes a vertex
+    /// </summary>
+    /// <param name="atPosition">the dictionary key position</param>
     public void RemoveVertex(Vector3 atPosition)
     {
         // find all the edge keys that contain the position
@@ -346,6 +408,11 @@ public class Bridge : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// removes and edge
+    /// </summary>
+    /// <param name="p1">one of the edge keys</param>
+    /// <param name="p2">one of the edge keys</param>
     public void RemoveEdge(Vector3 p1, Vector3 p2)
     {
         Edge edge = null;
@@ -372,11 +439,19 @@ public class Bridge : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// removes an edge
+    /// </summary>
+    /// <param name="edge">an edge object</param>
     public void RemoveEdge(Edge edge)
     {
         RemoveEdge(edge.pos1, edge.pos2);
     }
 
+    /// <summary>
+    /// removes an edge
+    /// </summary>
+    /// <param name="edge">the edge game object</param>
     public void RemoveEdge(GameObject edge)
     {
         Edge edgeComponent = edge.GetComponent<Edge>();
@@ -386,6 +461,11 @@ public class Bridge : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// updates an edge position
+    /// </summary>
+    /// <param name="p">is the position of the edge</param>
+    /// <returns>the new vector position</returns>
     public Vector3 UpdateEdge(Vector3 p)
     {
         //iterate through all possible pairs
@@ -417,6 +497,11 @@ public class Bridge : MonoBehaviour
         return nullVec; 
     }
 
+    /// <summary>
+    /// gets the edge connected to a vertex position
+    /// </summary>
+    /// <param name="p">vector position</param>
+    /// <returns>a vector3 for the edge dictionary location</returns>
     public Vector3 GetEdge(Vector3 p)
     {
         //iterate through all possible pairs
@@ -448,6 +533,11 @@ public class Bridge : MonoBehaviour
         return nullVec;
     }
 
+    /// <summary>
+    /// gets all the edges connected to a vertex
+    /// </summary>
+    /// <param name="pos">a vector3 of the dictionary index for the position of a vertex</param>
+    /// <returns>a list of edges</returns>
     public List<Edge> GetAllEdgesContainingPosition(Vector3 pos)
     {
         List<Edge> edgesWithPos = new List<Edge>();
@@ -463,6 +553,11 @@ public class Bridge : MonoBehaviour
         return edgesWithPos;
     }
 
+    /// <summary>
+    /// moves a vertex from one position to another
+    /// </summary>
+    /// <param name="vertex">the gameobject vertex</param>
+    /// <param name="newPos">the new position</param>
     public void MoveVertex(GameObject vertex, Vector3 newPos)
     {
         /*        RemoveVertex(oldloc);
@@ -491,16 +586,21 @@ public class Bridge : MonoBehaviour
         // move and add to vertex dictionary
         vertex.transform.position = newPos;
         vertices.Add(newPos, vertex.gameObject);
- 
-
     }
 
-
+    /// <summary>
+    /// gets the vertices count
+    /// </summary>
+    /// <returns>the count of vertices</returns>
     public int GetVertices()
     {
         return vertices.Count;
     }
 
+    /// <summary>
+    /// gets the edge count
+    /// </summary>
+    /// <returns>the count of the edges</returns>
     public int GetEdges()
     {
         return edges.Count;
