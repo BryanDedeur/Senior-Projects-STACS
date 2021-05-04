@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/// <summary>
-/// establishes controls for camera movement within the Bridge Creator scene
-/// </summary>
 
+/// <summary>
+/// BCCameraController class establishes controls for camera movement within the Bridge Creator scene
+/// </summary>
 public class BCCameraController : MonoBehaviour
 {
     public static BCCameraController instance; //bridge Creator instance is accessible to other scripts

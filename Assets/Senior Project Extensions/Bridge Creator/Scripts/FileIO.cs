@@ -4,13 +4,19 @@ using UnityEngine;
 using System.IO;
 using UnityEditor;
 
+/// <summary>
+/// FileIO class establishes methods for reading from and writing to files
+/// </summary>
 public class FileIO : MonoBehaviour
 {
-    public static FileIO instance;
+    public static FileIO instance; //FileIO instance accessible by other scripts
 
+    /// <summary>
+    /// called upon application start up
+    /// </summary>
     private void Awake()
     {
-        // this keeps instance a singlton
+        // creates singleton FileIO instance
         if (instance == null)
         {
             instance = this;
@@ -26,14 +32,16 @@ public class FileIO : MonoBehaviour
     {
         //WriteToFile("Bridges/test.txt", "Hello world");   
     }
+
+    /// <summary>
+    /// uses the file explorer to locate a position to save the file, as well as a filename, and then writes contents to the path
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="output"></param>
+    /// <param name="overwrite"></param>
+    /// <param name="isBridgeFile"></param>
     public void WriteToFile(string fileName, string output, bool overwrite, bool isBridgeFile)
     {
-        /*        if (File.Exists(fileName))
-                {
-                    Debug.Log(fileName + " already exists.");
-                    return;
-                }*/
-        //add to the end of file
         print(fileName);
         if (isBridgeFile == true)
         {
@@ -72,16 +80,25 @@ public class FileIO : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// given a filename, opens a streamreader for the file and processes the contents into a string
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns> a string containing the contents of the target file </returns>
     public string ReadFromFile(string fileName)
     {
         string fileInfo = "";
         StreamReader reader = new StreamReader(fileName);
         fileInfo = reader.ReadToEnd();
         reader.Close();
-
         return fileInfo;
     }
 
+    /// <summary>
+    /// given a bridge file following the correct formatting, returns the vertex and connection information needed to construct the bridge
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns> an array of strings, each string containing different information about the bridge </returns>
     public string[] ReadBridgeFile(string fileName)
     {
         string[] tempInfo;
