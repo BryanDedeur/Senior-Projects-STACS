@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/// <summary>
+/// establishes controls for camera movement within the Bridge Creator scene
+/// </summary>
 
-// Bridge Creator Camera Controller
 public class BCCameraController : MonoBehaviour
 {
-    public static BCCameraController instance;
+    public static BCCameraController instance; //bridge Creator instance is accessible to other scripts
     public enum CameraDirection
     {
         Left, Right, Top, Bottom
@@ -27,6 +29,9 @@ public class BCCameraController : MonoBehaviour
 
     private Vector3 orbitStart;
 
+    /// <summary>
+    /// instance is established before the first frame is called so other scripts can access the BCCameraController
+    /// </summary>
     private void Awake()
     {
         if (instance == null)
@@ -39,37 +44,49 @@ public class BCCameraController : MonoBehaviour
         }
         testbool = true;
     }
-
+    /// <summary>
+    /// in the first frame, rig is set to the transform of the parent's parent GameObject
+    /// </summary>
     private void Start()
     {
         rig = transform.parent.parent;
         //RightView();
     }
-
+    /// <summary>
+    /// establishes position and rotation for snap to top view
+    /// </summary>
     public void TopView()
     {
         rig.transform.position = Vector3.zero;
         SetNewAngles(90, 0);
     }
-
+    /// <summary>
+    /// establishes position and rotation for snap to bottom view
+    /// </summary>
     public void BottomView()
     {
         rig.transform.position = Vector3.zero;
         SetNewAngles(270, 0);
     }
-
+    /// <summary>
+    /// establishes position and rotation for snap to left view
+    /// </summary>
     public void LeftView()
     {
         rig.transform.position = Vector3.zero;
         SetNewAngles(0, 180);
     }
-
+    /// <summary>
+    /// establishes position and rotation for snap to right view
+    /// </summary>
     public void RightView()
     {
         rig.transform.position = Vector3.zero;
         SetNewAngles(0, 0);
     }
-
+    /// <summary>
+    /// calculates the change in position from the camera to a point selected with the mouse
+    /// </summary>
     private void OnMouseDown()
     {
         if (testbool)
@@ -78,7 +95,9 @@ public class BCCameraController : MonoBehaviour
             deltaY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y - transform.position.y;
         }
     }
-
+    /// <summary>
+    /// uses delaX and deltaY to change the camera's transform by dragging the mouse
+    /// </summary>
     private void OnMouseDrag()
     {
         if (testbool)
@@ -87,29 +106,41 @@ public class BCCameraController : MonoBehaviour
             transform.position = new Vector3(mousePosition.x - deltaX, mousePosition.y - deltaY, mousePosition.z);
         }
     }
-
+    /// <summary>
+    /// moves the camera closer to the bridge incrementally
+    /// </summary>
     private void ZoomIn()
     {
         Camera.main.transform.position += Camera.main.transform.forward * zoomAmount;
     }
-
+    /// <summary>
+    /// moves the camera away from the bridge incrementally
+    /// </summary>
     private void ZoomOut()
     {
         Camera.main.transform.position -= Camera.main.transform.forward * zoomAmount;
     }
-
+    /// <summary>
+    /// using the mouse's postion, the camera is orbitted around the bridge
+    /// </summary>
     private void StartMouseOrbit()
     {
 /*        yaw = Camera.main.transform.parent.parent.transform.localEulerAngles.y;
         pitch = Camera.main.transform.parent.transform.localEulerAngles.z;*/
         orbitStart = Input.mousePosition;
     }
-
+    /// <summary>
+    /// uses parameters to update the angles of a transform
+    /// </summary>
+    /// <param name="newPitch"></param>
+    /// <param name="newYaw"></param>
     private void SetNewAngles(float newPitch, float newYaw)
     {
         transform.parent.localEulerAngles = new Vector3(newPitch, newYaw, 0);
     }
-
+    /// <summary>
+    /// the rotational orbit around the bridge is updated each time this function is called 
+    /// </summary>
     private void ContinueOrbit()
     {
         Vector2 rotationOffset = Input.mousePosition - orbitStart;
@@ -138,19 +169,6 @@ public class BCCameraController : MonoBehaviour
             {
                 testbool = true;
             }
-
-            /*        if (viewDirection == CameraDirection.Left)
-                        leftViewControls = true;
-                    else
-                        leftViewControls = false;
-                    if (viewDirection == CameraDirection.Top)
-                        topViewControls = true;
-                    else
-                        topViewControls = false;
-                    if (viewDirection == CameraDirection.Bottom)
-                        bottomViewControls = true;
-                    else
-                        bottomViewControls = false;*/
 
             if (Input.GetAxis("Mouse ScrollWheel") > 0f) // forward
             {
