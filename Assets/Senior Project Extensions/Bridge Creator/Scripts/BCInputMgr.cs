@@ -123,6 +123,11 @@ public class BCInputMgr : MonoBehaviour
 
             }
     }
+
+    /// <summary>
+    /// checks if the mouse is over a UI object so we can aproperiately handle the input
+    /// </summary>
+    /// <returns>if the mouse is over a UI object</returns>
     public static bool IsPointerOverUIObject()
     {
         PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
