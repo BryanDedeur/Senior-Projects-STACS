@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿//Elizabeth
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -24,9 +25,11 @@ public class MenuMgr : MonoBehaviour
     public GameObject loadBridgeMenu;
     //This determines if load, delete, or edit was clicked
     public int whichButtonPressed = 0;
+    //Text
     public GameObject deleteTitle;
     public GameObject loadTitle;
     public GameObject editTitle;
+    //Panels
     public GameObject BridgeSelectionPanel;
     public GameObject TestBridgeSelectionPanel;
     public GameObject PracticeBridgeSelectionPanel;
@@ -44,6 +47,7 @@ public class MenuMgr : MonoBehaviour
 
     private void Awake()
     {
+        //Sets the screen resolution on load
         screenSize = Screen.resolutions;
         if (instance == null)
         {
@@ -85,6 +89,9 @@ public class MenuMgr : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Opens up the file explorer, allows user to select bridge, loads bridge into sandbox scene -> Noah
+    /// </summary>
     public void SetSandboxBridge()
     {
         var existingBridge = EditorUtility.OpenFilePanel("Select Existing Bridge", "", "txt");
@@ -96,12 +103,18 @@ public class MenuMgr : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Connects to button, loads the scene
+    /// </summary>
+    /// <param name="sceneName"></param>
     public void LaunchScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }
 
-    //Quits out of program
+    /// <summary>
+    /// Quits out of program
+    /// </summary>
     public void QuitGame()
     {
         Debug.Log("Quit");
@@ -112,12 +125,19 @@ public class MenuMgr : MonoBehaviour
     //Audio section:
     //Window->Audio->AudioMixer
     //Music Volume (Music (Settings))
+    /// <summary>
+    /// Sets volume to music when connected to the audiomixer
+    /// </summary>
+    /// <param name="musicVol"></param>
     public void SetMusicVolume(float musicVol)
     {
         Debug.Log(musicVol);
         musicMixer.SetFloat("musicVolume", musicVol);
     }
     //Noise Volume (Noise(Settings))
+    /// <summary>
+    /// Sets volume to noise when connected to the audiomixer
+    /// </summary>
     public void SetNoiseVolume(float noiseVol)
     {
         Debug.Log(noiseVol);
@@ -170,37 +190,6 @@ public class MenuMgr : MonoBehaviour
         deleteTitle.SetActive(false);
         whichButtonPressed = 3;
     }
-    //the bridge menu fucntion
-    /*    public void BridgeSelectionOperation(string sceneName)
-        {
-            print("OKAY");
-
-            //If I had clicked the load button
-            if (whichButtonPressed == 1)
-            {
-                LaunchScene(sceneName);
-                print("NICE");
-            }
-            //If I had clicked the delete button
-            if (whichButtonPressed == 2)
-            {
-                Debug.Log("in Delete");
-                if(sceneName == "SteelTrussBridge")
-                {
-                    Debug.Log("This bridge can not be deleted");
-                }
-            }
-            //if I clicked the edit button
-            if (whichButtonPressed == 3) 
-            {
-                Debug.Log("in Edit");
-                if (sceneName == "SteelTrussBridge")
-                {
-                    Debug.Log("This bridge can not be edited");
-                }
-            }
-
-        }*/
 
     //All buttons that bring you to bridge selection
     public void ToBridgeSelectionPanel()
@@ -235,6 +224,9 @@ public class MenuMgr : MonoBehaviour
         UnrLogo.SetActive(false);
     }
 
+    /// <summary>
+    /// Opens the bridge to be edited in bridge creator ->Noah
+    /// </summary>
     public void ExploreFiles()
     {
         var existingBridge = EditorUtility.OpenFilePanel("Select Existing Bridge", "", "txt");

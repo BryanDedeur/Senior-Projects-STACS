@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+
 public enum EGameState
 {
     None = 0,
@@ -237,7 +238,6 @@ public class UIMgr : MonoBehaviour
         State = EGameState.Monitoring;
     }
     //--------------------------------------------------------------------------------------------
-
     public RectTransform CameraViewPanelPrefab;
     public RectTransform CameraViewPanelsParent;
     public List<RectTransform> CameraViewPanels;
@@ -254,37 +254,65 @@ public class UIMgr : MonoBehaviour
 
     }
     //-------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This gives functionality to the buttons in Bridge Creator  -> Elizabeth
+    /// </summary>
+    /// <summary>
+    /// This gives functionality to the buttons in Bridge Creator -Turn on mirror button
+    /// </summary>
     public void MirrorButtonOn()
     {
         Debug.Log("on");
         BridgeCreator.instance.EnableMirroring();
     }
 
+    /// <summary>
+    /// This gives functionality to the buttons in Bridge Creator -Turn off mirror button
+    /// </summary>
     public void MirrorButtonOff()
     {
         Debug.Log("off");
         BridgeCreator.instance.DisableMirroring();
     }
+
+    /// <summary>
+    /// This gives functionality to the buttons in Bridge Creator -Turn on mirror selected button
+    /// </summary>
     public void MirrorSelectedButton()
     {
         Debug.Log("Selected");
         BridgeCreator.instance.MirrorSelectedObjects();
     }
+
+    /// <summary>
+    /// This gives functionality to the buttons in Bridge Creator -Deselected object
+    /// </summary>
     public void DeselectButton()
     {
         BCSelectionMgr.instance.DisableBoxSelection();
         BCSelectionMgr.instance.DeselectAll();
     }
+
+    /// <summary>
+    ///  -Restarts the bridge creator scene
+    /// </summary>
     public void RestartScene()
     {
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
     }
-  
+
+    /// <summary>
+    /// Connects resart to button to discard bridge 
+    /// </summary>
     public void DiscardBridge()
     {
         RestartScene();
     }
+
+    ///     /// <summary>
+    /// Pause game
+    /// </summary>
     public void PauseGame()
     {
 
@@ -292,11 +320,18 @@ public class UIMgr : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    ///     /// <summary>
+    /// Resume Game
+    /// </summary>
     public void ResumeGame()
     {
         Debug.Log("resume");
         Time.timeScale = 1;
     }
+
+    ///     /// <summary>
+    /// Deleted the bridge
+    /// </summary>
     public void DeleteBridge()
     {
         Destroy(Bridge.instance);
